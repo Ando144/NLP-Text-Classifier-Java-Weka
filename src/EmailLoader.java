@@ -31,12 +31,16 @@ public class EmailLoader {
             // 2. Construir el objeto Instances (Dataset crudo)
             Instances dataRaw = loader.getDataSet();
             
+            if (dataRaw.classIndex() == -1) {
+                dataRaw.setClassIndex(dataRaw.numAttributes() - 1);
+            }
+            
             // 3. Configurar el guardado del archivo ARFF
             ArffSaver saver = new ArffSaver();
             saver.setInstances(dataRaw);
             
-            // Definir la ruta de salida de nuestro archivo crudo
-            File outputArff = new File(path + "\\emails_raw.arff");
+            // Definir la ruta de salida de forma portable entre sistemas operativos
+            File outputArff = new File(path, "emails_raw.arff");
             saver.setFile(outputArff);
             saver.writeBatch();
             

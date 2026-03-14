@@ -7,78 +7,106 @@ import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.Ranker;
 import weka.core.stemmers.LovinsStemmer;
 import weka.core.tokenizers.WordTokenizer;
+import weka.core.stopwords.Rainbow;
 import weka.core.converters.ArffSaver;
 import java.io.File;
 
 public class EmailVectorizerAndSelector {
     public static void main(String[] args) {
         try {
-            // 1. Cargar datos crudos
-            DataSource source = new DataSource("data/emails_raw.arff"); 
-            Instances dataRaw = source.getDataSet();
-            if (dataRaw.classIndex() == -1) {
-                dataRaw.setClassIndex(dataRaw.numAttributes() - 1); 
- 
-            } else {
-                System.out.println("El dataset tiene que tener el indice en el -1");
+            String baseDir = args.length >= 1 ? args[0] : "Partiketak";
+            if (args.length > 1) {
+                System.err.println("Uso: java -cp \"lib/weka.jar:bin\" EmailVectorizerAndSelector [carpeta_particiones]");
+                return;
             }
-            //Vectorizamos con StringToWordVector
+
+            File trainRawFile = new File(baseDir, "train.arff");
+            File devRawFile = new File(baseDir, "dev.arff");
+            File testRawFile = new File(baseDir, "test.arff");
+
+            if (!trainRawFile.exists() || !devRawFile.exists() || !testRawFile.exists()) {
+                System.err.println("Faltan archivos de entrada en: " + new File(baseDir).getAbsolutePath());
+                System.err.println("Se esperan: train.arff, dev.arff y test.arff");
+                return;
+            }
+
+            // 1. Cargar datasets
+            Instances train = new DataSource(trainRawFile.getPath()).getDataSet();
+            Instances dev = new DataSource(devRawFile.getPath()).getDataSet();
+            Instances test = new DataSource(testRawFile.getPath()).getDataSet();
+
+            train.setClassIndex(train.numAttributes() - 1);
+            dev.setClassIndex(dev.numAttributes() - 1);
+            test.setClassIndex(test.numAttributes() - 1);
+
+            // ================================
+            // 2. StringToWordVector
+            // ================================
+
             StringToWordVector stwv = new StringToWordVector();
-            stwv.setInputFormat(dataRaw);
+
             stwv.setIDFTransform(true);
             stwv.setTFTransform(true);
             stwv.setLowerCaseTokens(true);
-            
+            stwv.setWordsToKeep(20000);
+
             WordTokenizer tokenizador = new WordTokenizer();
             tokenizador.setDelimiters(" \r\n\t.,;:'\"()?!-+/\\<>@#$%^&*_=~`|[]{}");
             stwv.setTokenizer(tokenizador);
-            
-            //el stemmer lo que hace es reducir las palabras a su raíz,
-            //  por ejemplo "running" se convierte en "run". 
-            // Esto ayuda a filtrar las palabras y que no tarde en ejecutar dos años.
 
             LovinsStemmer stemmer = new LovinsStemmer();
             stwv.setStemmer(stemmer);
-            
-            //el WordsToKeep lo mas grande posible 
-            stwv.setWordsToKeep(1000000); 
 
-            System.out.println("Aplicando StringToWordVector masivo...");
-            Instances dataVectorized = Filter.useFilter(dataRaw, stwv);
-            
-            System.out.println("Atributos ANTES de la selección: " + dataVectorized.numAttributes());
+            stwv.setStopwordsHandler(new Rainbow());
 
-            //fase de selección de atributos con InfoGain
+            stwv.setInputFormat(train);
+
+            Instances trainVec = Filter.useFilter(train, stwv);
+            Instances devVec = Filter.useFilter(dev, stwv);
+            Instances testVec = Filter.useFilter(test, stwv);
+
+            System.out.println("Atributos tras vectorización: " + trainVec.numAttributes());
+
+            // ================================
+            // 3. Selección de atributos
+            // ================================
+
             AttributeSelection filterSelector = new AttributeSelection();
-            
-            // Usamos Ganancia de Información (InfoGain)
+
             InfoGainAttributeEval eval = new InfoGainAttributeEval();
-            
-            // Usamos Ranker para ordenar las palabras de mejor a peor
+
             Ranker search = new Ranker();
-            
-            // aqui elegimos el tamaño del vocabulario final, habra que jugar con este numero para ver cual es el 
-            //mejor resultado
-            search.setNumToSelect(1000); 
-            
+            search.setNumToSelect(1000);
+
             filterSelector.setEvaluator(eval);
             filterSelector.setSearch(search);
-            filterSelector.setInputFormat(dataVectorized);
-            
-            System.out.println("Aplicando Selección de Atributos (InfoGain)...");
-            Instances dataFinal = Filter.useFilter(dataVectorized, filterSelector);
-            
-            // ==========================================
-            // FASE 3: GUARDAR EL DATASET FINAL
-            // ==========================================
+            filterSelector.setInputFormat(trainVec);
+
+            Instances trainFinal = Filter.useFilter(trainVec, filterSelector);
+            Instances devFinal = Filter.useFilter(devVec, filterSelector);
+            Instances testFinal = Filter.useFilter(testVec, filterSelector);
+
+            // ================================
+            // 4. Guardar datasets finales
+            // ================================
+
             ArffSaver saver = new ArffSaver();
-            saver.setInstances(dataFinal);
-            saver.setFile(new File("data/emails_final_bow.arff"));
+
+            saver.setInstances(trainFinal);
+            saver.setFile(new File(baseDir, "train_final.arff"));
+            saver.writeBatch();
+
+            saver.setInstances(devFinal);
+            saver.setFile(new File(baseDir, "dev_final.arff"));
+            saver.writeBatch();
+
+            saver.setInstances(testFinal);
+            saver.setFile(new File(baseDir, "test_final.arff"));
             saver.writeBatch();
 
             System.out.println("==================================================");
-            System.out.println("¡PROCESO COMPLETADO CON ÉXITO!");
-            System.out.println("Vocabulario Final (Atributos): " + dataFinal.numAttributes());
+            System.out.println("¡PROCESO COMPLETADO!");
+            System.out.println("Atributos finales: " + trainFinal.numAttributes());
             System.out.println("==================================================");
 
         } catch (Exception e) {

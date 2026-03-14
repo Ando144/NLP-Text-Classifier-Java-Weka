@@ -3,6 +3,7 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.core.converters.ArffSaver;
 import weka.filters.Filter;
 import weka.filters.supervised.instance.StratifiedRemoveFolds;
+import weka.filters.unsupervised.instance.Randomize;
 
 import java.io.File;
 
@@ -30,6 +31,12 @@ public class DataSplit {
             data.setClassIndex(data.numAttributes() - 1);
         }
 
+        // Randomizar el dataset
+        Randomize rand = new Randomize();
+        rand.setRandomSeed(1);
+        rand.setInputFormat(data);
+        data = Filter.useFilter(data, rand);
+
         // ================================
         // 2. Dividir en 3 particiones estratificadas 60/20/20
         // Usamos 5 folds (20% cada uno):
@@ -42,6 +49,7 @@ public class DataSplit {
         StratifiedRemoveFolds testFilter = new StratifiedRemoveFolds();
         testFilter.setNumFolds(5);
         testFilter.setFold(1);
+        testFilter.setSeed(1);
         testFilter.setInvertSelection(false);
         testFilter.setInputFormat(data);
         Instances test = Filter.useFilter(data, testFilter);
@@ -50,6 +58,7 @@ public class DataSplit {
         StratifiedRemoveFolds devFilter = new StratifiedRemoveFolds();
         devFilter.setNumFolds(5);
         devFilter.setFold(2);
+        devFilter.setSeed(1);
         devFilter.setInvertSelection(false);
         devFilter.setInputFormat(data);
         Instances dev = Filter.useFilter(data, devFilter);
@@ -59,6 +68,7 @@ public class DataSplit {
         StratifiedRemoveFolds trainFilter1 = new StratifiedRemoveFolds();
         trainFilter1.setNumFolds(5);
         trainFilter1.setFold(1);
+        trainFilter1.setSeed(1);
         trainFilter1.setInvertSelection(true); // todo menos fold 1
         trainFilter1.setInputFormat(data);
         Instances sinFold1 = Filter.useFilter(data, trainFilter1);
@@ -66,6 +76,7 @@ public class DataSplit {
         StratifiedRemoveFolds trainFilter2 = new StratifiedRemoveFolds();
         trainFilter2.setNumFolds(4); // sobre los 4 folds restantes
         trainFilter2.setFold(1);
+        trainFilter2.setSeed(1);
         trainFilter2.setInvertSelection(true); // todo menos fold 2 (ahora es fold 1 de los 4)
         trainFilter2.setInputFormat(sinFold1);
         Instances train = Filter.useFilter(sinFold1, trainFilter2);
