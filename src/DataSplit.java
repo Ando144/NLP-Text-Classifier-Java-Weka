@@ -21,9 +21,7 @@ public class DataSplit {
         String devPath = args[2];
         String testPath = args[3];
 
-        // ================================
         // 1. Cargar dataset
-        // ================================
         DataSource source = new DataSource(inputPath);
         Instances data = source.getDataSet();
 
@@ -37,15 +35,13 @@ public class DataSplit {
         rand.setInputFormat(data);
         data = Filter.useFilter(data, rand);
 
-        // ================================
         // 2. Dividir en 3 particiones estratificadas 60/20/20
         // Usamos 5 folds (20% cada uno):
         // fold 1 -> test (20%)
         // fold 2 -> dev (20%)
         // folds 3+4+5 -> train (60%)
-        // ================================
 
-        // --- Test: fold 1 ---
+        // Test: fold 1
         StratifiedRemoveFolds testFilter = new StratifiedRemoveFolds();
         testFilter.setNumFolds(5);
         testFilter.setFold(1);
@@ -54,7 +50,7 @@ public class DataSplit {
         testFilter.setInputFormat(data);
         Instances test = Filter.useFilter(data, testFilter);
 
-        // --- Dev: fold 2 ---
+        // Dev: fold 2
         StratifiedRemoveFolds devFilter = new StratifiedRemoveFolds();
         devFilter.setNumFolds(5);
         devFilter.setFold(2);
@@ -63,8 +59,8 @@ public class DataSplit {
         devFilter.setInputFormat(data);
         Instances dev = Filter.useFilter(data, devFilter);
 
-        // --- Train: complemento de fold 1, luego complemento de fold 2
-        // -> nos quedamos con los folds 3+4+5 (60%) ---
+        // Train: complemento de fold 1, luego complemento de fold 2
+        // nos quedamos con los folds 3+4+5 (60%)
         StratifiedRemoveFolds trainFilter1 = new StratifiedRemoveFolds();
         trainFilter1.setNumFolds(5);
         trainFilter1.setFold(1);
