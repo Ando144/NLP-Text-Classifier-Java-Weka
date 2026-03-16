@@ -5,39 +5,62 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Clase utilitaria para registrar automáticamente los experimentos, parámetros
- * y resultados en un archivo de texto. Para ayudar con la trazabilidad.
- * 
+ * Klase honek esperimentuen erregistro automatikoa (Logger) kudeatzen du.
+ * Parametroak eta emaitzak gordetzeaz gain, sistemaren informazioa, memoriaren kontsumoa
+ * eta prozesadorearen (CPU) datuak automatikoki harrapatzen ditu erreproduzibilidadea bermatzeko.
+ * * @author WekaProyecto2026 Taldea
  */
 public class ExperimentLogger {
     
-    // Archivo donde se guardará todo el historial
-private static final String LOG_FILE = "emaitzak/registro_experimentos.txt";
+    private static final String LOG_FILE = "registro_experimentos.txt";
+
     /**
-     * Escribe una nueva entrada en el log del proyecto.
-     * @param fase El nombre del script o fase (ej. "VECTORIZACIÓN", "MLP FINE-TUNING")
-     * @param parametros Los parámetros usados (ej. "WordsToKeep: 1000, InfoGain: 500")
-     * @param resultados Los resultados obtenidos o tiempos (ej. "F-Measure: 0.98, Tiempo: 4.5s")
+     * Esperimentu baten sarrera berri bat idazten du erregistroan.
+     * @param fasea Exekutatutako prozesua (adib. "MLP Fine-Tuning")
+     * @param parametroak Erabilitako ezarpenak
+     * @param emaitzak Lortutako metrikak edo denborak
      */
-    public static void log(String fase, String parametros, String resultados) {
-        try (FileWriter fw = new FileWriter(LOG_FILE, true); // El 'true' hace que se añada al final sin borrar lo anterior
+    public static void log(String fasea, String parametroak, String emaitzak) {
+        try (FileWriter fw = new FileWriter(LOG_FILE, true);
              PrintWriter pw = new PrintWriter(fw)) {
             
-            // Obtener la fecha y hora actual
+            // 1. Data eta Ordua
             LocalDateTime now = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String timestamp = now.format(formatter);
             
-            // Escribir en el archivo con un formato limpio y tabular
-            pw.println("==================================================");
-            pw.println("FECHA      : " + timestamp);
-            pw.println("FASE       : " + fase);
-            pw.println("PARÁMETROS : " + parametros);
-            pw.println("RESULTADOS : " + resultados);
-            pw.println("==================================================\n");
+            // 2. Sistemaren Informazioa eta CPU-a (Erreproduzibilidadea - RQ4)
+            String osName = System.getProperty("os.name");
+            String osArch = System.getProperty("os.arch");
+            String javaVersion = System.getProperty("java.version");
+            
+            // CPU nukleoak (Cores) eta modeloa (Windows sistemetan)
+            int cores = Runtime.getRuntime().availableProcessors();
+            String cpuModel = System.getenv("PROCESSOR_IDENTIFIER");
+            if (cpuModel == null) {
+                cpuModel = "Ezezaguna (Ez da Windows)";
+            }
+            
+            // 3. Memoriaren Kontsumoa (Koste Konputazionala - RQ2)
+            Runtime runtime = Runtime.getRuntime();
+            runtime.gc(); // Garbiketa azkarra memoria zehatzagoa izateko
+            long memoriaErabiliaBytes = runtime.totalMemory() - runtime.freeMemory();
+            long memoriaErabiliaMB = memoriaErabiliaBytes / (1024 * 1024);
+            
+            // 4. Fitxategian idatzi formatu profesional eta garbi batekin
+            pw.println("=========================================================================");
+            pw.println("DATA ETA ORDUA  : " + timestamp);
+            pw.println("SISTEMA         : " + osName + " (" + osArch + ") | Java: " + javaVersion);
+            pw.println("PROZESADOREA    : " + cpuModel + " (" + cores + " nukleo/hari)");
+            pw.println("MEMORIA (RAM)   : " + memoriaErabiliaMB + " MB erabilita sare neuronalarako");
+            pw.println("-------------------------------------------------------------------------");
+            pw.println("FASEA           : " + fasea);
+            pw.println("PARAMETROAK     : " + parametroak);
+            pw.println("EMAITZAK        : \n" + emaitzak);
+            pw.println("=========================================================================\n");
             
         } catch (IOException e) {
-            System.err.println("Error al escribir en el log de experimentos: " + e.getMessage());
+            System.err.println("Errorea esperimentuen erregistroan idaztean: " + e.getMessage());
         }
     }
 }

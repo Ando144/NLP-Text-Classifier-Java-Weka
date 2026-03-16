@@ -69,10 +69,10 @@ public class GetModel {
         // ================================================
         // 3. EKORKETA PRESTATU (Grid Search)
         // ================================================
-        double[] learningRates = { 0.001, 0.005, 0.01 };
-        double[] momentums = { 0.2, 0.3, 0.4 };
-        String[] hiddenLayers = { "3", "5", "10" };
-        int[] epochs = { 100 };
+        double[] learningRates = { 0.003, 0.005, 0.008 }; // Afinamos alrededor del ganador anterior
+        double[] momentums = { 0.4, 0.6, 0.8 };           // Subimos el techo
+        String[] hiddenLayers = { "10", "30", "a" };      // Probamos arquitecturas mucho más grandes ('a' = ~501 neuronas)
+        int[] epochs = { 100, 300, 500 };                 // Le damos más tiempo de aprendizaje
 
         MultilayerPerceptron bestModel = null;
         double bestFMeasure = -1;
