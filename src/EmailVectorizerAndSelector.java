@@ -11,26 +11,59 @@ import weka.core.stopwords.Rainbow;
 import weka.core.converters.ArffSaver;
 import java.io.File;
 
+/**
+ * Klase honek mezu elektronikoen testuak bektorizatzen ditu (StringToWordVector) 
+ * eta, ondoren, ezaugarri onenak aukeratzen ditu (AttributeSelection - InfoGain) 
+ * dimentsionalitatea murrizteko.
+ * * HELBURUAK:
+ * - Testu gordinak zenbakizko bektore bihurtzea TF-IDF, LovinsStemmer eta Rainbow stopwords erabiliz.
+ * - InfoGainAttributeEval erabiliz informazio gehien ematen duten atributuak (hitzak) iragaztea.
+ * - Esperimentazioa erraztea parametro dinamikoen bidez (Experiment Tracking).
+ * * AURREBALDINTZAK:
+ * - 'train.arff', 'dev.arff' eta 'test.arff' fitxategiak zehaztutako karpetan egon behar dira.
+ * * ONDORENGO BALDINTZAK:
+ * - 'train_final.arff', 'dev_final.arff' eta 'test_final.arff' fitxategiak sortuko dira 
+ * hiztegi optimizatuarekin (atributu kopuru murriztuarekin).
+ * * EXEKUZIO ADIBIDEA:
+ * java -cp "lib/weka.jar:bin" EmailVectorizerAndSelector Partiketak 20000 1000
+ * * @author WekaProyecto2026 Taldea
+ */
 public class EmailVectorizerAndSelector {
     public static void main(String[] args) {
         try {
-            String baseDir = args.length >= 1 ? args[0] : "Partiketak";
-            if (args.length > 1) {
-                System.err.println("Uso: java -cp \"lib/weka.jar:bin\" EmailVectorizerAndSelector [carpeta_particiones]");
+            // ================================================
+            // 1. PARAMETROEN KUDEAKETA DINAMIKOA (Aldagaiak)
+            // ================================================
+            if (args.length > 3) {
+                System.err.println("Erabilera: java -cp \"lib/weka.jar:bin\" EmailVectorizerAndSelector [karpeta] [wordsToKeep] [numToSelect]");
                 return;
             }
+
+            // Argumenturik pasatzen ez bada, balio lehenetsiak erabiliko dira
+            String baseDir = args.length >= 1 ? args[0] : "Partiketak";
+            int wordsToKeep = args.length >= 2 ? Integer.parseInt(args[1]) : 20000;
+            int numToSelect = args.length == 3 ? Integer.parseInt(args[2]) : 1000;
+
+            System.out.println("==================================================");
+            System.out.println("ESPERIMENTUAREN KONFIGURAZIOA:");
+            System.out.println("Lan-direktorioa       : " + baseDir);
+            System.out.println("Gordetzeko hitzak max : " + wordsToKeep);
+            System.out.println("InfoGain aukeraketa   : " + numToSelect + " atributu");
+            System.out.println("==================================================\n");
 
             File trainRawFile = new File(baseDir, "train.arff");
             File devRawFile = new File(baseDir, "dev.arff");
             File testRawFile = new File(baseDir, "test.arff");
 
             if (!trainRawFile.exists() || !devRawFile.exists() || !testRawFile.exists()) {
-                System.err.println("Faltan archivos de entrada en: " + new File(baseDir).getAbsolutePath());
-                System.err.println("Se esperan: train.arff, dev.arff y test.arff");
+                System.err.println("Sarrerako fitxategiak falta dira hemen: " + new File(baseDir).getAbsolutePath());
+                System.err.println("Hauek espero dira: train.arff, dev.arff eta test.arff");
                 return;
             }
 
-            // 1. Cargar datasets
+            // ================================================
+            // 2. DATU-MULTZOAK KARGATU
+            // ================================================
             Instances train = new DataSource(trainRawFile.getPath()).getDataSet();
             Instances dev = new DataSource(devRawFile.getPath()).getDataSet();
             Instances test = new DataSource(testRawFile.getPath()).getDataSet();
@@ -39,16 +72,18 @@ public class EmailVectorizerAndSelector {
             dev.setClassIndex(dev.numAttributes() - 1);
             test.setClassIndex(test.numAttributes() - 1);
 
-            // ================================
-            // 2. StringToWordVector
-            // ================================
-
+            // ================================================
+            // 3. StringToWordVector (Bektorizazioa)
+            // ================================================
+            System.out.println("StringToWordVector aplikatzen...");
             StringToWordVector stwv = new StringToWordVector();
 
             stwv.setIDFTransform(true);
             stwv.setTFTransform(true);
             stwv.setLowerCaseTokens(true);
-            stwv.setWordsToKeep(20000);
+            
+            // ALDAGAIA HEMEN APLIKATZEN DUGU
+            stwv.setWordsToKeep(wordsToKeep);
 
             WordTokenizer tokenizador = new WordTokenizer();
             tokenizador.setDelimiters(" \r\n\t.,;:'\"()?!-+/\\<>@#$%^&*_=~`|[]{}");
@@ -56,27 +91,25 @@ public class EmailVectorizerAndSelector {
 
             LovinsStemmer stemmer = new LovinsStemmer();
             stwv.setStemmer(stemmer);
-
             stwv.setStopwordsHandler(new Rainbow());
-
             stwv.setInputFormat(train);
 
             Instances trainVec = Filter.useFilter(train, stwv);
             Instances devVec = Filter.useFilter(dev, stwv);
             Instances testVec = Filter.useFilter(test, stwv);
 
-            System.out.println("Atributos tras vectorización: " + trainVec.numAttributes());
+            System.out.println("Atributuak bektorizazioaren ostean: " + trainVec.numAttributes());
 
-            // ================================
-            // 3. Selección de atributos
-            // ================================
-
+            // ================================================
+            // 4. ATRIBUTUEN AUKERAKETA (InfoGain)
+            // ================================================
+            System.out.println("Atributuen Aukeraketa (InfoGain) aplikatzen...");
             AttributeSelection filterSelector = new AttributeSelection();
-
             InfoGainAttributeEval eval = new InfoGainAttributeEval();
 
             Ranker search = new Ranker();
-            search.setNumToSelect(1000);
+            // ALDAGAIA HEMEN APLIKATZEN DUGU
+            search.setNumToSelect(numToSelect);
 
             filterSelector.setEvaluator(eval);
             filterSelector.setSearch(search);
@@ -86,10 +119,9 @@ public class EmailVectorizerAndSelector {
             Instances devFinal = Filter.useFilter(devVec, filterSelector);
             Instances testFinal = Filter.useFilter(testVec, filterSelector);
 
-            // ================================
-            // 4. Guardar datasets finales
-            // ================================
-
+            // ================================================
+            // 5. AMAIERAKO DATU-MULTZOAK GORDE
+            // ================================================
             ArffSaver saver = new ArffSaver();
 
             saver.setInstances(trainFinal);
@@ -105,9 +137,16 @@ public class EmailVectorizerAndSelector {
             saver.writeBatch();
 
             System.out.println("==================================================");
-            System.out.println("¡PROCESO COMPLETADO!");
-            System.out.println("Atributos finales: " + trainFinal.numAttributes());
+            System.out.println("PROZESUA AMAITUTA!");
+            System.out.println("Amaierako atributuak: " + trainFinal.numAttributes());
             System.out.println("==================================================");
+
+            // ================================================
+            // 6. ERREGISTRO AUTOMATIKOA (Experiment Tracking)
+            // ================================================
+            String parametrosUsados = String.format("WordsToKeep: %d | InfoGain(NumToSelect): %d", wordsToKeep, numToSelect);
+            String resultadosObtenidos = "Amaierako hiztegiaren atributuak: " + trainFinal.numAttributes();
+            ExperimentLogger.log("Bektorizazioa eta Atributuen Aukeraketa", parametrosUsados, resultadosObtenidos);
 
         } catch (Exception e) {
             e.printStackTrace();
