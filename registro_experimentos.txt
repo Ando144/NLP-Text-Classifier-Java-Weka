@@ -1,0 +1,12 @@
+=========================================================================
+DATA ETA ORDUA  : 2026-03-17 18:33:29
+SISTEMA         : Windows 11 (amd64) | Java: 25.0.2
+PROZESADOREA    : AMD64 Family 23 Model 8 Stepping 2, AuthenticAMD (12 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 3. MLP Fine-Tuning (GetModel)
+PARAMETROAK     : Parametro Onenak: LearningRate=0,005 | Momentum=0,8 | HiddenLayers=10 | Epochs=100
+EMAITZAK        : 
+F-Spam: 0,9851 | Denbora: 47,58s
+=========================================================================
+

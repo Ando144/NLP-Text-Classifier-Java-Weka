@@ -67,12 +67,12 @@ public class GetModel {
         if (spamIndex == -1) spamIndex = train.classAttribute().indexOfValue("spam");
 
         // ================================================
-        // 3. EKORKETA PRESTATU (Grid Search)
+        // 3. EKORKETA PRESTATU (Grid Search) - Bertsio Arina (~1 ordu)
         // ================================================
-        double[] learningRates = { 0.003, 0.005, 0.008 }; // Afinamos alrededor del ganador anterior
-        double[] momentums = { 0.4, 0.6, 0.8 };           // Subimos el techo
-        String[] hiddenLayers = { "10", "30", "a" };      // Probamos arquitecturas mucho más grandes ('a' = ~501 neuronas)
-        int[] epochs = { 100, 300, 500 };                 // Le damos más tiempo de aprendizaje
+        double[] learningRates = { 0.003, 0.005 };      // Nos quedamos con los dos más prometedores
+        double[] momentums = { 0.4, 0.6, 0.8 };         // Seguimos buscando el techo del momentum
+        String[] hiddenLayers = { "10", "20", "30" };   // No pasamos de 30 (sabemos que es suficiente)
+        int[] epochs = { 100, 200 };                    // 200 épocas máximo (evitamos los tiempos de 500)
 
         MultilayerPerceptron bestModel = null;
         double bestFMeasure = -1;
