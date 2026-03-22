@@ -9,7 +9,7 @@ Parametro optimoak:
   Train+Dev    : 4654 instanzia
 
 ==================================================
-1. 10-FOLD CROSS VALIDATION
+1. 5-FOLD CROSS VALIDATION
 ==================================================
 Accuracy          : 96,82%
 Spam  Precision   : 0,9419
@@ -29,7 +29,7 @@ Nahaste-matrizea:
 
 
 ==================================================
-2. 10 REPEATED STRATIFIED HOLD-OUT (70/30)
+2. 5 REPEATED STRATIFIED HOLD-OUT (70/30)
 ==================================================
 1. iterazioa: F-spam=0,9455 F-ham=0,9771 WAvg-F=0,9681
 2. iterazioa: F-spam=0,9573 F-ham=0,9815 WAvg-F=0,9743

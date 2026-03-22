@@ -16,8 +16,8 @@ import java.util.Random;
  * Kalitate estimatua: sortutako sailkatzailerako aurreikusitako
  * kalitate-txostena.
  * Bi ebaluazio eskema erabiltzen dira train+dev instantziekin:
- * 1. 10-fold Cross Validation
- * 2. 10 Repeated Stratified Hold-Out (70/30)
+ * 1. 5-fold Cross Validation
+ * 2. 5 Repeated Stratified Hold-Out (70/30)
  *
  * Uso:
  * java -cp "lib\weka.jar;bin" Evaluate <train_final.arff> <dev_final.arff>
@@ -81,26 +81,26 @@ public class Evaluate {
         writer.write("  Train+Dev    : " + allData.numInstances() + " instanzia\n\n");
 
         // ================================
-        // 2. 10-fold Cross Validation
+        // 2. 5-fold Cross Validation
         // ================================
-        System.out.println("\n[1/2] 10-fold Cross Validation...");
+        System.out.println("\n[1/2] 5-fold Cross Validation...");
 
         MultilayerPerceptron mlpCV = buildMLP();
         Evaluation evalCV = new Evaluation(allData);
         evalCV.crossValidateModel(mlpCV, allData, 5, new Random(1));
 
         writer.write("==================================================\n");
-        writer.write("1. 10-FOLD CROSS VALIDATION\n");
+        writer.write("1. 5-FOLD CROSS VALIDATION\n");
         writer.write("==================================================\n");
         writer.write(formatResults(evalCV, spamIndex));
         writer.write(evalCV.toMatrixString("Nahaste-matrizea:") + "\n\n");
 
-        System.out.println("  10-fCV F-spam: " + String.format("%.4f", evalCV.fMeasure(spamIndex)));
+        System.out.println("  5-fCV F-spam: " + String.format("%.4f", evalCV.fMeasure(spamIndex)));
 
         // ================================
-        // 3. 10 Repeated Stratified Hold-Out (70/30)
+        // 3. 5 Repeated Stratified Hold-Out (70/30)
         // ================================
-        System.out.println("[2/2] Repeated Stratified Hold-Out (10 errepikapen)...");
+        System.out.println("[2/2] Repeated Stratified Hold-Out (5 errepikapen)...");
 
         int repeticiones = 5;
         double[] fSpam = new double[repeticiones];
@@ -112,7 +112,7 @@ public class Evaluate {
         double[] reHam = new double[repeticiones];
 
         writer.write("==================================================\n");
-        writer.write("2. 10 REPEATED STRATIFIED HOLD-OUT (70/30)\n");
+        writer.write("2. 5 REPEATED STRATIFIED HOLD-OUT (70/30)\n");
         writer.write("==================================================\n");
 
         for (int k = 0; k < repeticiones; k++) {
@@ -175,7 +175,7 @@ public class Evaluate {
 
         ExperimentLogger.log("5. Kalitate Estimatua (Evaluate)",
                 "LR=" + LEARNING_RATE + " Mom=" + MOMENTUM + " Hidden=" + HIDDEN_LAYERS + " Epochs=" + EPOCHS,
-                "10-fCV F-spam: " + String.format("%.4f", evalCV.fMeasure(spamIndex))
+                "5-fCV F-spam: " + String.format("%.4f", evalCV.fMeasure(spamIndex))
                         + "\nRepeated HO F-spam: " + String.format("%.4f", mean(fSpam))
                         + " +- " + String.format("%.4f", stddev(fSpam)));
     }

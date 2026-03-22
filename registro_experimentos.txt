@@ -217,3 +217,16 @@ EMAITZAK        :
 Repeated HO F-spam: 0,9480 +- 0,0094
 =========================================================================
 
+=========================================================================
+DATA ETA ORDUA  : 2026-03-22 17:42:41
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 5. Kalitate Estimatua (Evaluate)
+PARAMETROAK     : LR=0.005 Mom=0.2 Hidden=3 Epochs=300
+EMAITZAK        : 
+5-fCV F-spam: 0,9454
+Repeated HO F-spam: 0,9480 +- 0,0094
+=========================================================================
+
