@@ -204,3 +204,16 @@ EMAITZAK        :
 Amaierako hiztegiaren atributuak: 1001
 =========================================================================
 
+=========================================================================
+DATA ETA ORDUA  : 2026-03-22 16:41:00
+SISTEMA         : Windows 11 (amd64) | Java: 21.0.10
+PROZESADOREA    : Intel64 Family 6 Model 154 Stepping 4, GenuineIntel (12 nukleo/hari)
+MEMORIA (RAM)   : 5 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 5. Kalitate Estimatua (Evaluate)
+PARAMETROAK     : LR=0.005 Mom=0.2 Hidden=3 Epochs=300
+EMAITZAK        : 
+10-fCV F-spam: 0,9454
+Repeated HO F-spam: 0,9480 +- 0,0094
+=========================================================================
+
