@@ -1,0 +1,14 @@
+=== MultilayerPerceptron FINE-TUNING ===
+Optimizazio metrika: F-Measure (spam)
+Train: Partiketak/train_final.arff
+Dev  : Partiketak/dev_final.arff
+
+LearningRate    Momentum     HiddenLayers   Epochs   F-spam       F-ham        WAvg-F       Denbora(s)  
+----------------------------------------------------------------------------------------------------
+0,005           0,8          10             100      0,9490       0,9778       0,9695       28,89       
+
+====================================================================================================
+EREDU ONENA:
+  Parametroak : LearningRate=0,005 | Momentum=0,8 | HiddenLayers=10 | Epochs=100
+  F-Measure (spam): 0,9490
+  Entrenamendu denbora: 28,89 seg

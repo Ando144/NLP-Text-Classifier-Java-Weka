@@ -230,3 +230,58 @@ EMAITZAK        :
 Repeated HO F-spam: 0,9480 +- 0,0094
 =========================================================================
 
+=========================================================================
+DATA ETA ORDUA  : 2026-03-24 18:46:18
+SISTEMA         : Windows 11 (amd64) | Java: 1.8.0_361
+PROZESADOREA    : Intel64 Family 6 Model 140 Stepping 1, GenuineIntel (8 nukleo/hari)
+MEMORIA (RAM)   : 22 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : Bektorizazioa eta Atributuen Aukeraketa
+PARAMETROAK     : WordsToKeep: 20000 | InfoGain(NumToSelect): 700 | Tokenizer: Alphabetic | Stemmer: Lovins | Stopwords: Rainbow
+EMAITZAK        : 
+Amaierako hiztegiaren atributuak: 701
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-24 18:54:17
+SISTEMA         : Windows 11 (amd64) | Java: 1.8.0_361
+PROZESADOREA    : Intel64 Family 6 Model 140 Stepping 1, GenuineIntel (8 nukleo/hari)
+MEMORIA (RAM)   : 4 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 3. MLP Fine-Tuning (GetModel)
+PARAMETROAK     : Parametro Onenak: LearningRate=0,005 | Momentum=0,8 | HiddenLayers=10 | Epochs=100
+EMAITZAK        : 
+F-Spam: 0,9490 | Denbora: 28,89s
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-24 18:54:28
+SISTEMA         : Windows 11 (amd64) | Java: 1.8.0_361
+PROZESADOREA    : Intel64 Family 6 Model 140 Stepping 1, GenuineIntel (8 nukleo/hari)
+MEMORIA (RAM)   : 3 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 4. Ebaluazio Itsua (TestModel)
+PARAMETROAK     : Eredua: modelo/mlp.model
+EMAITZAK        : 
+
+==================================================
+               EBALUAZIOAREN EMAITZAK             
+==================================================
+
+--- METRIKA OROKORRAK ---
+Zuzenen Ehunekoa (Accuracy) : 96,72%
+F-Measure Haztatua (WAvg)   : 0,9676
+
+--- SPAM KLASEAREN METRIKAK ---
+Zehaztasuna (Precision) : 0,9080
+Estaldura (Recall)      : 0,9867
+F-Measure               : 0,9457
+
+--- NAHASTE MATRIZEA (Confusion Matrix) ---
+   a   b   <-- classified as
+ 148   2 |   a = spam
+  15 353 |   b = ham
+
+==================================================
+=========================================================================
+
