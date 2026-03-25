@@ -40,10 +40,10 @@ public class Evaluate {
         String devPath = args[1];
         String resultsPath = args[2];
 
-        double learningRate = Double.parseDouble(args[4]);
-        double momentum = Double.parseDouble(args[5]);
-        String hiddenLayers = args[6];
-        int epochs = Integer.parseInt(args[7]);
+        double learningRate = Double.parseDouble(args[3]);
+        double momentum = Double.parseDouble(args[4]);
+        String hiddenLayers = args[5];
+        int epochs = Integer.parseInt(args[6]);
 
         // ================================
         // 1. Train eta dev kargatu eta elkartu
@@ -210,7 +210,7 @@ public class Evaluate {
         mlp.setHiddenLayers(hiddenLayers);
         mlp.setTrainingTime(epochs);
         mlp.setNominalToBinaryFilter(true);
-        mlp.setNormalizeAttributes(false);
+        mlp.setNormalizeAttributes(true);
         mlp.setGUI(false);
         mlp.setDebug(false);
         return mlp;

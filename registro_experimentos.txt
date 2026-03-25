@@ -231,7 +231,6 @@ Repeated HO F-spam: 0,9480 +- 0,0094
 =========================================================================
 
 =========================================================================
-<<<<<<< HEAD
 DATA ETA ORDUA  : 2026-03-24 18:46:18
 SISTEMA         : Windows 11 (amd64) | Java: 1.8.0_361
 PROZESADOREA    : Intel64 Family 6 Model 140 Stepping 1, GenuineIntel (8 nukleo/hari)
@@ -260,7 +259,6 @@ DATA ETA ORDUA  : 2026-03-24 18:54:28
 SISTEMA         : Windows 11 (amd64) | Java: 1.8.0_361
 PROZESADOREA    : Intel64 Family 6 Model 140 Stepping 1, GenuineIntel (8 nukleo/hari)
 MEMORIA (RAM)   : 3 MB erabilita sare neuronalarako
-=======
 DATA ETA ORDUA  : 2026-03-22 17:59:31
 SISTEMA         : Linux (amd64) | Java: 21.0.10
 PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
@@ -2204,7 +2202,6 @@ DATA ETA ORDUA  : 2026-03-24 19:44:49
 SISTEMA         : Linux (amd64) | Java: 21.0.10
 PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
 MEMORIA (RAM)   : 4 MB erabilita sare neuronalarako
->>>>>>> bc91c09 (A falta de limpiar)
 -------------------------------------------------------------------------
 FASEA           : 4. Ebaluazio Itsua (TestModel)
 PARAMETROAK     : Eredua: modelo/mlp.model
@@ -2216,7 +2213,6 @@ EMAITZAK        :
 
 --- METRIKA OROKORRAK ---
 Zuzenen Ehunekoa (Accuracy) : 96,72%
-<<<<<<< HEAD
 F-Measure Haztatua (WAvg)   : 0,9676
 
 --- SPAM KLASEAREN METRIKAK ---
@@ -2228,7 +2224,6 @@ F-Measure               : 0,9457
    a   b   <-- classified as
  148   2 |   a = spam
   15 353 |   b = ham
-=======
 F-Measure Haztatua (WAvg)   : 0,9669
 
 --- SPAM KLASEAREN METRIKAK ---
@@ -2923,8 +2918,406 @@ F-Measure               : 0,9639
    a   b   <-- classified as
  147   3 |   a = spam
    8 360 |   b = ham
->>>>>>> bc91c09 (A falta de limpiar)
 
 ==================================================
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:35:24
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 1. Datu Gordinen Karga (EmailLoader)
+PARAMETROAK     : Jatorria: DatuakRaw | Helburua: DatuakRaw/emails_raw.arff
+EMAITZAK        : 
+Kargatutako instantziak: 5172
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:35:25
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 2. Datuen Partiketa (DataSplit)
+PARAMETROAK     : Train: 80% | Dev: 10% | Test: 10% (Seed=1)
+EMAITZAK        : 
+Train: 4136 | Dev: 518 | Test: 518
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:39:38
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 1. Datu Gordinen Karga (EmailLoader)
+PARAMETROAK     : Jatorria: DatuakRaw | Helburua: DatuakRaw/emails_raw.arff
+EMAITZAK        : 
+Kargatutako instantziak: 5172
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:39:38
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 2. Datuen Partiketa (DataSplit)
+PARAMETROAK     : Train: 80% | Dev: 10% | Test: 10% (Seed=1)
+EMAITZAK        : 
+Train: 4136 | Dev: 518 | Test: 518
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:40:20
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 26 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : Bektorizazioa eta Aukeraketa (ablation)
+PARAMETROAK     : WordsToKeep=25000 | MinTermFreq=1 | DigitsAsDelim=false | ThresholdMode=false | TextNormalizer=false | MaxNGram=1
+EMAITZAK        : 
+Amaierako atributuak: 1001
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:40:58
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 3. MLP Fine-Tuning (GetModel)
+PARAMETROAK     : Parametro Onenak: LearningRate=0,005 | Momentum=0,2 | HiddenLayers=3 | Epochs=300
+EMAITZAK        : 
+F-Spam: 0,8667 | Denbora: 38,39s
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:40:59
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 4 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 4. Ebaluazio Itsua (TestModel)
+PARAMETROAK     : Eredua: modelo/mlp.model
+EMAITZAK        : 
+
+==================================================
+               EBALUAZIOAREN EMAITZAK             
+==================================================
+
+--- METRIKA OROKORRAK ---
+Zuzenen Ehunekoa (Accuracy) : 93,63%
+F-Measure Haztatua (WAvg)   : 0,9343
+
+--- SPAM KLASEAREN METRIKAK ---
+Zehaztasuna (Precision) : 0,9756
+Estaldura (Recall)      : 0,8000
+F-Measure               : 0,8791
+
+--- NAHASTE MATRIZEA (Confusion Matrix) ---
+   a   b   <-- classified as
+ 120  30 |   a = spam
+   3 365 |   b = ham
+
+==================================================
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:46:00
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 1. Datu Gordinen Karga (EmailLoader)
+PARAMETROAK     : Jatorria: DatuakRaw | Helburua: DatuakRaw/emails_raw.arff
+EMAITZAK        : 
+Kargatutako instantziak: 5172
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:46:01
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 2. Datuen Partiketa (DataSplit)
+PARAMETROAK     : Train: 80% | Dev: 10% | Test: 10% (Seed=1)
+EMAITZAK        : 
+Train: 4136 | Dev: 518 | Test: 518
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:46:42
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 26 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : Bektorizazioa eta Aukeraketa (ablation)
+PARAMETROAK     : WordsToKeep=25000 | MinTermFreq=1 | DigitsAsDelim=false | ThresholdMode=false | TextNormalizer=false | MaxNGram=1
+EMAITZAK        : 
+Amaierako atributuak: 1001
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:47:22
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 3. MLP Fine-Tuning (GetModel)
+PARAMETROAK     : Parametro Onenak: LearningRate=0,005 | Momentum=0,2 | HiddenLayers=3 | Epochs=300
+EMAITZAK        : 
+F-Spam: 0,8667 | Denbora: 38,49s
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:47:22
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 4 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 4. Ebaluazio Itsua (TestModel)
+PARAMETROAK     : Eredua: modelo/mlp.model
+EMAITZAK        : 
+
+==================================================
+               EBALUAZIOAREN EMAITZAK             
+==================================================
+
+--- METRIKA OROKORRAK ---
+Zuzenen Ehunekoa (Accuracy) : 93,63%
+F-Measure Haztatua (WAvg)   : 0,9343
+
+--- SPAM KLASEAREN METRIKAK ---
+Zehaztasuna (Precision) : 0,9756
+Estaldura (Recall)      : 0,8000
+F-Measure               : 0,8791
+
+--- NAHASTE MATRIZEA (Confusion Matrix) ---
+   a   b   <-- classified as
+ 120  30 |   a = spam
+   3 365 |   b = ham
+
+==================================================
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:54:11
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 5. Kalitate Estimatua (Evaluate)
+PARAMETROAK     : LR=0.005 Mom=0.2 Hidden=3 Epochs=300
+EMAITZAK        : 
+5-fCV F-spam: 0,9561
+Repeated HO F-spam: 0,9500 +- 0,0057
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:57:56
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 1. Datu Gordinen Karga (EmailLoader)
+PARAMETROAK     : Jatorria: DatuakRaw | Helburua: DatuakRaw/emails_raw.arff
+EMAITZAK        : 
+Kargatutako instantziak: 5172
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:57:58
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 2. Datuen Partiketa (DataSplit)
+PARAMETROAK     : Train: 80% | Dev: 10% | Test: 10% (Seed=1)
+EMAITZAK        : 
+Train: 4136 | Dev: 518 | Test: 518
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:58:45
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 26 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : Bektorizazioa eta Aukeraketa (ablation)
+PARAMETROAK     : WordsToKeep=25000 | MinTermFreq=1 | DigitsAsDelim=false | ThresholdMode=false | TextNormalizer=false | MaxNGram=1
+EMAITZAK        : 
+Amaierako atributuak: 1001
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:59:20
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 3. MLP Fine-Tuning (GetModel)
+PARAMETROAK     : Parametro Onenak: LearningRate=0,005 | Momentum=0,2 | HiddenLayers=3 | Epochs=300
+EMAITZAK        : 
+F-Spam: 0,8667 | Denbora: 34,65s
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 09:59:20
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 4 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 4. Ebaluazio Itsua (TestModel)
+PARAMETROAK     : Eredua: modelo/mlp.model
+EMAITZAK        : 
+
+==================================================
+               EBALUAZIOAREN EMAITZAK             
+==================================================
+
+--- METRIKA OROKORRAK ---
+Zuzenen Ehunekoa (Accuracy) : 93,63%
+F-Measure Haztatua (WAvg)   : 0,9343
+
+--- SPAM KLASEAREN METRIKAK ---
+Zehaztasuna (Precision) : 0,9756
+Estaldura (Recall)      : 0,8000
+F-Measure               : 0,8791
+
+--- NAHASTE MATRIZEA (Confusion Matrix) ---
+   a   b   <-- classified as
+ 120  30 |   a = spam
+   3 365 |   b = ham
+
+==================================================
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 10:04:23
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 5. Kalitate Estimatua (Evaluate)
+PARAMETROAK     : Datu-multzoa: Train+Dev bateratua (4654 instantzia)
+Sare Neuronalaren Ezarpenak: LR=0,005 | Mom=0,2 | Hidden=3 | Epochs=300
+Ebaluazio eskemak: 5-fold CV & 5 Repeated Stratified Hold-Out (70/30)
+EMAITZAK        : 
+[1] 5-FOLD CROSS VALIDATION:
+    Accuracy: 96,82%
+    F-Spam  : 0,9454
+    WAvg-F  : 0,9682
+
+[2] 5 REPEATED STRATIFIED HOLD-OUT (70/30):
+    Spam Precision : 0,9375 +- 0,0180
+    Spam Recall    : 0,9591 +- 0,0135
+    Spam F-Measure : 0,9480 +- 0,0094
+    WAvg F-Measure : 0,9698 +- 0,0047
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 10:08:53
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 1. Datu Gordinen Karga (EmailLoader)
+PARAMETROAK     : Jatorria: DatuakRaw | Helburua: DatuakRaw/emails_raw.arff
+EMAITZAK        : 
+Kargatutako instantziak: 5172
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 10:08:55
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 2. Datuen Partiketa (DataSplit)
+PARAMETROAK     : Train: 80% | Dev: 10% | Test: 10% (Seed=1)
+EMAITZAK        : 
+Train: 4136 | Dev: 518 | Test: 518
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 10:09:32
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 26 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : Bektorizazioa eta Aukeraketa (ablation)
+PARAMETROAK     : WordsToKeep=25000 | MinTermFreq=1 | DigitsAsDelim=false | ThresholdMode=false | TextNormalizer=false | MaxNGram=1
+EMAITZAK        : 
+Amaierako atributuak: 1001
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 10:10:05
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 3. MLP Fine-Tuning (GetModel)
+PARAMETROAK     : Parametro Onenak: LearningRate=0,005 | Momentum=0,2 | HiddenLayers=3 | Epochs=300
+EMAITZAK        : 
+F-Spam: 0,8667 | Denbora: 32,34s
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 10:10:05
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 4 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 4. Ebaluazio Itsua (TestModel)
+PARAMETROAK     : Eredua: modelo/mlp.model
+EMAITZAK        : 
+
+==================================================
+               EBALUAZIOAREN EMAITZAK             
+==================================================
+
+--- METRIKA OROKORRAK ---
+Zuzenen Ehunekoa (Accuracy) : 93,63%
+F-Measure Haztatua (WAvg)   : 0,9343
+
+--- SPAM KLASEAREN METRIKAK ---
+Zehaztasuna (Precision) : 0,9756
+Estaldura (Recall)      : 0,8000
+F-Measure               : 0,8791
+
+--- NAHASTE MATRIZEA (Confusion Matrix) ---
+   a   b   <-- classified as
+ 120  30 |   a = spam
+   3 365 |   b = ham
+
+==================================================
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-25 10:15:00
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 5. Kalitate Estimatua (Evaluate)
+PARAMETROAK     : Datu-multzoa: Train+Dev bateratua (4654 instantzia)
+Sare Neuronalaren Ezarpenak: LR=0,005 | Mom=0,2 | Hidden=3 | Epochs=300
+Ebaluazio eskemak: 5-fold CV & 5 Repeated Stratified Hold-Out (70/30)
+EMAITZAK        : 
+[1] 5-FOLD CROSS VALIDATION:
+    Accuracy: 96,82%
+    F-Spam  : 0,9454
+    WAvg-F  : 0,9682
+
+[2] 5 REPEATED STRATIFIED HOLD-OUT (70/30):
+    Spam Precision : 0,9375 +- 0,0180
+    Spam Recall    : 0,9591 +- 0,0135
+    Spam F-Measure : 0,9480 +- 0,0094
+    WAvg F-Measure : 0,9698 +- 0,0047
 =========================================================================
 

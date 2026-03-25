@@ -5,10 +5,10 @@ Dev  : Partiketak/dev_final.arff
 
 LearningRate    Momentum     HiddenLayers   Epochs   F-spam       F-ham        WAvg-F       Denbora(s)  
 ----------------------------------------------------------------------------------------------------
-0,005           0,2          3              300      0,8667       0,9530       0,9280       34,65       
+0,005           0,2          3              300      0,8667       0,9530       0,9280       32,34       
 
 ====================================================================================================
 EREDU ONENA:
   Parametroak : LearningRate=0,005 | Momentum=0,2 | HiddenLayers=3 | Epochs=300
   F-Measure (spam): 0,8667
-  Entrenamendu denbora: 34,65 seg
+  Entrenamendu denbora: 32,34 seg
