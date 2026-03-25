@@ -29,14 +29,6 @@ import java.util.Random;
  */
 public class Evaluate {
 
-    /*
-    // Parametro optimoak GetModel-etik lortutakoak
-    private static final double LEARNING_RATE = 0.005;
-    private static final double MOMENTUM = 0.2;
-    private static final String HIDDEN_LAYERS = "3";
-    private static final int EPOCHS = 300;
-    */
-   
     public static void main(String[] args) throws Exception {
         if (args.length < 7) {
             System.out.println(
@@ -73,6 +65,7 @@ public class Evaluate {
                 + " Hidden=" + hiddenLayers + " Epochs=" + epochs);
 
         int spamIndex = allData.classAttribute().indexOfValue("spam");
+        if (spamIndex == -1) spamIndex = allData.classAttribute().indexOfValue("SPAM");
 
         new File(resultsPath).getParentFile().mkdirs();
         BufferedWriter writer = new BufferedWriter(new FileWriter(resultsPath));
@@ -180,11 +173,34 @@ public class Evaluate {
         System.out.println("  Repeated HO F-spam: "
                 + String.format("%.4f", mean(fSpam)) + " +- " + String.format("%.4f", stddev(fSpam)));
 
-        ExperimentLogger.log("5. Kalitate Estimatua (Evaluate)",
-                "LR=" + learningRate + " Mom=" + momentum + " Hidden=" + hiddenLayers + " Epochs=" + epochs,
-                "5-fCV F-spam: " + String.format("%.4f", evalCV.fMeasure(spamIndex))
-                        + "\nRepeated HO F-spam: " + String.format("%.4f", mean(fSpam))
-                        + " +- " + String.format("%.4f", stddev(fSpam)));
+        // ================================
+        // 4. ERREGISTRO AUTOMATIKOA OSOA (Experiment Tracking)
+        // ================================
+        String parametrosLog = String.format(
+            "Datu-multzoa: Train+Dev bateratua (%d instantzia)\n" +
+            "Sare Neuronalaren Ezarpenak: LR=%.3f | Mom=%.1f | Hidden=%s | Epochs=%d\n" +
+            "Ebaluazio eskemak: 5-fold CV & 5 Repeated Stratified Hold-Out (70/30)",
+            allData.numInstances(), learningRate, momentum, hiddenLayers, epochs
+        );
+
+        String resultadosLog = String.format(
+            "[1] 5-FOLD CROSS VALIDATION:\n" +
+            "    Accuracy: %.2f%%\n" +
+            "    F-Spam  : %.4f\n" +
+            "    WAvg-F  : %.4f\n\n" +
+            "[2] 5 REPEATED STRATIFIED HOLD-OUT (70/30):\n" +
+            "    Spam Precision : %.4f +- %.4f\n" +
+            "    Spam Recall    : %.4f +- %.4f\n" +
+            "    Spam F-Measure : %.4f +- %.4f\n" +
+            "    WAvg F-Measure : %.4f +- %.4f",
+            evalCV.pctCorrect(), evalCV.fMeasure(spamIndex), evalCV.weightedFMeasure(),
+            mean(prSpam), stddev(prSpam),
+            mean(reSpam), stddev(reSpam),
+            mean(fSpam), stddev(fSpam),
+            mean(fWAvg), stddev(fWAvg)
+        );
+
+        ExperimentLogger.log("5. Kalitate Estimatua (Evaluate)", parametrosLog, resultadosLog);
     }
 
     private static MultilayerPerceptron buildMLP(double learningRate, double momentum, String hiddenLayers, int epochs) throws Exception {
