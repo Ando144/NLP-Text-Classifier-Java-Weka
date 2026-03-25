@@ -69,18 +69,16 @@ public class GetModel {
         // ================================================
         // 3. EKORKETA PRESTATU (Grid Search) - Bertsio Arina (~1 ordu)
         // ================================================
-        //double[] learningRates = { 0.003, 0.005 };      // Nos quedamos con los dos más prometedores
-        //double[] momentums = { 0.4, 0.6, 0.8 };         // Seguimos buscando el techo del momentum
-        //String[] hiddenLayers = { "10", "20", "30" };   // No pasamos de 30 (sabemos que es suficiente)
-        //int[] epochs = { 100, 200 };                    // 200 épocas máximo (evitamos los tiempos de 500)
-
-        // ================================================
-        // 3. EREDU ONENA ENTRENATU (Andonik Entrenatutakoa)
-        // ================================================
-        double[] learningRates = { 0.005 };      
-        double[] momentums = { 0.8 };            
-        String[] hiddenLayers = { "10" };       
-        int[] epochs = { 100 };                 
+        /* 
+        double[] learningRates = { 0.003 , 0.005 };      // Nos quedamos con los dos más prometedores
+        double[] momentums = { 0.4, 0.6, 0.8  };         // Seguimos buscando el techo del momentum
+        String[] hiddenLayers = { "5" , "10", "20" };   // No pasamos de 30 (sabemos que es suficiente)
+        int[] epochs = { 100, 200 };                    // 200 épocas máximo (evitamos los tiempos de 500)
+        */
+        double[] learningRates = { 0.005 };
+        double[] momentums = { 0.2  };
+        String[] hiddenLayers = { "3" };
+        int[] epochs = { 300 };
 
         MultilayerPerceptron bestModel = null;
         double bestFMeasure = -1;

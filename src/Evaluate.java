@@ -29,22 +29,29 @@ import java.util.Random;
  */
 public class Evaluate {
 
+    /*
     // Parametro optimoak GetModel-etik lortutakoak
     private static final double LEARNING_RATE = 0.005;
     private static final double MOMENTUM = 0.2;
     private static final String HIDDEN_LAYERS = "3";
     private static final int EPOCHS = 300;
-
+    */
+   
     public static void main(String[] args) throws Exception {
-        if (args.length < 3) {
+        if (args.length < 7) {
             System.out.println(
-                    "Uso: java -cp \"lib\\weka.jar;bin\" Evaluate <train_final.arff> <dev_final.arff> <emaitzak.txt>");
+                    "Uso: java -cp \"lib\\weka.jar;bin\" Evaluate <train_final.arff> <dev_final.arff> <emaitzak.txt> <learning_rate> <momentum> <hidden_layers> <epochs>");
             return;
         }
 
         String trainPath = args[0];
         String devPath = args[1];
         String resultsPath = args[2];
+
+        double learningRate = Double.parseDouble(args[4]);
+        double momentum = Double.parseDouble(args[5]);
+        String hiddenLayers = args[6];
+        int epochs = Integer.parseInt(args[7]);
 
         // ================================
         // 1. Train eta dev kargatu eta elkartu
@@ -62,8 +69,8 @@ public class Evaluate {
         allData.setClassIndex(allData.numAttributes() - 1);
 
         System.out.println("Train+Dev: " + allData.numInstances() + " instanzia");
-        System.out.println("Parametro optimoak: LR=" + LEARNING_RATE + " Mom=" + MOMENTUM
-                + " Hidden=" + HIDDEN_LAYERS + " Epochs=" + EPOCHS);
+        System.out.println("Parametro optimoak: LR=" + learningRate + " Mom=" + momentum
+                + " Hidden=" + hiddenLayers + " Epochs=" + epochs);
 
         int spamIndex = allData.classAttribute().indexOfValue("spam");
 
@@ -74,10 +81,10 @@ public class Evaluate {
         writer.write("      AURREIKUSITAKO KALITATE TXOSTENA            \n");
         writer.write("==================================================\n");
         writer.write("Parametro optimoak:\n");
-        writer.write("  LearningRate : " + LEARNING_RATE + "\n");
-        writer.write("  Momentum     : " + MOMENTUM + "\n");
-        writer.write("  HiddenLayers : " + HIDDEN_LAYERS + "\n");
-        writer.write("  Epochs       : " + EPOCHS + "\n");
+        writer.write("  LearningRate : " + learningRate + "\n");
+        writer.write("  Momentum     : " + momentum + "\n");
+        writer.write("  HiddenLayers : " + hiddenLayers + "\n");
+        writer.write("  Epochs       : " + epochs + "\n");
         writer.write("  Train+Dev    : " + allData.numInstances() + " instanzia\n\n");
 
         // ================================
@@ -85,7 +92,7 @@ public class Evaluate {
         // ================================
         System.out.println("\n[1/2] 5-fold Cross Validation...");
 
-        MultilayerPerceptron mlpCV = buildMLP();
+        MultilayerPerceptron mlpCV = buildMLP(learningRate, momentum, hiddenLayers, epochs);
         Evaluation evalCV = new Evaluation(allData);
         evalCV.crossValidateModel(mlpCV, allData, 5, new Random(1));
 
@@ -139,7 +146,7 @@ public class Evaluate {
             iterDev.setClassIndex(iterDev.numAttributes() - 1);
 
             // Entrenar y evaluar
-            MultilayerPerceptron mlpIter = buildMLP();
+            MultilayerPerceptron mlpIter = buildMLP(learningRate, momentum, hiddenLayers, epochs);
             mlpIter.buildClassifier(iterTrain);
 
             Evaluation evalIter = new Evaluation(iterTrain);
@@ -174,20 +181,20 @@ public class Evaluate {
                 + String.format("%.4f", mean(fSpam)) + " +- " + String.format("%.4f", stddev(fSpam)));
 
         ExperimentLogger.log("5. Kalitate Estimatua (Evaluate)",
-                "LR=" + LEARNING_RATE + " Mom=" + MOMENTUM + " Hidden=" + HIDDEN_LAYERS + " Epochs=" + EPOCHS,
+                "LR=" + learningRate + " Mom=" + momentum + " Hidden=" + hiddenLayers + " Epochs=" + epochs,
                 "5-fCV F-spam: " + String.format("%.4f", evalCV.fMeasure(spamIndex))
                         + "\nRepeated HO F-spam: " + String.format("%.4f", mean(fSpam))
                         + " +- " + String.format("%.4f", stddev(fSpam)));
     }
 
-    private static MultilayerPerceptron buildMLP() throws Exception {
+    private static MultilayerPerceptron buildMLP(double learningRate, double momentum, String hiddenLayers, int epochs) throws Exception {
         MultilayerPerceptron mlp = new MultilayerPerceptron();
-        mlp.setLearningRate(LEARNING_RATE);
-        mlp.setMomentum(MOMENTUM);
-        mlp.setHiddenLayers(HIDDEN_LAYERS);
-        mlp.setTrainingTime(EPOCHS);
+        mlp.setLearningRate(learningRate);
+        mlp.setMomentum(momentum);
+        mlp.setHiddenLayers(hiddenLayers);
+        mlp.setTrainingTime(epochs);
         mlp.setNominalToBinaryFilter(true);
-        mlp.setNormalizeAttributes(true);
+        mlp.setNormalizeAttributes(false);
         mlp.setGUI(false);
         mlp.setDebug(false);
         return mlp;
