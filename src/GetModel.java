@@ -9,34 +9,16 @@ import java.io.File;
 import java.io.FileWriter;
 
 /**
- * Klase honek MultilayerPerceptron (MLP) algoritmoaren parametroen ekorketa (fine-tuning) egiten du.
- * Parametro konbinazio desberdinak probatzen ditu, bakoitza 'dev' multzoan ebaluatuz, eta
- * Spam klaseko F-Measure onena lortzen duen modeloa gordetzen du.
- * * HELBURUAK:
- * - Sare neuronalaren parametro optimoak bilatzea (LearningRate, Momentum, HiddenLayers, Epochs).
- * - Koste konputazionala (entrenamendu denbora) neurtzea eredu bakoitzarentzat.
- * - Eredu optimoa diskorako esportatzea (.model formatuan).
- * * AURREBALDINTZAK:
- * - Bektorizatutako 'train_final.arff' eta 'dev_final.arff' fitxategiak existitzea.
- * * ONDORENGO BALDINTZAK:
- * - Eredu optimoa gordeko da adierazitako karpetan.
- * - Emaitzen laburpen taula bat '.txt' fitxategian idatziko da.
- * * EXEKUZIO ADIBIDEA:
- * java -cp "lib/weka.jar:bin" GetModel Partiketak/train_final.arff Partiketak/dev_final.arff modelo/mlp.model emaitzak/finetuning.txt
- * * @author WekaProyecto2026 Taldea
+ * MLP algoritmoaren parametroen ekorketa (fine-tuning) eta modelo onena gorde.
  */
 public class GetModel {
 
     public static void main(String[] args) throws Exception {
-        // ================================================
-        // 1. PARAMETROEN KUDEAKETA DINAMIKOA
-        // ================================================
         if (args.length > 4) {
             System.err.println("Erabilera: java -cp \"lib/weka.jar:bin\" GetModel <train_final.arff> <dev_final.arff> <modelo.model> <resultados.txt>");
             return;
         }
 
-        // Balio lehenetsiak zure egiturara egokituta
         String trainPath   = args.length >= 1 ? args[0] : "Partiketak/train_final.arff";
         String devPath     = args.length >= 2 ? args[1] : "Partiketak/dev_final.arff";
         String modelPath   = args.length >= 3 ? args[2] : "modelo/mlp.model";
@@ -62,19 +44,10 @@ public class GetModel {
         System.out.println("Train: " + train.numInstances() + " instantzia kargatuta.");
         System.out.println("Dev  : " + dev.numInstances() + " instantzia kargatuta.\n");
 
-        // Bilatu SPAM klasearen indizea (segurtasun neurria maiuskula/minuskula arazoentzat)
         int spamIndex = train.classAttribute().indexOfValue("SPAM");
         if (spamIndex == -1) spamIndex = train.classAttribute().indexOfValue("spam");
 
-        // ================================================
-        // 3. EKORKETA PRESTATU (Grid Search) - Bertsio Arina (~1 ordu)
-        // ================================================
-        /* 
-        double[] learningRates = { 0.003 , 0.005 };      // Nos quedamos con los dos más prometedores
-        double[] momentums = { 0.4, 0.6, 0.8  };         // Seguimos buscando el techo del momentum
-        String[] hiddenLayers = { "5" , "10", "20" };   // No pasamos de 30 (sabemos que es suficiente)
-        int[] epochs = { 100, 200 };                    // 200 épocas máximo (evitamos los tiempos de 500)
-        */
+        // Bilaketa espazioa (Grid Search)
         double[] learningRates = { 0.005 };
         double[] momentums = { 0.2  };
         String[] hiddenLayers = { "3" };
@@ -85,7 +58,6 @@ public class GetModel {
         String bestParams = "";
         double bestTime = 0.0;
 
-        // Sortu emaitzak gordetzeko karpeta
         File resultsFile = new File(resultsPath);
         if (resultsFile.getParentFile() != null) {
             resultsFile.getParentFile().mkdirs();
@@ -106,9 +78,7 @@ public class GetModel {
 
         System.out.println("Sare Neuronalaren entrenamendua hasi da. Hau denbora luzea har dezake...");
 
-        // ================================================
-        // 4. ENTRENAMENDU ETA EBALUAZIO BEGIZTAK
-        // ================================================
+        // Entrenamendu eta ebaluazio begiztak
         for (double lr : learningRates) {
             for (double mom : momentums) {
                 for (String hidden : hiddenLayers) {
@@ -142,7 +112,6 @@ public class GetModel {
 
                         System.out.printf("F-Spam: %.4f | Denbora: %.2fs%n", fSpam, timeSeconds);
 
-                        // Emaitza idatzi taulan
                         writer.write(String.format("%-15.3f %-12.1f %-14s %-8d %-12.4f %-12.4f %-12.4f %-12.2f%n",
                                 lr, mom, hidden, ep, fSpam, fHam, fWAvg, timeSeconds));
 

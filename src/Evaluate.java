@@ -11,28 +11,13 @@ import java.io.FileWriter;
 import java.util.Random;
 
 /**
- * Evaluate
- *
- * Kalitate estimatua: sortutako sailkatzailerako aurreikusitako
- * kalitate-txostena.
- * Bi ebaluazio eskema erabiltzen dira train+dev instantziekin:
- * 1. 5-fold Cross Validation
- * 2. 5 Repeated Stratified Hold-Out (70/30)
- *
- * Uso:
- * java -cp "lib\weka.jar;bin" Evaluate <train_final.arff> <dev_final.arff>
- * <emaitzak.txt>
- *
- * Ejemplo:
- * java -cp "lib\weka.jar;bin" Evaluate Partiketak/train_final.arff
- * Partiketak/dev_final.arff emaitzak/kalitatea.txt
+ * Sailkatzailearen kalitate-estimazioa: Cross Validation eta Hold-Out.
  */
 public class Evaluate {
 
     public static void main(String[] args) throws Exception {
         if (args.length < 7) {
-            System.out.println(
-                    "Uso: java -cp \"lib\\weka.jar;bin\" Evaluate <train_final.arff> <dev_final.arff> <emaitzak.txt> <learning_rate> <momentum> <hidden_layers> <epochs>");
+            System.out.println("Erabilera: java -cp \"lib\\weka.jar;bin\" Evaluate <train_final.arff> <dev_final.arff> <emaitzak.txt> <learning_rate> <momentum> <hidden_layers> <epochs>");
             return;
         }
 
@@ -45,9 +30,7 @@ public class Evaluate {
         String hiddenLayers = args[5];
         int epochs = Integer.parseInt(args[6]);
 
-        // ================================
-        // 1. Train eta dev kargatu eta elkartu
-        // ================================
+        // Train eta Dev kargatu eta elkartu
         Instances train = new DataSource(trainPath).getDataSet();
         Instances dev = new DataSource(devPath).getDataSet();
 
@@ -80,9 +63,7 @@ public class Evaluate {
         writer.write("  Epochs       : " + epochs + "\n");
         writer.write("  Train+Dev    : " + allData.numInstances() + " instanzia\n\n");
 
-        // ================================
-        // 2. 5-fold Cross Validation
-        // ================================
+        // 5-fold Cross Validation
         System.out.println("\n[1/2] 5-fold Cross Validation...");
 
         MultilayerPerceptron mlpCV = buildMLP(learningRate, momentum, hiddenLayers, epochs);
@@ -97,9 +78,7 @@ public class Evaluate {
 
         System.out.println("  5-fCV F-spam: " + String.format("%.4f", evalCV.fMeasure(spamIndex)));
 
-        // ================================
-        // 3. 5 Repeated Stratified Hold-Out (70/30)
-        // ================================
+        // 5 Repeated Stratified Hold-Out (70/30)
         System.out.println("[2/2] Repeated Stratified Hold-Out (5 errepikapen)...");
 
         int repeticiones = 5;
@@ -138,7 +117,6 @@ public class Evaluate {
             Instances iterDev = Filter.useFilter(allData, rDev);
             iterDev.setClassIndex(iterDev.numAttributes() - 1);
 
-            // Entrenar y evaluar
             MultilayerPerceptron mlpIter = buildMLP(learningRate, momentum, hiddenLayers, epochs);
             mlpIter.buildClassifier(iterTrain);
 
@@ -173,9 +151,7 @@ public class Evaluate {
         System.out.println("  Repeated HO F-spam: "
                 + String.format("%.4f", mean(fSpam)) + " +- " + String.format("%.4f", stddev(fSpam)));
 
-        // ================================
-        // 4. ERREGISTRO AUTOMATIKOA OSOA (Experiment Tracking)
-        // ================================
+        // Experiment Tracking (Aukerakoa)
         String parametrosLog = String.format(
             "Datu-multzoa: Train+Dev bateratua (%d instantzia)\n" +
             "Sare Neuronalaren Ezarpenak: LR=%.3f | Mom=%.1f | Hidden=%s | Epochs=%d\n" +

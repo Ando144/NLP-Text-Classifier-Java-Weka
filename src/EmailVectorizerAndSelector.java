@@ -18,13 +18,13 @@ import java.io.File;
  *
  * PARAMETROAK:
  *   1. baseDir
- *   2. wordsToKeep: Gordetako hitz kopurua 
+ *   2. wordsToKeep: Gordetako hitz kopurua
  *   3. numToSelect: Atributu kopurua
  *   4. digitsAsDelim: Digituak erabili bereizle gisa
  *   5. minTermFreq: Gutxieneko maiztasuna
  *   6. useThreshold: InfoGain atalasea 0.005
  *   7. useNormalizer: TextNormalizer aplikatu datu gordinetan
- *   8. maxNGram: N-gramen tamaina maximoa (1, 2, edo 3) 
+ *   8. maxNGram: N-gramen tamaina maximoa (1, 2, edo 3)
  *
  */
 public class EmailVectorizerAndSelector {
@@ -162,6 +162,14 @@ public class EmailVectorizerAndSelector {
             Instances testFinal  = Filter.useFilter(testVec,  filterSelector);
 
             System.out.println("  Amaierako atributuak: " + trainFinal.numAttributes());
+
+            // Gorde filtroak inferentziarako
+            File modelDir = new File("modelo");
+            if (!modelDir.exists()) modelDir.mkdirs();
+            
+            FilterSerializationHelper.saveFilter(stwv, "modelo/vectorizer.ser");
+            FilterSerializationHelper.saveFilter(filterSelector, "modelo/selector.ser");
+            System.out.println("\nFiltroak gordeta inferentziarako (modelo/vectorizer.ser, modelo/selector.ser)");
 
             // Gorde
             ArffSaver saver = new ArffSaver();

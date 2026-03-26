@@ -4,37 +4,15 @@ import weka.core.converters.ArffSaver;
 import java.io.File;
 
 /**
- * Klase honek SPAM eta HAM karpetetan egituratutako direktorio bat irakurtzen du 
- * eta mezu elektroniko guztiak ARFF formatuko datu-multzo (dataset) bakar batean bihurtzen ditu.
- * * HELBURUAK:
- * - Testu libreko .txt fitxategiak kargatzea klaseen arabera multzokatuta.
- * - Prozesamendurako beharrezkoa den hasierako ARFF fitxategi gordina (raw) sortzea.
- * * AURREBALDINTZAK:
- * - Jatorrizko karpetak existitu behar du eta zehazki bi azpikarpeta eduki behar ditu, 
- * klaseen izenekin (adibidez, "SPAM", "HAM").
- * * ONDORENGO BALDINTZAK:
- * - ARFF fitxategi bat sortuko da testuaren atributuarekin eta klase nominalarekin.
- * * EXEKUZIO ADIBIDEA:
- * java -cp "lib/weka.jar:bin" EmailLoader dataset_correos emails_raw.arff
- * * @author WekaProyecto2026 Taldea
+ * Datu gordinak ARFF formatura bihurtu.
  */
 public class EmailLoader {
-
-    /**
-     * Datuak kargatu eta bihurtzeko prozesua exekutatzen duen metodo nagusia.
-     * @param args Terminaleko argumentuak: [0] jatorrizko_bidea, [1] helburuko_arff_bidea
-     */
     public static void main(String[] args) {
-        // ================================================
-        // 1. PARAMETROEN KUDEAKETA DINAMIKOA
-        // ================================================
         if (args.length > 2) {
-            System.err.println("Erabilera: java -cp \"lib/weka.jar:bin\" EmailLoader [jatorrizko_bidea] [helburuko_arff_bidea]");
-            System.err.println("Jatorrizko bideak bi azpikarpeta izan behar ditu: 'SPAM' eta 'HAM'");
+            System.err.println("Erabilera: java -cp \"lib/weka.jar:bin\" EmailLoader [jatorrizkoa] [helburua]");
             return;
         }
 
-        // Balio lehenetsiak argumenturik ez badago (Eclipse/IntelliJ-n exekutatzeko erraza)
         String inputPath = args.length >= 1 ? args[0] : "DatuakRaw";
         String outputPath = args.length == 2 ? args[1] : "emails_raw.arff";
 
@@ -45,9 +23,7 @@ public class EmailLoader {
         System.out.println("==================================================\n");
 
         try {
-            // ================================================
-            // 2. DIREKTORIOEN EGIAZTAPENA ETA KARGA
-            // ================================================
+            // Direktorioak kargatu
             TextDirectoryLoader loader = new TextDirectoryLoader();
             
             File sourceDirectory = new File(inputPath);
@@ -61,19 +37,15 @@ public class EmailLoader {
             
             Instances dataRaw = loader.getDataSet();
             
-            // Weka-k klasearen atributua zein den jakin dezan ziurtatu (Index 0 edo azkena)
             if (dataRaw.classIndex() == -1) {
                 dataRaw.setClassIndex(dataRaw.numAttributes() - 1);
             }
             
-            // ================================================
-            // 3. ARFF FITXATEGIA GORDE
-            // ================================================
+            // ARFF Gorde
             ArffSaver saver = new ArffSaver();
             saver.setInstances(dataRaw);
             
             File outputArff = new File(outputPath);
-            // Karpeta ez bada existitzen, sortu egingo dugu erroreak ekiditeko
             if (outputArff.getParentFile() != null) {
                 outputArff.getParentFile().mkdirs();
             }

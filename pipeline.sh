@@ -142,6 +142,19 @@ java --add-opens java.base/java.lang=ALL-UNNAMED \
 echo "  OK"
 
 # ----------------------------------------------------------
+# 8) IRAGARPEN BERRIAK (Iragarri)
+# ----------------------------------------------------------
+echo ""
+echo "[8/8] Iragarpen berriak egiten (Iragarri)..."
+java --add-opens java.base/java.lang=ALL-UNNAMED \
+     -cp "lib/weka.jar:bin" \
+     Iragarri \
+     modelo/mlp.model \
+     DatuakRaw/proba_data \
+     emaitzak/
+echo "  OK"
+
+# ----------------------------------------------------------
 # LABURPENA
 # ----------------------------------------------------------
 echo ""
@@ -151,7 +164,8 @@ echo "=========================================================="
 echo "Emaitzak hemen:"
 echo "  - emaitzak/finetuning_finala.txt      (fine-tuning taula)"
 echo "  - emaitzak/test_emaitzak_finala.txt   (test itsuaren emaitzak)"
-echo "  - emaitzak/kalitatea_finala.txt  (kalitate estimatua)"
-echo "  - registro_experimentos.txt    (log osoa)"
-echo "  - modelo/mlp.model             (eredu onena)"
+echo "  - emaitzak/kalitatea_finala.txt       (kalitate estimatua)"
+echo "  - emaitzak/iragarpenak.txt            (iragarpen berriak)"
+echo "  - registro_experimentos.txt           (log osoa)"
+echo "  - modelo/mlp.model                    (eredu onena)"
 echo "=========================================================="

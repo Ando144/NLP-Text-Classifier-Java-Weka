@@ -8,25 +8,11 @@ import weka.filters.unsupervised.instance.Randomize;
 import java.io.File;
 
 /**
- * Klase honek hasierako datu-multzoa (emails_raw.arff) hiru azpimultzotan banatzen du:
- * Train (%80), Dev (%10) eta Test (%10), banaketa estratifikatua (Stratified) erabiliz.
- * * HELBURUAK:
- * - Datuen ausazkotzea (Randomize) hazi (seed) finko batekin, erreproduzibilitatea bermatzeko.
- * - Klaseen banaketa proportzionala mantentzea partiketa guztietan.
- * * AURREBALDINTZAK:
- * - 'emails_raw.arff' fitxategia existitu behar da (EmailLoader klaseak sortutakoa).
- * * ONDORENGO BALDINTZAK:
- * - 'Partiketak' karpetan 'train.arff', 'dev.arff' eta 'test.arff' fitxategiak sortuko dira.
- * * EXEKUZIO ADIBIDEA:
- * java -cp "lib/weka.jar:bin" DataSplit emails_raw.arff Partiketak/train.arff Partiketak/dev.arff Partiketak/test.arff
- * * @author WekaProyecto2026 Taldea
+ * Datuen partiketa estratifikatua: Train (80%), Dev (10%), Test (10%).
  */
 public class DataSplit {
 
     public static void main(String[] args) {
-        // ================================================
-        // 1. PARAMETROEN KUDEAKETA DINAMIKOA
-        // ================================================
         if (args.length > 4) {
             System.err.println("Erabilera: java -cp \"lib/weka.jar:bin\" DataSplit [input.arff] [train.arff] [dev.arff] [test.arff]");
             return;
@@ -47,7 +33,6 @@ public class DataSplit {
         System.out.println("==================================================\n");
 
         try {
-            // 1. Datu-multzoa kargatu
             File inputFile = new File(inputPath);
             if (!inputFile.exists()) {
                 System.err.println("ERROREA: Sarrerako fitxategia ez da existitzen -> " + inputFile.getAbsolutePath());
@@ -61,19 +46,17 @@ public class DataSplit {
                 data.setClassIndex(data.numAttributes() - 1);
             }
 
-            // Ausazkotu (Randomize) erreproduzibilitatea bermatzeko (Seed = 1)
+            // Randomize (Seed = 1)
             System.out.println("Datuak ausazkotzen (Randomize, seed=1)...");
             Randomize rand = new Randomize();
             rand.setRandomSeed(1);
             rand.setInputFormat(data);
             data = Filter.useFilter(data, rand);
 
-            // ================================================
-            // 2. PARTIKETA ESTRATIFIKATUA (80% Train, 10% Dev, 10% Test)
-            // ================================================
+            // Partiketa aplikatu
             System.out.println("Partiketa estratifikatua aplikatzen...");
 
-            // A. TEST sortu (%10 -> 1 fold 10etik)
+            // TEST (%10)
             StratifiedRemoveFolds testFilter = new StratifiedRemoveFolds();
             testFilter.setNumFolds(10);
             testFilter.setFold(1);
@@ -81,16 +64,15 @@ public class DataSplit {
             testFilter.setInputFormat(data);
             Instances test = Filter.useFilter(data, testFilter);
 
-            // Gainerako %90a lortu (Train + Dev)
             StratifiedRemoveFolds remainderFilter = new StratifiedRemoveFolds();
             remainderFilter.setNumFolds(10);
             remainderFilter.setFold(1);
             remainderFilter.setSeed(1);
-            remainderFilter.setInvertSelection(true); // Folds 2-10 mantendu
+            remainderFilter.setInvertSelection(true);
             remainderFilter.setInputFormat(data);
             Instances remainder = Filter.useFilter(data, remainderFilter);
 
-            // B. DEV sortu (Gainerakoaren 1 fold 9tik -> Totalaren %10a)
+            // DEV (%10)
             StratifiedRemoveFolds devFilter = new StratifiedRemoveFolds();
             devFilter.setNumFolds(9);
             devFilter.setFold(1);
@@ -98,7 +80,7 @@ public class DataSplit {
             devFilter.setInputFormat(remainder);
             Instances dev = Filter.useFilter(remainder, devFilter);
 
-            // C. TRAIN sortu (Gainerakoaren 8 folds 9tik -> Totalaren %80a)
+            // TRAIN (%80)
             StratifiedRemoveFolds trainFilter = new StratifiedRemoveFolds();
             trainFilter.setNumFolds(9);
             trainFilter.setFold(1);
@@ -112,10 +94,7 @@ public class DataSplit {
             System.out.println(" -> Dev   : " + dev.numInstances() + " instantzia");
             System.out.println(" -> Test  : " + test.numInstances() + " instantzia");
 
-            // ================================================
-            // 3. FITXATEGIAK GORDE
-            // ================================================
-            // 'Partiketak' karpeta sortu ez bada existitzen
+            // Fitxategiak gorde
             new File(trainPath).getParentFile().mkdirs();
 
             ArffSaver saver = new ArffSaver();
