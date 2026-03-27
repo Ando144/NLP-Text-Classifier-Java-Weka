@@ -4,10 +4,52 @@ import weka.core.converters.ArffSaver;
 import java.io.File;
 
 /**
- * Datu gordinak ARFF formatura bihurtu.
+ * Klase honek mezu elektronikoen testu-fitxategiak kargatzen ditu
+ * eta Weka-k erabil dezakeen ARFF formatura bihurtzen ditu.
+ *
+ * <p>
+ * Weka-ko {@code TextDirectoryLoader} erabiliz, direktorio-egitura
+ * batean dauden testu-fitxategiak automatikoki irakurtzen dira, non
+ * karpeta bakoitza klase bati dagokion (adibidez: spam / legitimoa).
+ * </p>
+ *
+ * <p>
+ * Sortutako dataset-ak bi atributu nagusi ditu:
+ * <ul>
+ * <li>Testua (emailaren edukia)</li>
+ * <li>Klasea (spam edo legitimoa)</li>
+ * </ul>
+ * </p>
+ *
+ * <p>
+ * Azken emaitza ARFF fitxategi batean gordetzen da, ondorengo
+ * prozesamenduetarako (behin betiko pipeline-an erabiltzeko).
+ * </p>
+ *
+ * <p>
+ * Klase hau emailen sailkapen sistemaren lehen urratsa da.
+ * </p>
+ *
+ * @version 1.0
  */
 public class EmailLoader {
+    /**
+     * Programa exekutatzen duen metodo nagusia, testu-fitxategiak kargatu
+     * eta ARFF dataset bihurtzen dituena.
+     *
+     * <p>
+     * Sarrerako direktorioa eta irteerako fitxategia argumentuen bidez
+     * zehaztu daitezke. Bestela, balio lehenetsiak erabiliko dira.
+     * </p>
+     *
+     * @param args Komando lerroko argumentuak:
+     *             <ul>
+     *             <li>args[0] - Jatorrizko direktorioa (email testuak)</li>
+     *             <li>args[1] - Irteerako ARFF fitxategia</li>
+     *             </ul>
+     */
     public static void main(String[] args) {
+
         if (args.length > 2) {
             System.err.println("Erabilera: java -cp \"lib/weka.jar:bin\" EmailLoader [jatorrizkoa] [helburua]");
             return;
@@ -23,36 +65,41 @@ public class EmailLoader {
         System.out.println("==================================================\n");
 
         try {
-            // Direktorioak kargatu
+            // Weka-ko TextDirectoryLoader erabiliz direktorio egitura kargatzen da
             TextDirectoryLoader loader = new TextDirectoryLoader();
-            
+
+            // Ziurtatzen da sarrerako direktorioa existitzen dela eta baliozkoa dela
             File sourceDirectory = new File(inputPath);
             if (!sourceDirectory.exists() || !sourceDirectory.isDirectory()) {
-                System.err.println("ERROREA: Jatorrizko direktorioa ez da existitzen -> " + sourceDirectory.getAbsolutePath());
+                System.err.println(
+                        "ERROREA: Jatorrizko direktorioa ez da existitzen -> " + sourceDirectory.getAbsolutePath());
                 return;
             }
-            
+
             loader.setDirectory(sourceDirectory);
-            System.out.println("Direktorioak eskaneatzen eta mezu elektronikoak kargatzen... Honek segundo batzuk har ditzake.");
-            
+            System.out.println(
+                    "Direktorioak eskaneatzen eta mezu elektronikoak kargatzen... Honek segundo batzuk har ditzake.");
+
+            // Testu-fitxategiak Weka Instances objektu bihurtzen dira
             Instances dataRaw = loader.getDataSet();
-            
+
+            // Klase atributua azken atributu gisa ezartzen da (spam/legitimoa)
             if (dataRaw.classIndex() == -1) {
                 dataRaw.setClassIndex(dataRaw.numAttributes() - 1);
             }
-            
-            // ARFF Gorde
+
+            // Sortutako dataset-a ARFF formatuan gordetzen da
             ArffSaver saver = new ArffSaver();
             saver.setInstances(dataRaw);
-            
+
             File outputArff = new File(outputPath);
             if (outputArff.getParentFile() != null) {
                 outputArff.getParentFile().mkdirs();
             }
-            
+
             saver.setFile(outputArff);
             saver.writeBatch();
-            
+
             System.out.println("==================================================");
             System.out.println("ARRAKASTA! Korreoen datu-multzoa ondo sortu da.");
             System.out.println("Prozesatutako mezuak guztira: " + dataRaw.numInstances());
