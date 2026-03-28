@@ -106,6 +106,17 @@ public class Iragarri {
         return Arrays.stream(children).anyMatch(File::isDirectory);
     }
 
+    /**
+     * Programaren sarrera-puntua.
+     *
+     * <p>
+     * Metodo honek entrenatutako eredua kargatzen du eta
+     * sarrera direktorio bateko emailak sailkatzen ditu.
+     * </p>
+     *
+     * @param args Argumentuak:
+     *             {@code  <eredua> <sarrera_direktorioa> <irteera_direktorioa>}
+     */
     public static void main(String[] args) {
         try {
             if (args.length > 3) {
