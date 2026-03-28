@@ -1,0 +1,844 @@
+\documentclass[12pt, a4paper]{article}
+
+% =============================================
+% PAKETEAK
+% =============================================
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[basque]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{fancyhdr}
+\usepackage{parskip}
+\usepackage{caption}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\geometry{top=2.5cm, bottom=2.5cm, left=3cm, right=3cm}
+
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=black, urlcolor=blue}
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Spam Sailkatzailea -- MLP}
+\lhead{Erabakiak Hartzeko Euskarri Sistemak}
+\cfoot{\thepage}
+
+% =============================================
+% DOKUMENTUA
+% =============================================
+\begin{document}
+
+% =============================================
+% AZALA
+% =============================================
+\begin{titlepage}
+    \centering
+    \vspace*{1.5cm}
+    {\Large \textbf{BILBOKO INGENIARITZA ESKOLA}}\\[0.3cm]
+    {\normalsize Kudeaketaren eta Informazio Sistemen Informatikaren Ingeniaritzarako Gradua}\\[2cm]
+    \rule{\textwidth}{1.5pt}\\[0.5cm]
+    {\Huge \textbf{Spam Sailkatzailea}}\\[0.4cm]
+    {\Large Multilayer Perceptron }\\[0.3cm]
+    \rule{\textwidth}{1.5pt}\\[2cm]
+
+    \begin{minipage}{0.45\textwidth}
+        \textbf{Egileak:}\\
+        Gorka Piedra\\
+        Andoni Ortiz de Zarate\\
+        Ibai Ibai Olaziregi\\
+    \end{minipage}
+    \begin{minipage}{0.45\textwidth}
+        \raggedleft
+        \textbf{Arloa:} Erabakiak Hartzeko Euskarri Sistemak\\[0.2cm]
+        \textbf{Maila:} 3. maila\\
+        \textbf{Lauhilabetea:} 2. lauhilabetea\\
+    \end{minipage}
+    \vfill
+    {\large \today}
+\end{titlepage}
+
+% =============================================
+% AURKIBIDEA
+% =============================================
+\tableofcontents
+\newpage
+
+% =============================================
+% 1. TALDE-LANAREN ARDUREN BANAKETA
+% =============================================
+\section{Talde-lanaren arduren banaketa}
+
+\begin{table}[H]
+    \centering
+    \caption{Taldekide bakoitzaren ardura eta inplementatutako zatiak}
+    \begin{tabular}{p{2.5cm}p{4cm}p{6.5cm}}
+        \toprule
+        \textbf{Kidea} & \textbf{Ardura nagusia} & \textbf{Inplementatutako zatiak} \\
+        \midrule
+        Gorka Piedra &
+        --- &
+        --- \\
+        \midrule
+        Andoni &
+        --- &
+        --- \\
+        \midrule
+        Ibai &
+        --- &
+        --- \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:ardura}
+\end{table}
+
+% =============================================
+% 2. DATU-SORTAREN ANALISIA
+% =============================================
+\section{Datu-sortaren analisia}
+
+\subsection{Datu gordinak}
+
+Erabilitako datu-multzoa Enron-Spam corpusa da. Bi klasetan banatutako
+mezu elektronikoz osatuta dago: \textbf{spam} (nahi ez dena) eta \textbf{ham} (legitimo).
+
+Spam mezuak sustapen komertzialen, iruzurren eta premium zerbitzuen ingurukoak dira,
+hizkera limurtzailea, maiuskulak, presazko estiloa eta estekak erabiliz
+(adib.: \textit{``Free prize! Call now to claim your \pounds 1000''}).
+
+Ham mezuak eguneroko komunikazio pertsonalak dira, hizkera informala,
+laburdurak eta emotikonoak erabiliz (adib.: \textit{``Hey, what are you doing?''}).
+
+\begin{table}[H]
+    \centering
+    \caption{Jatorrizko datu-multzoaren deskribapen kuantitatiboa (datu gordinak)}
+    \begin{tabular}{lrrr}
+        \toprule
+        \textbf{Ezaugarria} & \textbf{Train} & \textbf{Dev} & \textbf{Test} \\
+        \midrule
+        Atributu nominalak  & 1     & 1     & 1     \\
+        Atributu numerikoak & 0     & 0     & 0     \\
+        String atributuak   & 1     & 1     & 1     \\
+        Atributu guztira    & 2     & 2     & 2     \\
+        \midrule
+        Instantzia (spam $\oplus$)  & 1.200 & 150   & 150   \\
+        Instantzia (ham $\ominus$)  & 2.937 & 368   & 367   \\
+        Instantzia guztira          & 4.137 & 518   & 517   \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:datuak_gordinak}
+\end{table}
+
+Taula~\ref{tab:datuak_gordinak}-n ikusten den bezala, klaseen artean desoreka
+nabarmena dago: spam instantziak ham instantzien \%29 baino ez dira.
+Horrek eragina du ereduaren errendimenduan, bereziki spam klaseko recall-ean.
+
+\subsection{Partiketa estratifikatua}
+
+\texttt{DataSplit.java} fitxategiak \texttt{StratifiedRemoveFolds} metodoa erabiliz
+datu-multzoa hiru azpimultzotan banatzen du, klaseen proportzioa mantenduz
+partiketa guztietan. Partiketa \textbf{\%80/\%10/\%10} egin da:
+
+\begin{itemize}
+    \item \textbf{Train (\%80):} 4.137 instantzia -- eredua entrenatzeko
+    \item \textbf{Dev (\%10):} 518 instantzia -- parametroak optimizatzeko
+    \item \textbf{Test (\%10):} 517 instantzia -- azken iragarpenak egiteko
+\end{itemize}
+
+% =============================================
+% 3. AURREPROZESAMENDUA
+% =============================================
+\section{Aurreprozesamendua}
+
+\subsection{Aplikatutako prozesuak}
+
+\texttt{EmailVectorizerAndSelector.java} fitxategiak \texttt{StringToWordVector}
+filtroaren bidez testu gordinak bektore numeriko bihurtzen ditu.
+Prozesu honetan honako eragiketak egin dira:
+
+\begin{itemize}
+    \item \textbf{Minuskulizazioa (\texttt{LowerCaseTokens=true}):}
+    Maiuskulak eta minuskulak berdintzen dira. \textit{``FREE''} eta \textit{``free''}
+    hitz bera bezala tratatzen dira.
+    \item \textbf{Tokenizazioa (\texttt{WordTokenizer}):}
+    Testua hitzetan banatzen da puntuazio-markak banatzailetzat erabiliz.
+    Muga-karaktereak: \texttt{" \textbackslash r\textbackslash n\textbackslash t.,;:'``()?!-+/\textbackslash<>@\#\$\%\^{}\&*\_=\textasciitilde`|[]\{\}"}
+    \item \textbf{Stemming (\texttt{LovinsStemmer}):}
+    Hitzak beren erroetara murrizten dira. Adib.: \textit{``running''}, \textit{``runs''}
+    eta \textit{``run''} hitz bera bilakatzen dira.
+    \item \textbf{Stopwords (\texttt{Rainbow}):}
+    Hitz ez-informatiboak ezabatzen dira (\textit{``the''}, \textit{``is''}, \textit{``at''}, ...).
+\end{itemize}
+
+\subsection{Parametroen eragina (kuantitatiboa)}
+
+Stemmer-aren eta stopword-en eraginaren ebaluazioa train multzoan egin da.
+\textbf{TODO: Osatu esperimentu honekin -- stemmer bai/ez konparaketa egin eta
+taula bete.}
+
+\begin{table}[H]
+    \centering
+    \caption{Stemmer-aren eraginaren konparaketa (F-Measure, spam)}
+    \begin{tabular}{lrr}
+        \toprule
+        \textbf{Konfigurazioa} & \textbf{Atributu kopurua} & \textbf{F-spam} \\
+        \midrule
+        Stemmer gabe  & -- & -- \\
+        LovinsStemmer & -- & -- \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:stemmer}
+\end{table}
+
+% =============================================
+% 4. BEKTORIZAZIOA
+% =============================================
+\section{Bektorizazioa}
+
+\subsection{Bektorizazio-metodo ezberdinak}
+
+Lau bektorizazio-metodo aztertu dira train multzoan, MLP sailkatzailearekin batera,
+egokiena aukeratzeko. Ebaluazio-eskema: \textbf{Hold-Out} (train vs. dev).
+Metrika: \textbf{F-Measure (spam)}.
+
+\begin{table}[H]
+    \centering
+    \caption{Bektorizazio metodoen konparaketa (F-Measure)}
+    \begin{tabular}{lrrr}
+        \toprule
+        \textbf{Metodoa} & \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
+        \midrule
+        TF-IDF   & -- & -- & -- \\
+        TF       & -- & -- & -- \\
+        IDF      & -- & -- & -- \\
+        Bin BoW  & -- & -- & -- \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:bektorizazio}
+\end{table}
+
+\textbf{TODO: Osatu taula bektorizazio-metodo bakoitzarekin esperimentatu ondoren.}
+
+\subsection{StringToWordVector parametroak}
+
+\begin{table}[H]
+    \centering
+    \caption{Aukeratutako StringToWordVector parametro guztiak}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Parametroa} & \textbf{Balioa} & \textbf{Zergatia} \\
+        \midrule
+        TFTransform     & true   & Hitz maiztasuna kontuan hartzeko \\
+        IDFTransform    & true   & Hitz arraroak gehiago ponderatzeko \\
+        LowerCaseTokens & true   & Maiuskulak berdintze \\
+        WordsToKeep     & 20.000 & Hiztegi zabala mantentzeko atributu-hautaketarako \\
+        Tokenizadorea   & WordTokenizer & Puntuazio-markak banatzailetzat \\
+        Stemmer         & LovinsStemmer & Hitzen erroetara murrizteko \\
+        Stopwords       & Rainbow & Hitz ez-informatiboak kentzeko \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:stwv}
+\end{table}
+
+\subsection{Atributuen hautapena}
+
+\texttt{AttributeSelection} filtro bat aplikatu da \texttt{InfoGainAttributeEval}
+ebaluatzailearekin eta \texttt{Ranker} bilatzailearekin. Informazio-irabaziak
+spam klasearekiko erlazionatuen dauden atributuak aukeratzen ditu.
+
+\textbf{Hautaketaren eragina:}
+
+\begin{table}[H]
+    \centering
+    \caption{Atributu-hautaketaren eragina}
+    \begin{tabular}{lrr}
+        \toprule
+        \textbf{Konfigurazioa} & \textbf{Atributu kopurua} & \textbf{F-spam} \\
+        \midrule
+        Hautaketa gabe (WordsToKeep=20.000) & 20.000 & -- \\
+        Hautaketarekin (Ranker=1.000)       & 1.000  & -- \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:hautaketa}
+\end{table}
+
+\textbf{TODO: Osatu taula esperimentu honekin.}
+
+Amaierako hiztegi-tamaina: \textbf{1.001 atributu} (1.000 numeriko + 1 klase).
+500 baino handiagoa den baldintza betetzen da.
+
+\subsection{Test-blind prozesua}
+
+Test-blind bermatzeko prozesu hau jarraitu da:
+
+\begin{enumerate}
+    \item \texttt{stwv.setInputFormat(train)} -- Hiztegi guztia \textbf{train multzoan
+    soilik} ikasten da. Dev eta test-ek ez dute beren hiztegirik sortzen.
+    \item \texttt{Filter.useFilter(dev, stwv)} eta \texttt{Filter.useFilter(test, stwv)}
+    -- Train-eko hiztegi bera aplikatzen zaie.
+    \item \texttt{selector.setInputFormat(trainVec)} -- Atributu-hautaketa ere
+    train multzoan soilik ikasten da.
+    \item \texttt{Filter.useFilter(devVec, selector)} eta
+    \texttt{Filter.useFilter(testVec, selector)} -- Ranking bera aplikatzen zaie.
+\end{enumerate}
+
+Prozesu honek bermatzen du train, dev eta test multzoek \textbf{atributu berdinak}
+dituztela, \textit{data leakage}-rik gabe.
+
+% =============================================
+% 5. SAILKATZAILEA: MULTILAYER PERCEPTRON
+% =============================================
+\section{Sailkatzailea: Multilayer Perceptron}
+
+\subsection{Deskribapen teorikoa}
+
+Multilayer Perceptron (MLP) sare neuronal artifizial bat da, ikasketa gainbegiratua
+erabiltzen duena \cite{goodfellow2016, bishop2006}. Sare neuronal sakonagoen oinarria
+da eta sailkapen eta erregresio lanetan oso erabilia da.
+
+MLPk hiru geruza mota ditu:
+
+\begin{itemize}
+    \item \textbf{Sarrera-geruza (Input Layer):} Bektorizatutako testuaren atributuak
+    jasotzen ditu. Kasu honetan, 1.000 atributu numeriko.
+    \item \textbf{Geruza ezkutuak (Hidden Layers):} Informazioa prozesatzen duten
+    geruzak. Neurona bakoitzak honako kalkulua egiten du:
+    \begin{equation}
+        a_j = f\!\left(\sum_{i} w_{ij} x_i + b_j\right)
+    \end{equation}
+    Non $f$ aktibazio-funtzioa den (sigmoid, tanh, ...), $w_{ij}$ pisuak
+    eta $b_j$ biasa.
+    \item \textbf{Irteera-geruza (Output Layer):} \textit{spam} edo \textit{ham}
+    sailkapena ematen du softmax edo sigmoid funtzioa erabiliz.
+\end{itemize}
+
+\textbf{Entrenamendua -- Backpropagation:}
+Gradient descent metodoa erabiltzen da errorea minimizatzeko:
+
+\begin{equation}
+    w_{ij} \leftarrow w_{ij}
+    - \eta \frac{\partial E}{\partial w_{ij}}
+    + \alpha \Delta w_{ij}^{(t-1)}
+\end{equation}
+
+Non $\eta$ learning rate, $E$ errorea (cross-entropy edo MSE) eta
+$\alpha$ momentua diren. Momentuak aurreko eguneraketaren zati bat gehitzen
+du konbergentzia azkartzeko eta minimum lokaletan ez blokeatzeko.
+
+\textbf{Abantailak:}
+\begin{itemize}
+    \item Ez-linealtasun konplexuak ikas ditzake
+    \item Testu-datu handiekin ondo funtzionatzen du
+    \item Backpropagation bidez ikasketa eraginkorra
+\end{itemize}
+
+\textbf{Desabantailak:}
+\begin{itemize}
+    \item Parametro askoren doikuntza behar du (overfitting arriskua)
+    \item Konputazio-kostua altua
+    \item ``Kutxa beltza'' da -- emaitzak ez dira erraz interpretagarriak
+\end{itemize}
+
+\subsection{Parametro sentikorrak}
+
+Weka-ko \texttt{MultilayerPerceptron} klaseak honako parametro sentikorrak ditu:
+
+\begin{table}[H]
+    \centering
+    \caption{MLP parametro sentikorrak: teoria eta praktika}
+    \begin{tabular}{p{2.5cm}p{2.2cm}p{4cm}p{3cm}}
+        \toprule
+        \textbf{Parametroa} & \textbf{Tarte teorikoa} & \textbf{Interpretazioa} &
+        \textbf{Aztertutakoak} \\
+        \midrule
+        \texttt{learningRate} ($\eta$) & $(0, 1]$ &
+        Ikasketaren abiadura. Balio handiak ezegonkortasuna sor dezake;
+        txikiak konbergentzia moteltzen du &
+        0,001 / 0,003 / 0,005 / 0,010 \\
+        \midrule
+        \texttt{momentum} ($\alpha$) & $[0, 1)$ &
+        Aurreko eguneraketaren eragina. Minimum lokalak ekidin eta
+        konbergentzia azkartzen laguntzen du &
+        0,2 / 0,4 / 0,6 / 0,8 \\
+        \midrule
+        \texttt{hiddenLayers} & $\geq 1$ neurona &
+        Sarearen konplexutasuna. Gehiegi izateak overfitting ekar dezake;
+        gutxiegi, underfitting &
+        3 / 5 / 10 / 20 / 30 \\
+        \midrule
+        \texttt{trainingTime} & $\geq 1$ &
+        Entrenamendu-iterazio kopurua (epokak). Gehiegi izateak overfitting &
+        100 / 200 / 300 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:parametroak}
+\end{table}
+
+\subsection{Fine-tuning: parametro ekorketa}
+
+\subsubsection{Ebaluazio-eskema eta metrika}
+
+Fine-tuning prozesuan:
+\begin{itemize}
+    \item \textbf{Ebaluazio-eskema:} Stratified Hold-Out -- train multzoa
+    entrenatzeko, dev multzoa ebaluatzeko
+    \item \textbf{Datu-sortak:} \texttt{train\_final.arff} (4.137 inst.) eta
+    \texttt{dev\_final.arff} (518 inst.)
+    \item \textbf{Metrika:} F-Measure (spam) -- precision eta recall batera
+    hartzen ditu, klase desorekarentzat egokia
+\end{itemize}
+
+\subsubsection{Gorka-ren ekorketa}
+
+Aztertutako balioak: LR $\in \{0{,}001, 0{,}005, 0{,}010\}$,
+Mom $\in \{0{,}2, 0{,}3, 0{,}4\}$, Hidden $\in \{3, 5, 10\}$, Epochs = 100.
+27 konbinazio guztira.
+
+\begin{table}[H]
+    \centering
+    \caption{Gorka: fine-tuning emaitzak (hautaketa)}
+    \small
+    \begin{tabular}{rrlrrrr}
+        \toprule
+        \textbf{LR} & \textbf{Mom} & \textbf{Hidden} & \textbf{Epochs} &
+        \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
+        \midrule
+        0,001 & 0,2 & 3  & 100 & 0,9609 & 0,9835 & 0,9770 \\
+        0,001 & 0,2 & 10 & 100 & 0,9660 & 0,9855 & 0,9799 \\
+        0,005 & 0,2 & 10 & 100 & 0,9803 & 0,9918 & 0,9885 \\
+        0,005 & 0,3 & 10 & 100 & 0,9803 & 0,9918 & 0,9885 \\
+        \textbf{0,005} & \textbf{0,4} & \textbf{10} & \textbf{100} &
+        \textbf{0,9819} & \textbf{0,9925} & \textbf{0,9894} \\
+        0,010 & 0,2 & 10 & 100 & 0,9787 & 0,9911 & 0,9875 \\
+        0,010 & 0,4 & 10 & 100 & 0,9739 & 0,9890 & 0,9846 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:finetuning_gorka}
+\end{table}
+
+\textbf{Ondorioak:} LR=0,005 onena. Momentum-ak eragin txikia du.
+10 neurona 3 eta 5 baino hobea.
+\textbf{Eredu onena: LR=0,005 | Mom=0,4 | Hidden=10 | F-spam=0,9819.}
+
+\subsubsection{Andoni-ren ekorketa}
+
+Aztertutako balioak: LR $\in \{0{,}003, 0{,}005\}$,
+Mom $\in \{0{,}4, 0{,}6, 0{,}8\}$, Hidden $\in \{10, 20, 30\}$,
+Epochs $\in \{100, 200\}$. 36 konbinazio guztira.
+
+\begin{table}[H]
+    \centering
+    \caption{Andoni: fine-tuning emaitzak (hautaketa)}
+    \small
+    \begin{tabular}{rrlrrrr}
+        \toprule
+        \textbf{LR} & \textbf{Mom} & \textbf{Hidden} & \textbf{Epochs} &
+        \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
+        \midrule
+        0,003 & 0,4 & 10 & 100 & 0,9787 & 0,9911 & 0,9875 \\
+        0,003 & 0,6 & 20 & 100 & 0,9819 & 0,9925 & 0,9894 \\
+        0,003 & 0,8 & 10 & 100 & 0,9836 & 0,9932 & 0,9904 \\
+        0,003 & 0,8 & 20 & 100 & 0,9835 & 0,9932 & 0,9904 \\
+        0,003 & 0,8 & 30 & 100 & 0,9835 & 0,9932 & 0,9904 \\
+        0,005 & 0,4 & 10 & 100 & 0,9819 & 0,9925 & 0,9894 \\
+        \textbf{0,005} & \textbf{0,8} & \textbf{10} & \textbf{100} &
+        \textbf{0,9851} & \textbf{0,9939} & \textbf{0,9913} \\
+        0,005 & 0,8 & 20 & 100 & 0,9834 & 0,9932 & 0,9904 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:finetuning_andoni}
+\end{table}
+
+\textbf{Ondorioak:} Momentum altuagoak (0,8) emaitza hobeak ematen ditu.
+Epoch kopuruak (100 vs 200) eragin txikia du.
+\textbf{Eredu onena: LR=0,005 | Mom=0,8 | Hidden=10 | Epochs=100 | F-spam=0,9851.}
+
+\subsubsection{Ibai-ren ekorketa}
+
+Aztertutako balioak: LR $\in \{0{,}003, 0{,}005\}$,
+Mom $\in \{0{,}4, 0{,}6, 0{,}8\}$, Hidden $\in \{10, 20, 30\}$,
+Epochs $\in \{100, 200\}$. 36 konbinazio guztira.
+
+\begin{table}[H]
+    \centering
+    \caption{Ibai: fine-tuning emaitzak (hautaketa)}
+    \small
+    \begin{tabular}{rrlrrrr}
+        \toprule
+        \textbf{LR} & \textbf{Mom} & \textbf{Hidden} & \textbf{Epochs} &
+        \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
+        \midrule
+        0,003 & 0,4 & 10 & 100 & 0,8657 & 0,9531 & 0,9278 \\
+        0,003 & 0,8 & 10 & 200 & 0,8841 & 0,9579 & 0,9365 \\
+        0,005 & 0,4 & 10 & 100 & 0,8263 & 0,9421 & 0,9085 \\
+        0,005 & 0,8 & 20 & 100 & 0,8453 & 0,9468 & 0,9174 \\
+        \textbf{0,005} & \textbf{0,8} & \textbf{20} & \textbf{200} &
+        \textbf{0,8921} & \textbf{0,9604} & \textbf{0,9406} \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:finetuning_ibai}
+\end{table}
+
+\textbf{Ondorioak:} Ibai-ren emaitzak nabarmen txikiagoak dira (F-spam $\approx$ 0,89).
+Honen arrazoia \texttt{EmailVectorizerAndSelector.java}-ko konfigurazio-aldea
+da ziurrenik: \texttt{WordsToKeep} edo \texttt{Ranker}-eko atributu-kopuru ezberdina.
+\textbf{Eredu onena: LR=0,005 | Mom=0,8 | Hidden=20 | Epochs=200 | F-spam=0,8921.}
+
+\subsubsection{Emaitzen adierazpen grafikoa}
+
+Irudian LearningRate-ren eragina ikusten da F-spam-ean, Gorka-ren esperimentutik:
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=10cm, height=6cm,
+            xlabel={LearningRate},
+            ylabel={F-Measure (spam)},
+            xtick={0.001, 0.005, 0.010},
+            xticklabels={0,001, 0,005, 0,010},
+            ymin=0.95, ymax=1.0,
+            ymajorgrids=true,
+            legend pos=south east,
+            title={LearningRate-ren eragina F-spam-ean (Hidden=10, Epochs=100)}
+        ]
+        \addplot[color=blue, mark=*, thick] coordinates {
+            (0.001, 0.9660)
+            (0.005, 0.9819)
+            (0.010, 0.9787)
+        };
+        \addlegendentry{Momentum=0,4}
+
+        \addplot[color=red, mark=square*, thick] coordinates {
+            (0.001, 0.9660)
+            (0.005, 0.9803)
+            (0.010, 0.9755)
+        };
+        \addlegendentry{Momentum=0,3}
+
+        \addplot[color=green!60!black, mark=triangle*, thick] coordinates {
+            (0.001, 0.9660)
+            (0.005, 0.9803)
+            (0.010, 0.9739)
+        };
+        \addlegendentry{Momentum=0,2}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{LearningRate-ren eragina F-spam-ean (Gorka-ren fine-tuning, Hidden=10)}
+    \label{fig:lr_eragina}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=10cm, height=6cm,
+            xlabel={Momentum},
+            ylabel={F-Measure (spam)},
+            xtick={0.4, 0.6, 0.8},
+            xticklabels={0,4, 0,6, 0,8},
+            ymin=0.97, ymax=0.99,
+            ymajorgrids=true,
+            legend pos=south east,
+            title={Momentum-aren eragina F-spam-ean (LR=0,005, Epochs=100)}
+        ]
+        \addplot[color=blue, mark=*, thick] coordinates {
+            (0.4, 0.9819)
+            (0.6, 0.9771)
+            (0.8, 0.9851)
+        };
+        \addlegendentry{Hidden=10}
+
+        \addplot[color=red, mark=square*, thick] coordinates {
+            (0.4, 0.9819)
+            (0.6, 0.9803)
+            (0.8, 0.9834)
+        };
+        \addlegendentry{Hidden=20}
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Momentum-aren eragina F-spam-ean (Andoni-ren fine-tuning, LR=0,005)}
+    \label{fig:mom_eragina}
+\end{figure}
+
+\subsection{Sailkatzaile optimoaren inferentzia}
+
+Hiru fine-tuningen emaitzak konparatuz, \textbf{Andoni-ren eredu onena}
+aukeratu da proiektuko eredu optimal gisa, F-spam altuena lortzen duelako:
+
+\begin{table}[H]
+    \centering
+    \caption{Hiru fine-tuningen eredu onenak -- konparaketa}
+    \begin{tabular}{lllllr}
+        \toprule
+        \textbf{Kidea} & \textbf{LR} & \textbf{Mom} & \textbf{Hidden} &
+        \textbf{Epochs} & \textbf{F-spam} \\
+        \midrule
+        Gorka  & 0,005 & 0,4 & 10 & 100 & 0,9819 \\
+        \textbf{Andoni} & \textbf{0,005} & \textbf{0,8} & \textbf{10} &
+        \textbf{100} & \textbf{0,9851} \\
+        Ibai   & 0,005 & 0,8 & 20 & 200 & 0,8921 \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:eredu_onenak}
+\end{table}
+
+\textbf{Eredu optimoa:}
+\begin{itemize}
+    \item LearningRate: 0,005
+    \item Momentum: 0,8
+    \item HiddenLayers: 10
+    \item Epochs: 100
+    \item Entrenatzeko datu-multzoa: \texttt{train\_final.arff} (4.137 instantzia)
+    \item Gordetako eredua: \texttt{modelo/mlp.model}
+\end{itemize}
+
+% =============================================
+% 6. KALITATE ESTIMATUA
+% =============================================
+\section{Aurreikusitako kalitate estimatua}
+
+Eredu finalaren kalitatea bi ebaluazio-eskemaren bidez estimatu da,
+\textbf{train eta dev instantziak elkartuz} (4.654 instantzia).
+Parametro optimoak: LR=0,005 | Mom=0,2 | Hidden=3 | Epochs=300.
+
+\subsection{5-fold Cross Validation}
+
+5-fold CV-n train+dev multzoa 5 zatitan banatzen da; bakoitzean 4 zatirekin
+entrenatzen da eta 1arekin ebaluatzen. Prozesu hau 5 aldiz errepikatzen da.
+
+\begin{table}[H]
+    \centering
+    \caption{5-fold Cross Validation emaitzak}
+    \begin{tabular}{lrrr}
+        \toprule
+        \textbf{Klasea} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} \\
+        \midrule
+        Spam  & 0,9419 & 0,9489 & 0,9454 \\
+        Ham   & 0,9791 & 0,9761 & 0,9776 \\
+        WAvg  & 0,9683 & 0,9682 & 0,9682 \\
+        \midrule
+        \multicolumn{2}{l}{Accuracy} & \multicolumn{2}{r}{\%96,82} \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:5fcv}
+\end{table}
+
+Nahaste-matrizea:
+\begin{table}[H]
+    \centering
+    \caption{5-fold CV nahaste-matrizea}
+    \begin{tabular}{rr|l}
+        \toprule
+        \textbf{a} & \textbf{b} & \\
+        \midrule
+        1.281 & 69    & a = spam \\
+        79    & 3.225 & b = ham  \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+69 spam mezu ham bezala sailkatu dira (false negative), eta 79 ham mezu
+spam bezala (false positive). Spam-eko false negative-ak kritikoagoak
+dira posta-kutxan spam mezu gehiago onartzen direlako.
+
+\subsection{5 Repeated Stratified Hold-Out (70/30)}
+
+10 aldiz errepikatu da 70/30 banaketa estratifikatua, emaitzen egonkortasuna
+neurtzeko.
+
+\begin{table}[H]
+    \centering
+    \caption{5 Repeated Stratified Hold-Out -- iterazio bakoitzeko emaitzak}
+    \begin{tabular}{lrrr}
+        \toprule
+        \textbf{Iterazioa} & \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
+        \midrule
+        1 & 0,9455 & 0,9771 & 0,9681 \\
+        2 & 0,9573 & 0,9815 & 0,9743 \\
+        3 & 0,9606 & 0,9831 & 0,9764 \\
+        4 & 0,9368 & 0,9757 & 0,9652 \\
+        5 & 0,9399 & 0,9752 & 0,9649 \\
+        \midrule
+        \textbf{Batezbestekoa} & \textbf{0,9480} & \textbf{0,9785} & \textbf{0,9698} \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:rep_ho_iter}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{5 Repeated Stratified Hold-Out -- batezbestekoa $\pm$ desbideratze estandarra}
+    \begin{tabular}{lrrr}
+        \toprule
+        \textbf{Klasea} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} \\
+        \midrule
+        Spam & $0{,}9375 \pm 0{,}0180$ & $0{,}9591 \pm 0{,}0135$ & $0{,}9480 \pm 0{,}0094$ \\
+        Ham  & $0{,}9831 \pm 0{,}0056$ & $0{,}9741 \pm 0{,}0069$ & $0{,}9786 \pm 0{,}0032$ \\
+        WAvg & --                       & --                       & $0{,}9698 \pm 0{,}0047$ \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:rep_ho}
+\end{table}
+
+\subsection{Kalitate estimatuaren interpretazioa}
+
+5-fCV-k eta Repeated HO-k antzeko emaitzak ematen dituzte
+(F-spam $\approx$ 0,945--0,948), ereduak ondo orokortzen duela adieraziz.
+Desbideratze estandar txikiek ($\pm$0,009) emaitzen egonkortasuna
+erakusten dute. Ham klaseko F-Measure altuagoa da datuen desoreka dela eta.
+
+% =============================================
+% 7. IRAGARPENAK -- ERABILTZAILE ROLA
+% =============================================
+\section{Iragarpenak: erabiltzailearen paketea}
+
+\subsection{Test-blind ebaluazioa}
+
+\texttt{TestModel.java} fitxategiak eredu finala \texttt{test\_final.arff}
+multzoan ebaluatu du (517 instantzia, klase ezezagunak):
+
+\begin{table}[H]
+    \centering
+    \caption{Test multzoko emaitzak (517 instantzia)}
+    \begin{tabular}{lr}
+        \toprule
+        \textbf{Metrika} & \textbf{Balioa} \\
+        \midrule
+        Accuracy                    & \%97,87 \\
+        F-Measure haztatua (WAvg)   & 0,9787  \\
+        \midrule
+        Spam Precision              & 0,9633  \\
+        Spam Recall                 & 0,9633  \\
+        Spam F-Measure              & 0,9633  \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:test}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{Test multzoko nahaste-matrizea}
+    \begin{tabular}{rr|l}
+        \toprule
+        \textbf{a} & \textbf{b} & \\
+        \midrule
+        289 & 11 & a = spam \\
+        11  & 724 & b = ham \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Test F-spam (0,9633) kalitate estimatutakoa (0,9480) baino altuagoa da,
+ereduak benetako datu ezezagunekin ere ondo funtzionatzen duela erakutsiz.
+
+\subsection{Classify.java -- testu gordina sailkatzeko}
+
+\texttt{Classify.java} fitxategiak testu gordina jasotzen du eta
+\textit{spam}/\textit{ham} iragarpena ematen du. Prozesu osoa
+on-the-fly egiten du:
+
+\begin{enumerate}
+    \item Eredua kargatu (\texttt{mlp.model})
+    \item Train multzoko hiztegia berreraiki (\texttt{train\_final.arff}-tik)
+    \item Testu berria bektorizatu hiztegi berarekin
+    \item Atributu-hautaketa aplikatu ranking berarekin
+    \item \texttt{classifyInstance()} bidez iragarpena lortu
+\end{enumerate}
+
+Exekuzio adibidea:
+\begin{verbatim}
+java -cp "lib\weka.jar;bin" Classify modelo/mlp.model
+     Partiketak/train_final.arff
+     "Free prize! Click here to claim your reward now"
+\end{verbatim}
+
+Irteera:
+\begin{verbatim}
+Testua     : Free prize! Click here to claim your reward now
+Iragarpena : SPAM
+\end{verbatim}
+
+% =============================================
+% 8. SOFTWARE DISEINUA
+% =============================================
+\section{Diseinua}
+
+Helburuetan bi rol bereizten dira: datuen pre-prozesamendua eta klasifikazio/ebaluazioa. Atal bakoitzerako diseinatu dugun softwarearen diseinua grafikoan adierazten da datuen fluxu-diagramen bitartez, non prozesu nagusiak eta datuen transformazioak ikus daitezkeen.
+
+\subsection{Datu-fluxu diagrama}
+
+\begin{figure}[h]
+    \centering
+     Hemen jarri dezakezu zuk sortutako irudia, adibidez:
+     \includegraphics[width=1.17\textwidth]{diagramas/fuxu_diagrama.drawio.png}
+    \caption{Datu-fluxu sinplea: sarrera, prozesuak eta irteerak.}
+\end{figure}
+
+\subsection{Sarrera eta Irteerak}
+
+\begin{itemize}
+    \item \textbf{Sarrera:} ARFF formatuko fitxategiak, adibidez, \texttt{test\_final.arff} edo \texttt{train\_final.arff}, partiketako azpi-multzoak erabiliz.
+    \item \textbf{Barneko prozesuak:}
+    \begin{itemize}
+        \item \textbf{Pre-prozesamendua:} testu normalizazioa (\texttt{TextNormalizer}), tokenizazioa eta atributuen selekzioa (\texttt{StringToWordVector}, \texttt{AttributeSelection}).
+        \item \textbf{Inferentzia:} entrenatutako ereduak aplikatzea (\texttt{Classifier} erabiltzen \texttt{Iragarri} eta \texttt{TestModel} klaseetan).
+        \item \textbf{Ebaluazioa:} zehaztasuna, recall eta F-measure kalkulatzea (\texttt{Evaluation} klasearen bidez).
+    \end{itemize}
+    \item \textbf{Irteera:} testuen emaitzak fitxategi testuetan gordetzea (\texttt{.txt}), baita konfusio-matrizeak eta metrika orokorrak.
+\end{itemize}
+
+\subsection{Datuen transformazioa}
+
+Datuak sarreratik irteerara prozesu hauen bidez pasatzen dira:
+
+\begin{enumerate}
+    \item Sarrera ARFF fitxategia kargatu.
+    \item Testu atributuak normalizatu (\texttt{TextNormalizer}).
+    \item Tokenizatu eta aukeratu atributuak garrantzitsuenak (\texttt{StringToWordVector}, \texttt{AttributeSelection}).
+    \item Aplikatu inferentzia entrenatutako ereduarekin (\texttt{Classifier}).
+    \item Ebaluatu emaitzak (\texttt{Evaluation}) eta sortu txostenak (\texttt{.txt} fitxategiak).
+\end{enumerate}
+
+Horrela, datuen fluxua eta prozesu nagusiak modu grafiko eta testualean dokumentatzen dira, sarrera eta irteera formatuak argi adieraziz.
+
+% =============================================
+% BIBLIOGRAFIA
+% =============================================
+\newpage
+\bibliographystyle{plain}
+\begin{thebibliography}{9}
+
+\bibitem{goodfellow2016}
+Goodfellow, I., Bengio, Y., \& Courville, A. (2016).
+\textit{Deep Learning}. MIT Press.
+
+\bibitem{bishop2006}
+Bishop, C. M. (2006).
+\textit{Pattern Recognition and Machine Learning}. Springer.
+
+\bibitem{weka}
+Hall, M., Frank, E., Holmes, G., Pfahringer, B., Reutemann, P., \& Witten, I. H. (2009).
+The WEKA data mining software: An update.
+\textit{ACM SIGKDD Explorations Newsletter}, 11(1), 10--18.
+
+\bibitem{manning}
+Manning, C. D., Raghavan, P., \& Sch\"utze, H. (2008).
+\textit{Introduction to Information Retrieval}. Cambridge University Press.
+
+\bibitem{hastie}
+Hastie, T., Tibshirani, R., \& Friedman, J. (2009).
+\textit{The Elements of Statistical Learning}. Springer.
+
+\end{thebibliography}
+
+\end{document}
