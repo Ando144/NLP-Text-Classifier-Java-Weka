@@ -34,6 +34,46 @@ import java.io.File;
  */
 public class EmailLoader {
     /**
+     * Datu-multzo bat ARFF formatuko fitxategi batean gordetzen du.
+     *
+     * <p>
+     * Metodo honek, existitzen ez badira, irteerako fitxategiaren direktorioak
+     * sortzen ditu, eta Weka-ko {@link ArffSaver} erabiliz datuak idazten
+     * ditu.
+     * </p>
+     *
+     * @param data       Gorde nahi den Instances objektua
+     * @param outputFile Irteerako fitxategiaren File objektua
+     * @throws Exception Fitxategia idaztean errore bat gertatzen bada
+     */
+    public static void saveToArff(Instances data, File outputFile) throws Exception {
+        if (outputFile.getParentFile() != null) {
+            outputFile.getParentFile().mkdirs();
+        }
+        ArffSaver saver = new ArffSaver();
+        saver.setInstances(data);
+        saver.setFile(outputFile);
+        saver.writeBatch();
+    }
+
+    /**
+     * Datu-multzo baten klase-atributua azken indizean dagoela ziurtatzen du.
+     *
+     * <p>
+     * Weka-k klase-atributua esplizituki ezarrita izatea behar du prozesu
+     * gehienetarako. Metodo honek ezarrita ez badago soilik aldatzen du,
+     * klasea azken atributua dela ezarriz.
+     * </p>
+     *
+     * @param data Prozesatu nahi den datu-multzoa
+     */
+    public static void ensureClassIndex(Instances data) {
+        if (data.classIndex() == -1) {
+            data.setClassIndex(data.numAttributes() - 1);
+        }
+    }
+
+    /**
      * Programa exekutatzen duen metodo nagusia, testu-fitxategiak kargatu
      * eta ARFF dataset bihurtzen dituena.
      *
@@ -84,27 +124,16 @@ public class EmailLoader {
             Instances dataRaw = loader.getDataSet();
 
             // Klase atributua azken atributu gisa ezartzen da (spam/legitimoa)
-            if (dataRaw.classIndex() == -1) {
-                dataRaw.setClassIndex(dataRaw.numAttributes() - 1);
-            }
+            ensureClassIndex(dataRaw);
 
             // Sortutako dataset-a ARFF formatuan gordetzen da
-            ArffSaver saver = new ArffSaver();
-            saver.setInstances(dataRaw);
-
-            File outputArff = new File(outputPath);
-            if (outputArff.getParentFile() != null) {
-                outputArff.getParentFile().mkdirs();
-            }
-
-            saver.setFile(outputArff);
-            saver.writeBatch();
+            saveToArff(dataRaw, new File(outputPath));
 
             System.out.println("==================================================");
             System.out.println("ARRAKASTA! Korreoen datu-multzoa ondo sortu da.");
             System.out.println("Prozesatutako mezuak guztira: " + dataRaw.numInstances());
             System.out.println("Sortutako atributuak: " + dataRaw.numAttributes() + " (Klasea eta Testua)");
-            System.out.println("Fitxategia hemen gorde da: " + outputArff.getAbsolutePath());
+            System.out.println("Fitxategia hemen gorde da: " + new File(outputPath).getAbsolutePath());
             System.out.println("==================================================");
 
             // ================================================

@@ -103,14 +103,14 @@ public class Evaluate {
         Instances train = new DataSource(trainPath).getDataSet();
         Instances dev = new DataSource(devPath).getDataSet();
 
-        train.setClassIndex(train.numAttributes() - 1);
-        dev.setClassIndex(dev.numAttributes() - 1);
+        EmailLoader.ensureClassIndex(train);
+        EmailLoader.ensureClassIndex(dev);
 
         Instances allData = new Instances(train);
         for (int i = 0; i < dev.numInstances(); i++) {
             allData.add(dev.instance(i));
         }
-        allData.setClassIndex(allData.numAttributes() - 1);
+        EmailLoader.ensureClassIndex(allData);
 
         System.out.println("Train+Dev: " + allData.numInstances() + " instanzia");
         System.out.println("Parametro optimoak: LR=" + learningRate + " Mom=" + momentum
@@ -273,7 +273,22 @@ public class Evaluate {
         ExperimentLogger.log("5. Kalitate Estimatua (Evaluate)", parametrosLog, resultadosLog);
     }
 
-    private static MultilayerPerceptron buildMLP(double learningRate, double momentum, String hiddenLayers, int epochs)
+    /**
+     * Multilayer Perceptron sare neuronala sortu eta konfiguratzen du.
+     *
+     * <p>
+     * Metodo honek MLP algoritmoaren parametroak ezartzen ditu,
+     * input balioak hartuz eta MLP eredua haiekin sortuz.
+     * </p>
+     *
+     * @param learningRate Ikasketa tasa (learning rate)
+     * @param momentum     Momentum balioa
+     * @param hiddenLayers Geruza ezkutuen konfigurazioa (adib. "3")
+     * @param epochs       Entrenamendu iterazio kopurua (training time)
+     * @return Konfiguratutako {@link MultilayerPerceptron} eredua
+     * @throws Exception Konfigurazioan errore bat gertatzen bada
+     */
+    public static MultilayerPerceptron buildMLP(double learningRate, double momentum, String hiddenLayers, int epochs)
             throws Exception {
         MultilayerPerceptron mlp = new MultilayerPerceptron();
         mlp.setLearningRate(learningRate);

@@ -113,19 +113,6 @@ public class EmailVectorizerAndSelector {
             int maxNGram = args.length >= 8 ? Integer.parseInt(args[7]) : 1;
 
             boolean thresholdMode = (numToSelect == -1) || useThreshold;
-            /**
-             * Exekuzioaren konfigurazioa kontsolan inprimatzen du,
-             * esperimentuen trazabilitatea errazteko.
-             *
-             * @param baseDir       Datuen direktorioa
-             * @param wordsToKeep   Hitz kopuru maximoa
-             * @param numToSelect   Hautatutako atributu kopurua
-             * @param digitsAsDelim Digituak bereizle diren ala ez
-             * @param minTermFreq   Gutxieneko maiztasuna
-             * @param thresholdMode Atalase bidezko aukeraketa aktibatuta dagoen
-             * @param useNormalizer TextNormalizer erabilera
-             * @param maxNGram      N-gram tamaina maximoa
-             */
             printConfig(baseDir, wordsToKeep, numToSelect, digitsAsDelim,
                     minTermFreq, thresholdMode, useNormalizer, maxNGram);
 
@@ -145,9 +132,9 @@ public class EmailVectorizerAndSelector {
             Instances dev = new DataSource(devRawFile.getPath()).getDataSet();
             Instances test = new DataSource(testRawFile.getPath()).getDataSet();
 
-            train.setClassIndex(train.numAttributes() - 1);
-            dev.setClassIndex(dev.numAttributes() - 1);
-            test.setClassIndex(test.numAttributes() - 1);
+            EmailLoader.ensureClassIndex(train);
+            EmailLoader.ensureClassIndex(dev);
+            EmailLoader.ensureClassIndex(test);
 
             // Aukeran, testuaren aurreprozesamendua aplikatzen da (garbiketa,
             // normalizazioa)
@@ -247,19 +234,9 @@ public class EmailVectorizerAndSelector {
             System.out.println("\nFiltroak gordeta inferentziarako (modelo/vectorizer.ser, modelo/selector.ser)");
 
             // Azken dataset eraldatuak fitxategietan gordetzen dira
-            ArffSaver saver = new ArffSaver();
-
-            saver.setInstances(trainFinal);
-            saver.setFile(new File(baseDir, "train_final.arff"));
-            saver.writeBatch();
-
-            saver.setInstances(devFinal);
-            saver.setFile(new File(baseDir, "dev_final.arff"));
-            saver.writeBatch();
-
-            saver.setInstances(testFinal);
-            saver.setFile(new File(baseDir, "test_final.arff"));
-            saver.writeBatch();
+            EmailLoader.saveToArff(trainFinal, new File(baseDir, "train_final.arff"));
+            EmailLoader.saveToArff(devFinal, new File(baseDir, "dev_final.arff"));
+            EmailLoader.saveToArff(testFinal, new File(baseDir, "test_final.arff"));
 
             System.out.println("\n==================================================");
             System.out.println("PROZESUA AMAITUTA!");
@@ -280,6 +257,19 @@ public class EmailVectorizerAndSelector {
         }
     }
 
+    /**
+     * Exekuzioaren konfigurazioa kontsolan inprimatzen du,
+     * esperimentuen trazabilitatea errazteko.
+     *
+     * @param baseDir       Datuen direktorioa
+     * @param wordsToKeep   Hitz kopuru maximoa
+     * @param numToSelect   Hautatutako atributu kopurua
+     * @param digitsAsDelim Digituak bereizle diren ala ez
+     * @param minTermFreq   Gutxieneko maiztasuna
+     * @param thresholdMode Atalase bidezko aukeraketa aktibatuta dagoen
+     * @param useNormalizer TextNormalizer erabilera
+     * @param maxNGram      N-gram tamaina maximoa
+     */
     private static void printConfig(String baseDir, int wordsToKeep, int numToSelect,
             boolean digitsAsDelim, int minTermFreq,
             boolean thresholdMode, boolean useNormalizer,

@@ -74,10 +74,8 @@ public class GetModel {
         Instances train = new DataSource(trainPath).getDataSet();
         Instances dev = new DataSource(devPath).getDataSet();
 
-        if (train.classIndex() == -1)
-            train.setClassIndex(train.numAttributes() - 1);
-        if (dev.classIndex() == -1)
-            dev.setClassIndex(dev.numAttributes() - 1);
+        EmailLoader.ensureClassIndex(train);
+        EmailLoader.ensureClassIndex(dev);
 
         System.out.println("Train: " + train.numInstances() + " instantzia kargatuta.");
         System.out.println("Dev  : " + dev.numInstances() + " instantzia kargatuta.\n");
@@ -87,10 +85,10 @@ public class GetModel {
             spamIndex = train.classAttribute().indexOfValue("spam");
 
         // Bilaketa espazioa (Grid Search)
-        double[] learningRates = { 0.005 };
-        double[] momentums = { 0.2 };
-        String[] hiddenLayers = { "3" };
-        int[] epochs = { 300 };
+        double[] learningRates = { 0.003, 0.005, 0.01 };
+        double[] momentums = { 0.1, 0.2, 0.3 };
+        String[] hiddenLayers = { "3", "5", "10" };
+        int[] epochs = { 200, 300, 500 };
 
         MultilayerPerceptron bestModel = null;
         double bestFMeasure = -1;
@@ -127,13 +125,7 @@ public class GetModel {
                                 current, total, lr, mom, hidden, ep);
 
                         // MLP Konfigurazioa
-                        MultilayerPerceptron mlp = new MultilayerPerceptron();
-                        mlp.setLearningRate(lr);
-                        mlp.setMomentum(mom);
-                        mlp.setHiddenLayers(hidden);
-                        mlp.setTrainingTime(ep);
-                        mlp.setNominalToBinaryFilter(true);
-                        mlp.setNormalizeAttributes(true);
+                        MultilayerPerceptron mlp = Evaluate.buildMLP(lr, mom, hidden, ep);
 
                         // Koste konputazionala neurtu (Train)
                         long startTime = System.currentTimeMillis();

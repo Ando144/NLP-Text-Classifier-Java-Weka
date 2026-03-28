@@ -90,9 +90,7 @@ public class DataSplit {
             DataSource source = new DataSource(inputPath);
             Instances data = source.getDataSet();
 
-            if (data.classIndex() == -1) {
-                data.setClassIndex(data.numAttributes() - 1);
-            }
+            EmailLoader.ensureClassIndex(data);
 
             // Datuak ausaz nahasten dira, banaketan bias-a saihesteko
             System.out.println("Datuak ausazkotzen (Randomize, seed=1)...");
@@ -140,26 +138,19 @@ public class DataSplit {
             Instances train = Filter.useFilter(remainder, trainFilter);
 
             System.out.println("Banaketa amaituta:");
+
+            EmailLoader.ensureClassIndex(train);
+            EmailLoader.ensureClassIndex(dev);
+            EmailLoader.ensureClassIndex(test);
+
             System.out.println(" -> Train : " + train.numInstances() + " instantzia");
             System.out.println(" -> Dev   : " + dev.numInstances() + " instantzia");
             System.out.println(" -> Test  : " + test.numInstances() + " instantzia");
 
             // Sortutako azpimultzoak ARFF fitxategietan gordetzen dira
-            new File(trainPath).getParentFile().mkdirs();
-
-            ArffSaver saver = new ArffSaver();
-
-            saver.setInstances(train);
-            saver.setFile(new File(trainPath));
-            saver.writeBatch();
-
-            saver.setInstances(dev);
-            saver.setFile(new File(devPath));
-            saver.writeBatch();
-
-            saver.setInstances(test);
-            saver.setFile(new File(testPath));
-            saver.writeBatch();
+            EmailLoader.saveToArff(train, new File(trainPath));
+            EmailLoader.saveToArff(dev, new File(devPath));
+            EmailLoader.saveToArff(test, new File(testPath));
 
             System.out.println("\nARRAKASTA! Fitxategiak ondo gorde dira 'Partiketak' karpetan.");
             System.out.println("==================================================");

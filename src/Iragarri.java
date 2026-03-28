@@ -88,23 +88,6 @@ public class Iragarri {
         return data;
     }
 
-    /**
-     * Sarrerako direktorioak klaseen azpikarpetak dituen egiaztatzen du.
-     *
-     * <p>
-     * Adibidez: /spam eta /ham karpetak badaude.
-     * </p>
-     *
-     * @param inputDirectory Aztertu beharreko direktorioa
-     * @return true azpikarpetak badaude, false bestela
-     */
-    private static boolean hasClassSubdirectories(File inputDirectory) {
-        File[] children = inputDirectory.listFiles();
-        if (children == null) {
-            return false;
-        }
-        return Arrays.stream(children).anyMatch(File::isDirectory);
-    }
 
     /**
      * Programaren sarrera-puntua.
@@ -152,18 +135,9 @@ public class Iragarri {
 
             // Datuak kargatu
             System.out.println("\nEmailak irakurtzen...");
-            Instances probaRaw;
-            if (hasClassSubdirectories(inputDirectory)) {
-                TextDirectoryLoader loader = new TextDirectoryLoader();
-                loader.setDirectory(inputDirectory);
-                probaRaw = loader.getDataSet();
-            } else {
-                probaRaw = loadFlatInferenceData(inputDirectory);
-            }
+            Instances probaRaw = loadFlatInferenceData(inputDirectory);
 
-            if (probaRaw.classIndex() == -1) {
-                probaRaw.setClassIndex(probaRaw.numAttributes() - 1);
-            }
+            EmailLoader.ensureClassIndex(probaRaw);
             for (int i = 0; i < probaRaw.numInstances(); i++) {
                 probaRaw.instance(i).setClassMissing();
             }
@@ -175,12 +149,8 @@ public class Iragarri {
                         "ABISUA: Ez da mezu elektronikorik kargatu. Egiaztatu sarrera direktorioaren egitura.");
             }
 
-            File rawArffFile = new File(outputDir, "proba_raw.arff");
-            ArffSaver rawSaver = new ArffSaver();
-            rawSaver.setInstances(probaRaw);
-            rawSaver.setFile(rawArffFile);
-            rawSaver.writeBatch();
-            System.out.println("  RAW ARFF gordeta: " + rawArffFile.getAbsolutePath());
+            EmailLoader.saveToArff(probaRaw, new File(outputDir, "proba_raw.arff"));
+            System.out.println("  RAW ARFF gordeta.");
 
             // TestNormalizer aplikatu
             System.out.println("\nTextNormalizer aplikatzen...");
@@ -203,9 +173,11 @@ public class Iragarri {
                 AttributeSelection selector = (AttributeSelection) FilterSerializationHelper
                         .loadFilter(selectorFile.getPath());
 
+                stwv.setInputFormat(probaNorm);
                 Instances probaVec = Filter.useFilter(probaNorm, stwv);
                 System.out.println("  Bektorizazioaren ostean atributuak: " + probaVec.numAttributes());
 
+                selector.setInputFormat(probaVec);
                 probaFinal = Filter.useFilter(probaVec, selector);
                 System.out.println("  Aukeraketa aplikatuta. Atributuak: " + probaFinal.numAttributes());
 
@@ -214,12 +186,8 @@ public class Iragarri {
                         "Filtro serializatuak ez dira aurkitu 'modelo/' karpetan. Exekutatu EmailVectorizerAndSelector lehenik.");
             }
 
-            File finalArffFile = new File(outputDir, "proba_final.arff");
-            ArffSaver finalSaver = new ArffSaver();
-            finalSaver.setInstances(probaFinal);
-            finalSaver.setFile(finalArffFile);
-            finalSaver.writeBatch();
-            System.out.println("  FINAL ARFF gordeta: " + finalArffFile.getAbsolutePath());
+            EmailLoader.saveToArff(probaFinal, new File(outputDir, "proba_final.arff"));
+            System.out.println("  FINAL ARFF gordeta.");
 
             System.out.println("\nEredua (sare neuronala) kargatzen...");
             Classifier modelo = (Classifier) SerializationHelper.read(modelPath);

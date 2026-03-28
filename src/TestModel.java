@@ -70,9 +70,7 @@ public class TestModel {
 
             // Datuak eta eredua kargatu
             Instances test = new DataSource(testPath).getDataSet();
-            if (test.classIndex() == -1) {
-                test.setClassIndex(test.numAttributes() - 1);
-            }
+            EmailLoader.ensureClassIndex(test);
 
             Classifier eredua = (Classifier) SerializationHelper.read(modelPath);
 
