@@ -29,7 +29,7 @@ public class TestModel {
     /**
      * Programaren sarrera-puntua.
      *
-     * <p>
+     * 
      * Metodo honek:
      * <ul>
      * <li>Test datuak kargatzen ditu</li>
@@ -38,7 +38,7 @@ public class TestModel {
      * <li>Metrika nagusiak kalkulatzen ditu (Accuracy, F-Measure, etab.)</li>
      * <li>Emaitzak pantailan erakutsi eta fitxategian gordetzen ditu</li>
      * </ul>
-     * </p>
+     * 
      *
      * @param args Argumentuak:
      *             {@code <test_final.arff> <eredua.model> <emaitzak.txt> }

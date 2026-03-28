@@ -33,7 +33,7 @@ public class GetModel {
     /**
      * Programaren sarrera-puntua.
      *
-     * <p>
+     * 
      * Metodo honek:
      * <ul>
      * <li>Datuak kargatzen ditu (train eta dev)</li>
@@ -42,7 +42,7 @@ public class GetModel {
      * <li>F-Measure (spam) maximizatzen duen eredua hautatzen du</li>
      * <li>Eredu onena fitxategi batean gordetzen du</li>
      * </ul>
-     * </p>
+     * 
      *
      * @param args Argumentuak:
      *             {@code <train_final.arff> <dev_final.arff> <modelo.model> <resultados.txt>}
