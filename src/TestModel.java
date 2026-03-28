@@ -12,16 +12,16 @@ import java.io.FileWriter;
  * Entrenatutako eredu baten azken ebaluazioa egiten duen klasea,
  * test datu-multzo independente baten gainean (blind test).
  *
- * <p>
+ * 
  * Klase honek aurrez entrenatutako sailkatzaile bat kargatzen du
  * eta inoiz ikusi ez dituen datuen gainean ebaluatzen du,
  * ereduaren benetako generalizazio gaitasuna neurtzeko.
- * </p>
+ * 
  *
- * <p>
+ * 
  * Ebaluazio honek ez du inolako parametro doikuntzarik egiten,
  * eta horregatik da fidagarriena.
- * </p>
+ * 
  *
  * @version 1.0
  */

@@ -12,20 +12,20 @@ import java.io.FileWriter;
  * Multilayer Perceptron (MLP) algoritmoaren parametroen optimizazioa
  * (fine-tuning) egiten duen klasea.
  *
- * <p>
+ * 
  * Klase honek entrenamendu (train) eta balidazio (dev) datu-multzoak
  * erabiltzen ditu parametro desberdinen konbinazioak ebaluatzeko
  * (grid search bidez), eta errendimendu onena duen eredua aukeratzen du.
- * </p>
  *
- * <p>
+ *
+ * 
  * Optimizazio irizpide nagusia spam klasearen F-Measure da.
- * </p>
+ * 
  *
- * <p>
+ * 
  * Azkenik, eredurik onena diskoan gordetzen da eta emaitzen txosten
  * zehatza sortzen da.
- * </p>
+ * 
  *
  * @version 1.0
  */

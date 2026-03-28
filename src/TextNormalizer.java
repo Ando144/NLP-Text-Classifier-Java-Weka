@@ -10,16 +10,16 @@ import java.util.regex.Pattern;
 /**
  * Email testua normalizatzeko Weka filtro pertsonalizatua.
  *
- * <p>
+ *
  * Klase honek testu atributuak prozesatzen ditu
  * {@link weka.filters.unsupervised.attribute.StringToWordVector}
  * aplikatu aurretik, zarata murrizteko eta kalitate handiagoko
  * bektorizazioa lortzeko.
- * </p>
+ * 
  *
- * <p>
+ * 
  * Aplikatzen diren normalizazio nagusiak:
- * </p>
+ * 
  * <ul>
  * <li>URLak token bakarrera bihurtzea</li>
  * <li>Email helbideak token bakarrera bihurtzea</li>
@@ -29,10 +29,10 @@ import java.util.regex.Pattern;
  * <li>Espazio anitzak normalizatzea</li>
  * </ul>
  *
- * <p>
+ * 
  * Helburua da testua sinplifikatzea eta ereduak patroien
  * gainean ikastea, ez zarataren gainean.
- * </p>
+ * 
  *
  * @version 1.0
  */
@@ -106,10 +106,10 @@ public class TextNormalizer extends SimpleStreamFilter {
     /**
      * Testu kate bati normalizazio eragiketak aplikatzen dizkio.
      *
-     * <p>
+     * 
      * Transformazioak orden jakin batean aplikatzen dira,
      * emaitza koherentea bermatzeko.
-     * </p>
+     * 
      *
      * @param text Normalizatu beharreko testua
      * @return Normalizatutako testua

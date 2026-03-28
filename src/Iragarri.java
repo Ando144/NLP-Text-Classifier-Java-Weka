@@ -26,9 +26,9 @@ import java.util.List;
  * Entrenatutako sailkatzaile bat erabiliz (MLP eredua),
  * email berrien gaineko iragarpenak egiten dituen klasea.
  *
- * <p>
+ * 
  * Pipeline osoa exekutatzen du inferentzia fasean:
- * </p>
+ * 
  * <ul>
  * <li>Emailak kargatu (direktorio egituratik edo fitxategi lautik)</li>
  * <li>Testuaren normalizazioa aplikatu</li>
@@ -38,9 +38,9 @@ import java.util.List;
  * <li>Emaitzak fitxategi batean gorde</li>
  * </ul>
  *
- * <p>
+ * 
  * Helburua da entrenamendu eta inferentzia arteko koherentzia bermatzea.
- * </p>
+ * 
  *
  * @version 1.0
  */
