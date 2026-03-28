@@ -9,20 +9,51 @@ import java.io.File;
 import java.io.FileWriter;
 
 /**
- * Entrenatutako mmodelo bat test-multzo baten gainean ebaluatzeko.
+ * Entrenatutako eredu baten azken ebaluazioa egiten duen klasea,
+ * test datu-multzo independente baten gainean (blind test).
+ *
+ * <p>
+ * Klase honek aurrez entrenatutako sailkatzaile bat kargatzen du
+ * eta inoiz ikusi ez dituen datuen gainean ebaluatzen du,
+ * ereduaren benetako generalizazio gaitasuna neurtzeko.
+ * </p>
+ *
+ * <p>
+ * Ebaluazio honek ez du inolako parametro doikuntzarik egiten,
+ * eta horregatik da fidagarriena.
+ * </p>
+ *
+ * @version 1.0
  */
 public class TestModel {
-
+    /**
+     * Programaren sarrera-puntua.
+     *
+     * <p>
+     * Metodo honek:
+     * <ul>
+     * <li>Test datuak kargatzen ditu</li>
+     * <li>Aurrez entrenatutako eredua kargatzen du</li>
+     * <li>Eredua ebaluatzen du datu ezezagunetan</li>
+     * <li>Metrika nagusiak kalkulatzen ditu (Accuracy, F-Measure, etab.)</li>
+     * <li>Emaitzak pantailan erakutsi eta fitxategian gordetzen ditu</li>
+     * </ul>
+     * </p>
+     *
+     * @param args Argumentuak:
+     *             {@code <test_final.arff> <eredua.model> <emaitzak.txt> }
+     */
     public static void main(String[] args) {
         try {
             if (args.length > 3) {
-                System.err.println("Erabilera: java -cp \"lib/weka.jar:bin\" TestModel <test_final.arff> <eredua.model> <emaitzak.txt>");
+                System.err.println(
+                        "Erabilera: java -cp \"lib/weka.jar:bin\" TestModel <test_final.arff> <eredua.model> <emaitzak.txt>");
                 return;
             }
 
             // Balio lehenetsiak
-            String testPath    = args.length >= 1 ? args[0] : "Partiketak/test_final.arff";
-            String modelPath   = args.length >= 2 ? args[1] : "modelo/mlp.model";
+            String testPath = args.length >= 1 ? args[0] : "Partiketak/test_final.arff";
+            String modelPath = args.length >= 2 ? args[1] : "modelo/mlp.model";
             String resultsPath = args.length == 3 ? args[2] : "emaitzak/test_emaitzak.txt";
 
             System.out.println("==================================================");
@@ -52,13 +83,14 @@ public class TestModel {
 
             // Emaitzak prestatu
             int spamIndex = test.classAttribute().indexOfValue("SPAM");
-            if (spamIndex == -1) spamIndex = test.classAttribute().indexOfValue("spam");
+            if (spamIndex == -1)
+                spamIndex = test.classAttribute().indexOfValue("spam");
 
             StringBuilder emaitzaOsoa = new StringBuilder();
             emaitzaOsoa.append("==================================================\n");
             emaitzaOsoa.append("               EBALUAZIOAREN EMAITZAK                  \n");
             emaitzaOsoa.append("==================================================\n\n");
-            
+
             emaitzaOsoa.append("--- METRIKA OROKORRAK ---\n");
             emaitzaOsoa.append(String.format("Zuzenen Ehunekoa (Accuracy) : %.2f%%\n", eval.pctCorrect()));
             emaitzaOsoa.append(String.format("F-Measure Haztatua (WAvg)   : %.4f\n\n", eval.weightedFMeasure()));
@@ -85,7 +117,8 @@ public class TestModel {
             }
 
             // Experiment Tracking (Aukerakoa)
-            ExperimentLogger.log("4. Ebaluazio Itsua (TestModel)", "Eredua: " + modelPath, "\n" + emaitzaOsoa.toString());
+            ExperimentLogger.log("4. Ebaluazio Itsua (TestModel)", "Eredua: " + modelPath,
+                    "\n" + emaitzaOsoa.toString());
 
             System.out.println("\nARRAKASTA! Emaitzen txosten zehatza hemen gorde da: " + resultsPath);
 

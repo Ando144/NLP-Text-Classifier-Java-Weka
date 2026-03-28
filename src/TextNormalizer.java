@@ -8,7 +8,33 @@ import weka.filters.SimpleStreamFilter;
 import java.util.regex.Pattern;
 
 /**
- * Emailen testua normalizatu StringToWordVector aplikatu aurretik.
+ * Email testua normalizatzeko Weka filtro pertsonalizatua.
+ *
+ * <p>
+ * Klase honek testu atributuak prozesatzen ditu
+ * {@link weka.filters.unsupervised.attribute.StringToWordVector}
+ * aplikatu aurretik, zarata murrizteko eta kalitate handiagoko
+ * bektorizazioa lortzeko.
+ * </p>
+ *
+ * <p>
+ * Aplikatzen diren normalizazio nagusiak:
+ * </p>
+ * <ul>
+ * <li>URLak token bakarrera bihurtzea</li>
+ * <li>Email helbideak token bakarrera bihurtzea</li>
+ * <li>Letra solteak elkartzea (adib. "h e l l o" → "hello")</li>
+ * <li>HTML atributuak eta fragmentuak ezabatzea</li>
+ * <li>Puntuazio errepikatuak sinplifikatzea</li>
+ * <li>Espazio anitzak normalizatzea</li>
+ * </ul>
+ *
+ * <p>
+ * Helburua da testua sinplifikatzea eta ereduak patroien
+ * gainean ikastea, ez zarataren gainean.
+ * </p>
+ *
+ * @version 1.0
  */
 public class TextNormalizer extends SimpleStreamFilter {
 
@@ -16,35 +42,28 @@ public class TextNormalizer extends SimpleStreamFilter {
 
     // Patroiak: URL, Email, Letra suelteak, HTML eta puntuazioa
     private static final Pattern URL_PATTERN = Pattern.compile(
-        "https?\\s*:\\s*/\\s*/\\s*\\S+|ftp\\s*:\\s*/\\s*/\\s*\\S+",
-        Pattern.CASE_INSENSITIVE
-    );
+            "https?\\s*:\\s*/\\s*/\\s*\\S+|ftp\\s*:\\s*/\\s*/\\s*\\S+",
+            Pattern.CASE_INSENSITIVE);
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
-        "[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}"
-    );
+            "[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}");
 
     private static final Pattern SPACED_LETTERS_PATTERN = Pattern.compile(
-        "\\b([a-z])([\\s.]+[a-z]){3,}\\b"
-    );
+            "\\b([a-z])([\\s.]+[a-z]){3,}\\b");
 
     private static final Pattern HTML_ATTR_PATTERN = Pattern.compile(
-        "\\b[a-z]+=[a-zA-Z0-9#]+\\b",
-        Pattern.CASE_INSENSITIVE
-    );
+            "\\b[a-z]+=[a-zA-Z0-9#]+\\b",
+            Pattern.CASE_INSENSITIVE);
 
     private static final Pattern HTML_FRAGMENT_PATTERN = Pattern.compile(
-        "\\b(tr|td|br|th|li|ul|ol|div|span|img|href|src|nbsp|bgcolor|cellpad){2,}\\b",
-        Pattern.CASE_INSENSITIVE
-    );
+            "\\b(tr|td|br|th|li|ul|ol|div|span|img|href|src|nbsp|bgcolor|cellpad){2,}\\b",
+            Pattern.CASE_INSENSITIVE);
 
     private static final Pattern REPEATED_PUNCT_PATTERN = Pattern.compile(
-        "([^a-zA-Z0-9\\s])\\1{2,}"
-    );
+            "([^a-zA-Z0-9\\s])\\1{2,}");
 
     private static final Pattern MULTI_SPACE_PATTERN = Pattern.compile(
-        "\\s{2,}"
-    );
+            "\\s{2,}");
 
     @Override
     public String globalInfo() {
@@ -78,17 +97,26 @@ public class TextNormalizer extends SimpleStreamFilter {
                 text = normalize(text);
 
                 result.setValue(i,
-                    result.dataset().attribute(i).addStringValue(text));
+                        result.dataset().attribute(i).addStringValue(text));
             }
         }
         return result;
     }
 
-    // NORMALIZAZIO LOGIKA:
-
-    // Normalizazio urratsak hurrenkeran aplikatu
+    /**
+     * Testu kate bati normalizazio eragiketak aplikatzen dizkio.
+     *
+     * <p>
+     * Transformazioak orden jakin batean aplikatzen dira,
+     * emaitza koherentea bermatzeko.
+     * </p>
+     *
+     * @param text Normalizatu beharreko testua
+     * @return Normalizatutako testua
+     */
     public static String normalize(String text) {
-        if (text == null || text.isEmpty()) return text;
+        if (text == null || text.isEmpty())
+            return text;
 
         text = URL_PATTERN.matcher(text).replaceAll(" URLTOKEN ");
         text = EMAIL_PATTERN.matcher(text).replaceAll(" EMAILTOKEN ");
@@ -101,7 +129,16 @@ public class TextNormalizer extends SimpleStreamFilter {
         return text;
     }
 
-    // Letra solteen sekuentziak lotu
+    /**
+     * Letra solteak dituzten sekuentziak bateratzen ditu.
+     *
+     * <p>
+     * Adibidez: "h e l l o" → "hello"
+     * </p>
+     *
+     * @param text Sarrerako testua
+     * @return Testu eraldatua
+     */
     private static String collapseSpacedLetters(String text) {
         StringBuffer sb = new StringBuffer();
         java.util.regex.Matcher m = SPACED_LETTERS_PATTERN.matcher(text);

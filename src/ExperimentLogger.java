@@ -8,9 +8,9 @@ import java.time.format.DateTimeFormatter;
  * Klase honek esperimentuen erregistro automatikoa kudeatzen du,
  * exekuzio bakoitzeko informazio garrantzitsua fitxategi batean gordez.
  *
- * <p>
+ * 
  * Erregistroak honako informazioa jasotzen du:
- * </p>
+ * 
  * <ul>
  * <li>Data eta ordua (timestamp)</li>
  * <li>Sistemaren informazioa (OS, Java bertsioa)</li>
@@ -21,16 +21,16 @@ import java.time.format.DateTimeFormatter;
  * <li>Lortutako emaitzak</li>
  * </ul>
  *
- * <p>
+ * 
  * Informazio hau {@code registro_experimentos.txt} fitxategian
  * gordetzen da, esperimentuen trazabilitatea eta erreprodukzioa
  * errazteko.
- * </p>
+ * 
  *
- * <p>
+ * 
  * Klase hau oso erabilgarria da machine learning pipeline-etan,
  * konfigurazio ezberdinen arteko konparaketak egiteko.
- * </p>
+ * 
  *
  * @version 1.0
  */

@@ -9,19 +9,55 @@ import java.io.File;
 import java.io.FileWriter;
 
 /**
- * MLP algoritmoaren parametroen ekorketa (fine-tuning) eta modelo onena gorde.
+ * Multilayer Perceptron (MLP) algoritmoaren parametroen optimizazioa
+ * (fine-tuning) egiten duen klasea.
+ *
+ * <p>
+ * Klase honek entrenamendu (train) eta balidazio (dev) datu-multzoak
+ * erabiltzen ditu parametro desberdinen konbinazioak ebaluatzeko
+ * (grid search bidez), eta errendimendu onena duen eredua aukeratzen du.
+ * </p>
+ *
+ * <p>
+ * Optimizazio irizpide nagusia spam klasearen F-Measure da.
+ * </p>
+ *
+ * <p>
+ * Azkenik, eredurik onena diskoan gordetzen da eta emaitzen txosten
+ * zehatza sortzen da.
+ * </p>
+ *
+ * @version 1.0
  */
 public class GetModel {
-
+    /**
+     * Programaren sarrera-puntua.
+     *
+     * <p>
+     * Metodo honek:
+     * <ul>
+     * <li>Datuak kargatzen ditu (train eta dev)</li>
+     * <li>Parametroen grid search bat exekutatzen du</li>
+     * <li>Eredu bakoitza entrenatu eta ebaluatzen du</li>
+     * <li>F-Measure (spam) maximizatzen duen eredua hautatzen du</li>
+     * <li>Eredu onena fitxategi batean gordetzen du</li>
+     * </ul>
+     * </p>
+     *
+     * @param args Argumentuak:
+     *             {@code <train_final.arff> <dev_final.arff> <modelo.model> <resultados.txt>}
+     * @throws Exception Prozesuan errore bat gertatzen bada
+     */
     public static void main(String[] args) throws Exception {
         if (args.length > 4) {
-            System.err.println("Erabilera: java -cp \"lib/weka.jar:bin\" GetModel <train_final.arff> <dev_final.arff> <modelo.model> <resultados.txt>");
+            System.err.println(
+                    "Erabilera: java -cp \"lib/weka.jar:bin\" GetModel <train_final.arff> <dev_final.arff> <modelo.model> <resultados.txt>");
             return;
         }
 
-        String trainPath   = args.length >= 1 ? args[0] : "Partiketak/train_final.arff";
-        String devPath     = args.length >= 2 ? args[1] : "Partiketak/dev_final.arff";
-        String modelPath   = args.length >= 3 ? args[2] : "modelo/mlp.model";
+        String trainPath = args.length >= 1 ? args[0] : "Partiketak/train_final.arff";
+        String devPath = args.length >= 2 ? args[1] : "Partiketak/dev_final.arff";
+        String modelPath = args.length >= 3 ? args[2] : "modelo/mlp.model";
         String resultsPath = args.length == 4 ? args[3] : "emaitzak/finetuning.txt";
 
         System.out.println("==================================================");
@@ -38,18 +74,21 @@ public class GetModel {
         Instances train = new DataSource(trainPath).getDataSet();
         Instances dev = new DataSource(devPath).getDataSet();
 
-        if (train.classIndex() == -1) train.setClassIndex(train.numAttributes() - 1);
-        if (dev.classIndex() == -1) dev.setClassIndex(dev.numAttributes() - 1);
+        if (train.classIndex() == -1)
+            train.setClassIndex(train.numAttributes() - 1);
+        if (dev.classIndex() == -1)
+            dev.setClassIndex(dev.numAttributes() - 1);
 
         System.out.println("Train: " + train.numInstances() + " instantzia kargatuta.");
         System.out.println("Dev  : " + dev.numInstances() + " instantzia kargatuta.\n");
 
         int spamIndex = train.classAttribute().indexOfValue("SPAM");
-        if (spamIndex == -1) spamIndex = train.classAttribute().indexOfValue("spam");
+        if (spamIndex == -1)
+            spamIndex = train.classAttribute().indexOfValue("spam");
 
         // Bilaketa espazioa (Grid Search)
         double[] learningRates = { 0.005 };
-        double[] momentums = { 0.2  };
+        double[] momentums = { 0.2 };
         String[] hiddenLayers = { "3" };
         int[] epochs = { 300 };
 
@@ -133,10 +172,10 @@ public class GetModel {
         // 5. LABURPENA ETA EREDUA GORDE
         // ================================================
         String laburpena = "\n" + repeat("=", 100) + "\n" +
-                           "EREDU ONENA:\n" +
-                           "  Parametroak : " + bestParams + "\n" +
-                           "  F-Measure (spam): " + String.format("%.4f", bestFMeasure) + "\n" +
-                           "  Entrenamendu denbora: " + String.format("%.2f", bestTime) + " seg\n";
+                "EREDU ONENA:\n" +
+                "  Parametroak : " + bestParams + "\n" +
+                "  F-Measure (spam): " + String.format("%.4f", bestFMeasure) + "\n" +
+                "  Entrenamendu denbora: " + String.format("%.2f", bestTime) + " seg\n";
 
         writer.write(laburpena);
         writer.close();
@@ -155,6 +194,13 @@ public class GetModel {
         ExperimentLogger.log("3. MLP Fine-Tuning (GetModel)", "Parametro Onenak: " + bestParams, emaitzaLog);
     }
 
+    /**
+     * Kate bat n aldiz errepikatzen du.
+     *
+     * @param s Errepikatu nahi den katea
+     * @param n Errepikapen kopurua
+     * @return Sortutako kate berria
+     */
     private static String repeat(String s, int n) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < n; i++)

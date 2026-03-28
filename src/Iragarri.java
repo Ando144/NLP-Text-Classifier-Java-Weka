@@ -23,10 +23,41 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Entrenatutako eredu bat (.model) erabiliz email berriak sailkatu.
+ * Entrenatutako sailkatzaile bat erabiliz (MLP eredua),
+ * email berrien gaineko iragarpenak egiten dituen klasea.
+ *
+ * <p>
+ * Pipeline osoa exekutatzen du inferentzia fasean:
+ * </p>
+ * <ul>
+ * <li>Emailak kargatu (direktorio egituratik edo fitxategi lautik)</li>
+ * <li>Testuaren normalizazioa aplikatu</li>
+ * <li>Entrenamenduan erabilitako filtroak berrerabili (bektorizazioa eta
+ * atributu-aukeraketa)</li>
+ * <li>Eredua kargatu eta iragarpenak egin</li>
+ * <li>Emaitzak fitxategi batean gorde</li>
+ * </ul>
+ *
+ * <p>
+ * Helburua da entrenamendu eta inferentzia arteko koherentzia bermatzea.
+ * </p>
+ *
+ * @version 1.0
  */
 public class Iragarri {
-
+    /**
+     * Karpeta batean dauden .txt fitxategiak kargatzen ditu,
+     * azpikarpetarik gabe (egitura laua).
+     *
+     * <p>
+     * Fitxategi bakoitza instantzia bat bihurtzen da,
+     * testu atributu bakarrarekin eta klase ezezagunarekin.
+     * </p>
+     *
+     * @param inputDirectory Sarrerako karpeta
+     * @return Sortutako Instances objektua
+     * @throws IOException Irakurketa errorea gertatzen bada
+     */
     private static Instances loadFlatInferenceData(File inputDirectory) throws IOException {
         ArrayList<Attribute> attributes = new ArrayList<>();
         attributes.add(new Attribute("text", (List<String>) null));
@@ -40,9 +71,9 @@ public class Iragarri {
 
         List<Path> txtFiles = new ArrayList<>();
         Files.walk(inputDirectory.toPath())
-            .filter(Files::isRegularFile)
-            .filter(p -> p.getFileName().toString().toLowerCase().endsWith(".txt"))
-            .forEach(txtFiles::add);
+                .filter(Files::isRegularFile)
+                .filter(p -> p.getFileName().toString().toLowerCase().endsWith(".txt"))
+                .forEach(txtFiles::add);
 
         txtFiles.sort(Comparator.comparing(Path::toString));
 
@@ -57,6 +88,16 @@ public class Iragarri {
         return data;
     }
 
+    /**
+     * Sarrerako direktorioak klaseen azpikarpetak dituen egiaztatzen du.
+     *
+     * <p>
+     * Adibidez: /spam eta /ham karpetak badaude.
+     * </p>
+     *
+     * @param inputDirectory Aztertu beharreko direktorioa
+     * @return true azpikarpetak badaude, false bestela
+     */
     private static boolean hasClassSubdirectories(File inputDirectory) {
         File[] children = inputDirectory.listFiles();
         if (children == null) {
@@ -73,7 +114,7 @@ public class Iragarri {
             }
 
             String modelPath = args.length >= 1 ? args[0] : "modelo/mlp.model";
-            String inputDir  = args.length >= 2 ? args[1] : "DatuakRaw/proba_data/";
+            String inputDir = args.length >= 2 ? args[1] : "DatuakRaw/proba_data/";
             String outputDir = args.length == 3 ? args[2] : "emaitzak/";
 
             System.out.println("\n--- Iragarpenak ---");
@@ -91,7 +132,8 @@ public class Iragarri {
             }
 
             if (!inputDirectory.exists() || !inputDirectory.isDirectory()) {
-                System.err.println("ERROREA: Sarrera direktorioa ez da existitzen -> " + inputDirectory.getAbsolutePath());
+                System.err.println(
+                        "ERROREA: Sarrera direktorioa ez da existitzen -> " + inputDirectory.getAbsolutePath());
                 return;
             }
 
@@ -107,7 +149,7 @@ public class Iragarri {
             } else {
                 probaRaw = loadFlatInferenceData(inputDirectory);
             }
-            
+
             if (probaRaw.classIndex() == -1) {
                 probaRaw.setClassIndex(probaRaw.numAttributes() - 1);
             }
@@ -118,7 +160,8 @@ public class Iragarri {
             System.out.println("Kargatutako mezuak: " + probaRaw.numInstances());
             System.out.println("Atributuak: " + probaRaw.numAttributes());
             if (probaRaw.numInstances() == 0) {
-                System.out.println("ABISUA: Ez da mezu elektronikorik kargatu. Egiaztatu sarrera direktorioaren egitura.");
+                System.out.println(
+                        "ABISUA: Ez da mezu elektronikorik kargatu. Egiaztatu sarrera direktorioaren egitura.");
             }
 
             File rawArffFile = new File(outputDir, "proba_raw.arff");
@@ -138,23 +181,26 @@ public class Iragarri {
             // Filtroak kargatu
             File vectorizerFile = new File("modelo/vectorizer.ser");
             File selectorFile = new File("modelo/selector.ser");
-            
+
             Instances probaFinal;
-            
+
             if (vectorizerFile.exists() && selectorFile.exists()) {
                 System.out.println("\nEntrenamenduko filtroak kargatzen (vectorizer.ser, selector.ser)...");
-                
-                StringToWordVector stwv = (StringToWordVector) FilterSerializationHelper.loadFilter(vectorizerFile.getPath());
-                AttributeSelection selector = (AttributeSelection) FilterSerializationHelper.loadFilter(selectorFile.getPath());
-                
+
+                StringToWordVector stwv = (StringToWordVector) FilterSerializationHelper
+                        .loadFilter(vectorizerFile.getPath());
+                AttributeSelection selector = (AttributeSelection) FilterSerializationHelper
+                        .loadFilter(selectorFile.getPath());
+
                 Instances probaVec = Filter.useFilter(probaNorm, stwv);
                 System.out.println("  Bektorizazioaren ostean atributuak: " + probaVec.numAttributes());
-                
+
                 probaFinal = Filter.useFilter(probaVec, selector);
                 System.out.println("  Aukeraketa aplikatuta. Atributuak: " + probaFinal.numAttributes());
-                
+
             } else {
-                throw new Exception("Filtro serializatuak ez dira aurkitu 'modelo/' karpetan. Exekutatu EmailVectorizerAndSelector lehenik.");
+                throw new Exception(
+                        "Filtro serializatuak ez dira aurkitu 'modelo/' karpetan. Exekutatu EmailVectorizerAndSelector lehenik.");
             }
 
             File finalArffFile = new File(outputDir, "proba_final.arff");
@@ -179,15 +225,15 @@ public class Iragarri {
 
             for (int i = 0; i < totalCount; i++) {
                 Instance instancia = probaFinal.instance(i);
-                
+
                 double[] probabilidades = modelo.distributionForInstance(instancia);
                 double prediccion = modelo.classifyInstance(instancia);
-                
+
                 String klaseIzena = probaFinal.classAttribute().value((int) prediccion);
                 double confidence = probabilidades[(int) prediccion];
 
-                emaitzak.append(String.format("Mezua %d: %s (konfidantza: %.4f)%n", 
-                    i + 1, klaseIzena.toUpperCase(), confidence));
+                emaitzak.append(String.format("Mezua %d: %s (konfidantza: %.4f)%n",
+                        i + 1, klaseIzena.toUpperCase(), confidence));
             }
 
             emaitzak.append("\n==================================================\n");
@@ -205,18 +251,16 @@ public class Iragarri {
 
             // Experiment Tracking (Aukerakoa)
             String parametrosLog = String.format(
-                "Eredua: %s\n" +
-                "Sarrera direktorioa: %s\n" +
-                "Proba mezuak: %d\n" +
-                "Filtroak: modelo/vectorizer.ser, modelo/selector.ser",
-                modelPath, inputDir, totalCount
-            );
+                    "Eredua: %s\n" +
+                            "Sarrera direktorioa: %s\n" +
+                            "Proba mezuak: %d\n" +
+                            "Filtroak: modelo/vectorizer.ser, modelo/selector.ser",
+                    modelPath, inputDir, totalCount);
 
             String resultadosLog = String.format(
-                "Sailkatutako mezuak: %d\n" +
-                "Irteera fitxategia: %s",
-                totalCount, resultsFile.getAbsolutePath()
-            );
+                    "Sailkatutako mezuak: %d\n" +
+                            "Irteera fitxategia: %s",
+                    totalCount, resultsFile.getAbsolutePath());
 
             ExperimentLogger.log("6. Iragarpenak (Iragarri)", parametrosLog, resultadosLog);
 

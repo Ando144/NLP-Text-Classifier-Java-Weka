@@ -14,10 +14,10 @@ import java.util.Random;
  * Klase honek sailkatzaile baten kalitatea ebaluatzen du,
  * bi metodologia erabiliz: Cross Validation eta Hold-Out.
  *
- * <p>
+ * 
  * Ebaluazioa egiteko, train eta dev dataset-ak bateratzen dira,
  * eta ondoren bi estrategia aplikatzen dira:
- * </p>
+ * 
  *
  * <ul>
  * <li><b>5-fold Cross Validation:</b>
@@ -36,9 +36,9 @@ import java.util.Random;
  * </li>
  * </ul>
  *
- * <p>
+ * 
  * Ebaluazioan kalkulatutako metrikak:
- * </p>
+ * 
  * <ul>
  * <li>Accuracy</li>
  * <li>Precision</li>
@@ -47,15 +47,15 @@ import java.util.Random;
  * <li>Weighted average</li>
  * </ul>
  *
- * <p>
+ * 
  * Erabilitako eredua sare neuronal bat da (MultilayerPerceptron),
  * parametro konfigurableekin.
- * </p>
+ * 
  *
- * <p>
+ * 
  * Emaitzak fitxategi batean gordetzen dira eta esperimentuen
  * erregistroan ere jasotzen dira.
- * </p>
+ * 
  *
  * @version 1.0
  */

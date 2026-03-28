@@ -11,12 +11,12 @@ import java.io.File;
  * Klase honek ARFF formatuko dataset bat hiru azpimultzotan banatzen du:
  * entrenamendua (train), garapena (dev) eta testa (test).
  *
- * <p>
+ * 
  * Banaketa modu estratifikatuan egiten da Weka liburutegia erabiliz,
  * klaseen proportzioa (spam / legitimoa) azpimultzo guztietan mantenduz.
- * </p>
+ * 
  *
- * <p>
+ * 
  * Prozesuak urrats hauek ditu:
  * <ul>
  * <li>Datuen ausazkotzea (randomizazioa)</li>
@@ -29,16 +29,16 @@ import java.io.File;
  * </ul>
  * </li>
  * </ul>
- * </p>
+ * 
  *
- * <p>
+ * 
  * Emaitzak ARFF fitxategi independenteetan gordetzen dira.
- * </p>
+ * 
  *
- * <p>
+ * 
  * Klase hau emailen sailkapen pipeline-aren parte da
  * (spam vs legitimoa).
- * </p>
+ * 
  *
  * @version 1.0
  */

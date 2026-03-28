@@ -7,28 +7,28 @@ import java.io.File;
  * Klase honek mezu elektronikoen testu-fitxategiak kargatzen ditu
  * eta Weka-k erabil dezakeen ARFF formatura bihurtzen ditu.
  *
- * <p>
+ * 
  * Weka-ko {@code TextDirectoryLoader} erabiliz, direktorio-egitura
  * batean dauden testu-fitxategiak automatikoki irakurtzen dira, non
  * karpeta bakoitza klase bati dagokion (adibidez: spam / legitimoa).
- * </p>
+ * 
  *
- * <p>
+ * 
  * Sortutako dataset-ak bi atributu nagusi ditu:
  * <ul>
  * <li>Testua (emailaren edukia)</li>
  * <li>Klasea (spam edo legitimoa)</li>
  * </ul>
- * </p>
+ * 
  *
- * <p>
+ * 
  * Azken emaitza ARFF fitxategi batean gordetzen da, ondorengo
  * prozesamenduetarako (behin betiko pipeline-an erabiltzeko).
- * </p>
+ * 
  *
- * <p>
+ * 
  * Klase hau emailen sailkapen sistemaren lehen urratsa da.
- * </p>
+ * 
  *
  * @version 1.0
  */

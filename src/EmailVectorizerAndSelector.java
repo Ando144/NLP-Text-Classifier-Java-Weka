@@ -17,9 +17,9 @@ import java.io.File;
  * ditu,
  * emailen sailkapenerako (spam vs legitimoa).
  *
- * <p>
+ * 
  * Pipeline hau bi urrats nagusitan banatzen da:
- * </p>
+ * 
  *
  * <ul>
  * <li><b>Bektorizazioa (StringToWordVector):</b>
@@ -45,9 +45,9 @@ import java.io.File;
  * </li>
  * </ul>
  *
- * <p>
+ * 
  * Gainera, aukerazko konfigurazio hauek onartzen dira:
- * </p>
+ * 
  * <ul>
  * <li>TextNormalizer aplikatzea</li>
  * <li>N-gramen erabilera</li>
@@ -55,15 +55,15 @@ import java.io.File;
  * <li>MinTermFreq parametroa</li>
  * </ul>
  *
- * <p>
+ * 
  * Azken emaitza train/dev/test dataset eraldatuak dira, eta filtroak
  * serializatzen dira ondorengo inferentziarako.
- * </p>
+ * 
  *
- * <p>
+ * 
  * Klase hau pipeline-aren erdigunea da, feature engineering fasea kudeatzen
  * duena.
- * </p>
+ * 
  *
  * @version 1.0
  */
