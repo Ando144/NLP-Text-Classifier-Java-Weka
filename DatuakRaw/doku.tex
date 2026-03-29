@@ -197,8 +197,7 @@ Prozesu honetan honako eragiketak egin dira:
 \subsection{Parametroen eragina (kuantitatiboa)}
 
 Stemmer-aren eta stopword-en eraginaren ebaluazioa train multzoan egin da.
-\textbf{TODO: Osatu esperimentu honekin -- stemmer bai/ez konparaketa egin eta
-taula bete.}
+
 
 \begin{table}[H]
     \centering
@@ -242,7 +241,6 @@ Metrika: \textbf{F-Measure (spam)}.
     \label{tab:bektorizazio}
 \end{table}
 
-\textbf{TODO: Osatu taula bektorizazio-metodo bakoitzarekin esperimentatu ondoren.}
 
 \subsection{StringToWordVector parametroak}
 
@@ -287,7 +285,6 @@ spam klasearekiko erlazionatuen dauden atributuak aukeratzen ditu.
     \label{tab:hautaketa}
 \end{table}
 
-\textbf{TODO: Osatu taula esperimentu honekin.}
 
 Amaierako hiztegi-tamaina: \textbf{1.001 atributu} (1.000 numeriko + 1 klase).
 500 baino handiagoa den baldintza betetzen da.
@@ -400,224 +397,80 @@ Weka-ko \texttt{MultilayerPerceptron} klaseak honako parametro sentikorrak ditu:
     \label{tab:parametroak}
 \end{table}
 
-\subsection{Fine-tuning: parametro ekorketa}
+\subsection{Parametroen optimizazioa (Fine-Tuning)}
 
-\subsubsection{Ebaluazio-eskema eta metrika}
+Atal honetan \textit{MultilayerPerceptron} ereduaren parametro optimoak bilatu dira, \textbf{F-Measure (spam)} maximizatzea helburu hartuta. Horretarako, hainbat esperimentu egin dira \texttt{train\_final.arff} eta \texttt{dev\_final.arff} datu-multzoekin.
 
-Fine-tuning prozesuan:
+Lau konfigurazio desberdin aztertu dira: \textbf{2000 atributuko bektorea}, \textbf{2-gram eredua}, \textbf{azken konfigurazioa (finala)} eta \textbf{normalizatutako datuak}.
+
+\subsubsection*{2000 atributuko eredua}
+Emaitzen arabera, parametro konbinazio onena honakoa izan da:
 \begin{itemize}
-    \item \textbf{Ebaluazio-eskema:} Stratified Hold-Out -- train multzoa
-    entrenatzeko, dev multzoa ebaluatzeko
-    \item \textbf{Datu-sortak:} \texttt{train\_final.arff} (4.137 inst.) eta
-    \texttt{dev\_final.arff} (518 inst.)
-    \item \textbf{Metrika:} F-Measure (spam) -- precision eta recall batera
-    hartzen ditu, klase desorekarentzat egokia
+    \item LearningRate: 0,010
+    \item Momentum: 0,2
+    \item HiddenLayers: 5
+    \item Epochs: 500
 \end{itemize}
 
-\subsubsection{Gorka-ren ekorketa}
+Konfigurazio honek \textbf{F-spam = 0,9117} lortu du, 161,89 segundoko entrenamendu denborarekin.
 
-Aztertutako balioak: LR $\in \{0{,}001, 0{,}005, 0{,}010\}$,
-Mom $\in \{0{,}2, 0{,}3, 0{,}4\}$, Hidden $\in \{3, 5, 10\}$, Epochs = 100.
-27 konbinazio guztira.
-
-\begin{table}[H]
-    \centering
-    \caption{Gorka: fine-tuning emaitzak (hautaketa)}
-    \small
-    \begin{tabular}{rrlrrrr}
-        \toprule
-        \textbf{LR} & \textbf{Mom} & \textbf{Hidden} & \textbf{Epochs} &
-        \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
-        \midrule
-        0,001 & 0,2 & 3  & 100 & 0,9609 & 0,9835 & 0,9770 \\
-        0,001 & 0,2 & 10 & 100 & 0,9660 & 0,9855 & 0,9799 \\
-        0,005 & 0,2 & 10 & 100 & 0,9803 & 0,9918 & 0,9885 \\
-        0,005 & 0,3 & 10 & 100 & 0,9803 & 0,9918 & 0,9885 \\
-        \textbf{0,005} & \textbf{0,4} & \textbf{10} & \textbf{100} &
-        \textbf{0,9819} & \textbf{0,9925} & \textbf{0,9894} \\
-        0,010 & 0,2 & 10 & 100 & 0,9787 & 0,9911 & 0,9875 \\
-        0,010 & 0,4 & 10 & 100 & 0,9739 & 0,9890 & 0,9846 \\
-        \bottomrule
-    \end{tabular}
-    \label{tab:finetuning_gorka}
-\end{table}
-
-\textbf{Ondorioak:} LR=0,005 onena. Momentum-ak eragin txikia du.
-10 neurona 3 eta 5 baino hobea.
-\textbf{Eredu onena: LR=0,005 | Mom=0,4 | Hidden=10 | F-spam=0,9819.}
-
-\subsubsection{Andoni-ren ekorketa}
-
-Aztertutako balioak: LR $\in \{0{,}003, 0{,}005\}$,
-Mom $\in \{0{,}4, 0{,}6, 0{,}8\}$, Hidden $\in \{10, 20, 30\}$,
-Epochs $\in \{100, 200\}$. 36 konbinazio guztira.
-
-\begin{table}[H]
-    \centering
-    \caption{Andoni: fine-tuning emaitzak (hautaketa)}
-    \small
-    \begin{tabular}{rrlrrrr}
-        \toprule
-        \textbf{LR} & \textbf{Mom} & \textbf{Hidden} & \textbf{Epochs} &
-        \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
-        \midrule
-        0,003 & 0,4 & 10 & 100 & 0,9787 & 0,9911 & 0,9875 \\
-        0,003 & 0,6 & 20 & 100 & 0,9819 & 0,9925 & 0,9894 \\
-        0,003 & 0,8 & 10 & 100 & 0,9836 & 0,9932 & 0,9904 \\
-        0,003 & 0,8 & 20 & 100 & 0,9835 & 0,9932 & 0,9904 \\
-        0,003 & 0,8 & 30 & 100 & 0,9835 & 0,9932 & 0,9904 \\
-        0,005 & 0,4 & 10 & 100 & 0,9819 & 0,9925 & 0,9894 \\
-        \textbf{0,005} & \textbf{0,8} & \textbf{10} & \textbf{100} &
-        \textbf{0,9851} & \textbf{0,9939} & \textbf{0,9913} \\
-        0,005 & 0,8 & 20 & 100 & 0,9834 & 0,9932 & 0,9904 \\
-        \bottomrule
-    \end{tabular}
-    \label{tab:finetuning_andoni}
-\end{table}
-
-\textbf{Ondorioak:} Momentum altuagoak (0,8) emaitza hobeak ematen ditu.
-Epoch kopuruak (100 vs 200) eragin txikia du.
-\textbf{Eredu onena: LR=0,005 | Mom=0,8 | Hidden=10 | Epochs=100 | F-spam=0,9851.}
-
-\subsubsection{Ibai-ren ekorketa}
-
-Aztertutako balioak: LR $\in \{0{,}003, 0{,}005\}$,
-Mom $\in \{0{,}4, 0{,}6, 0{,}8\}$, Hidden $\in \{10, 20, 30\}$,
-Epochs $\in \{100, 200\}$. 36 konbinazio guztira.
-
-\begin{table}[H]
-    \centering
-    \caption{Ibai: fine-tuning emaitzak (hautaketa)}
-    \small
-    \begin{tabular}{rrlrrrr}
-        \toprule
-        \textbf{LR} & \textbf{Mom} & \textbf{Hidden} & \textbf{Epochs} &
-        \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
-        \midrule
-        0,003 & 0,4 & 10 & 100 & 0,8657 & 0,9531 & 0,9278 \\
-        0,003 & 0,8 & 10 & 200 & 0,8841 & 0,9579 & 0,9365 \\
-        0,005 & 0,4 & 10 & 100 & 0,8263 & 0,9421 & 0,9085 \\
-        0,005 & 0,8 & 20 & 100 & 0,8453 & 0,9468 & 0,9174 \\
-        \textbf{0,005} & \textbf{0,8} & \textbf{20} & \textbf{200} &
-        \textbf{0,8921} & \textbf{0,9604} & \textbf{0,9406} \\
-        \bottomrule
-    \end{tabular}
-    \label{tab:finetuning_ibai}
-\end{table}
-
-\textbf{Ondorioak:} Ibai-ren emaitzak nabarmen txikiagoak dira (F-spam $\approx$ 0,89).
-Honen arrazoia \texttt{EmailVectorizerAndSelector.java}-ko konfigurazio-aldea
-da ziurrenik: \texttt{WordsToKeep} edo \texttt{Ranker}-eko atributu-kopuru ezberdina.
-\textbf{Eredu onena: LR=0,005 | Mom=0,8 | Hidden=20 | Epochs=200 | F-spam=0,8921.}
-
-\subsubsection{Emaitzen adierazpen grafikoa}
-
-Irudian LearningRate-ren eragina ikusten da F-spam-ean, Gorka-ren esperimentutik:
-
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-            width=10cm, height=6cm,
-            xlabel={LearningRate},
-            ylabel={F-Measure (spam)},
-            xtick={0.001, 0.005, 0.010},
-            xticklabels={0,001, 0,005, 0,010},
-            ymin=0.95, ymax=1.0,
-            ymajorgrids=true,
-            legend pos=south east,
-            title={LearningRate-ren eragina F-spam-ean (Hidden=10, Epochs=100)}
-        ]
-        \addplot[color=blue, mark=*, thick] coordinates {
-            (0.001, 0.9660)
-            (0.005, 0.9819)
-            (0.010, 0.9787)
-        };
-        \addlegendentry{Momentum=0,4}
-
-        \addplot[color=red, mark=square*, thick] coordinates {
-            (0.001, 0.9660)
-            (0.005, 0.9803)
-            (0.010, 0.9755)
-        };
-        \addlegendentry{Momentum=0,3}
-
-        \addplot[color=green!60!black, mark=triangle*, thick] coordinates {
-            (0.001, 0.9660)
-            (0.005, 0.9803)
-            (0.010, 0.9739)
-        };
-        \addlegendentry{Momentum=0,2}
-        \end{axis}
-    \end{tikzpicture}
-    \caption{LearningRate-ren eragina F-spam-ean (Gorka-ren fine-tuning, Hidden=10)}
-    \label{fig:lr_eragina}
-\end{figure}
-
-\begin{figure}[H]
-    \centering
-    \begin{tikzpicture}
-        \begin{axis}[
-            width=10cm, height=6cm,
-            xlabel={Momentum},
-            ylabel={F-Measure (spam)},
-            xtick={0.4, 0.6, 0.8},
-            xticklabels={0,4, 0,6, 0,8},
-            ymin=0.97, ymax=0.99,
-            ymajorgrids=true,
-            legend pos=south east,
-            title={Momentum-aren eragina F-spam-ean (LR=0,005, Epochs=100)}
-        ]
-        \addplot[color=blue, mark=*, thick] coordinates {
-            (0.4, 0.9819)
-            (0.6, 0.9771)
-            (0.8, 0.9851)
-        };
-        \addlegendentry{Hidden=10}
-
-        \addplot[color=red, mark=square*, thick] coordinates {
-            (0.4, 0.9819)
-            (0.6, 0.9803)
-            (0.8, 0.9834)
-        };
-        \addlegendentry{Hidden=20}
-        \end{axis}
-    \end{tikzpicture}
-    \caption{Momentum-aren eragina F-spam-ean (Andoni-ren fine-tuning, LR=0,005)}
-    \label{fig:mom_eragina}
-\end{figure}
-
-\subsection{Sailkatzaile optimoaren inferentzia}
-
-Hiru fine-tuningen emaitzak konparatuz, \textbf{Andoni-ren eredu onena}
-aukeratu da proiektuko eredu optimal gisa, F-spam altuena lortzen duelako:
-
-\begin{table}[H]
-    \centering
-    \caption{Hiru fine-tuningen eredu onenak -- konparaketa}
-    \begin{tabular}{lllllr}
-        \toprule
-        \textbf{Kidea} & \textbf{LR} & \textbf{Mom} & \textbf{Hidden} &
-        \textbf{Epochs} & \textbf{F-spam} \\
-        \midrule
-        Gorka  & 0,005 & 0,4 & 10 & 100 & 0,9819 \\
-        \textbf{Andoni} & \textbf{0,005} & \textbf{0,8} & \textbf{10} &
-        \textbf{100} & \textbf{0,9851} \\
-        Ibai   & 0,005 & 0,8 & 20 & 200 & 0,8921 \\
-        \bottomrule
-    \end{tabular}
-    \label{tab:eredu_onenak}
-\end{table}
-
-\textbf{Eredu optimoa:}
+\subsubsection*{2-gram eredua}
+Emaitza onenak 2-gram konfigurazioarekin lortu dira. Parametro optimoak hauek izan dira:
 \begin{itemize}
-    \item LearningRate: 0,005
-    \item Momentum: 0,8
-    \item HiddenLayers: 10
-    \item Epochs: 100
-    \item Entrenatzeko datu-multzoa: \texttt{train\_final.arff} (4.137 instantzia)
-    \item Gordetako eredua: \texttt{modelo/mlp.model}
+    \item LearningRate: 0,003
+    \item Momentum: 0,3
+    \item HiddenLayers: 3
+    \item Epochs: 500
 \end{itemize}
+
+Kasu honetan, \textbf{F-spam = 0,9669} lortu da, eta entrenamendu denbora nabarmen txikiagoa izan da (53,09 s).
+
+\subsubsection*{Azken konfigurazioa (finala)}
+Azken konfigurazioan (aurreprozesamendu osoarekin), parametro optimoak honakoak izan dira:
+\begin{itemize}
+    \item LearningRate: 0,010
+    \item Momentum: 0,1
+    \item HiddenLayers: 5
+    \item Epochs: 500
+\end{itemize}
+
+Eredu honek \textbf{F-spam = 0,9252} lortu du, 78,34 segundoko entrenamenduarekin.
+
+
+
+\begin{table}[h!]
+\centering
+\caption{Comparación de los mejores modelos de fine-tuning}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Eredua / Fitxategia} & \textbf{LearningRate} & \textbf{Momentum} & \textbf{HiddenLayers} & \textbf{Epochs} & \textbf{F-Measure (spam)} & \textbf{Entrenamendu denbora (s)} \\
+\hline
+2000 atributuko & 0,010 & 0,2 & 5 & 500 & 0,9117 & 161,89 \\
+2-gram & 0,003 & 0,3 & 3 & 500 & 0,9669 & 53,09 \\
+Azken konfigurazioa & 0,003 & 0,1 & 3 & 500 & 0,9039 & 56,83 \\
+Normalizatua & 0,010 & 0,3 & 3 & 500 & 0,9530 & 50,71 \\
+\hline
+\end{tabular}%
+}
+\end{table}
+\subsubsection*{Datu normalizatuak}
+Normalizatutako datuekin lortutako emaitza onenak honako parametroekin izan dira:
+\begin{itemize}
+    \item LearningRate: 0,010
+    \item Momentum: 0,1
+    \item HiddenLayers: 3
+    \item Epochs: 500
+\end{itemize}
+
+Kasu honetan, \textbf{F-spam = 0,9046} izan da, 51,67 segundoko entrenamenduarekin.
+
+\subsubsection*{Ondorioak}
+Lortutako emaitzak alderatuta, \textbf{2-gram eredua} da errendimendurik onena eskaintzen duena, bai zehaztasunean (F-spam altuena), bai entrenamendu denboran.
+
+Hori dela eta, ondorengo ataletarako konfigurazio hau hartu da oinarritzat.
+
+
 
 \newpage
 % =============================================
@@ -627,12 +480,20 @@ aukeratu da proiektuko eredu optimal gisa, F-spam altuena lortzen duelako:
 
 Eredu finalaren kalitatea bi ebaluazio-eskemaren bidez estimatu da,
 \textbf{train eta dev instantziak elkartuz} (4.654 instantzia).
-Parametro optimoak: LR=0,005 | Mom=0,2 | Hidden=3 | Epochs=300.
+Parametro optimoak honakoak dira:
+
+\begin{itemize}
+    \item LearningRate: 0,01
+    \item Momentum: 0,1
+    \item HiddenLayers: 3
+    \item Epochs: 500
+\end{itemize}
 
 \subsection{5-fold Cross Validation}
 
-5-fold CV-n train+dev multzoa 5 zatitan banatzen da; bakoitzean 4 zatirekin
-entrenatzen da eta 1arekin ebaluatzen. Prozesu hau 5 aldiz errepikatzen da.
+5-fold Cross Validation metodoan datu-multzoa 5 zatitan banatzen da.
+Iterazio bakoitzean 4 zatirekin entrenatzen da eta gainerakoarekin ebaluatzen da,
+prozesua 5 aldiz errepikatuz.
 
 \begin{table}[H]
     \centering
@@ -641,17 +502,17 @@ entrenatzen da eta 1arekin ebaluatzen. Prozesu hau 5 aldiz errepikatzen da.
         \toprule
         \textbf{Klasea} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} \\
         \midrule
-        Spam  & 0,9419 & 0,9489 & 0,9454 \\
-        Ham   & 0,9791 & 0,9761 & 0,9776 \\
-        WAvg  & 0,9683 & 0,9682 & 0,9682 \\
+        Spam  & 0,9408 & 0,9422 & 0,9415 \\
+        Ham   & 0,9764 & 0,9758 & 0,9761 \\
+        WAvg  & 0,9661 & 0,9661 & 0,9661 \\
         \midrule
-        \multicolumn{2}{l}{Accuracy} & \multicolumn{2}{r}{\%96,82} \\
+        \multicolumn{2}{l}{Accuracy} & \multicolumn{2}{r}{\%96,61} \\
         \bottomrule
     \end{tabular}
-    \label{tab:5fcv}
 \end{table}
 
 Nahaste-matrizea:
+
 \begin{table}[H]
     \centering
     \caption{5-fold CV nahaste-matrizea}
@@ -659,62 +520,66 @@ Nahaste-matrizea:
         \toprule
         \textbf{a} & \textbf{b} & \\
         \midrule
-        1.281 & 69    & a = spam \\
-        79    & 3.225 & b = ham  \\
+        1272 & 78  & a = spam \\
+        80   & 3224 & b = ham  \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-69 spam mezu ham bezala sailkatu dira (false negative), eta 79 ham mezu
-spam bezala (false positive). Spam-eko false negative-ak kritikoagoak
-dira posta-kutxan spam mezu gehiago onartzen direlako.
+Emaitzek erakusten dute ereduak portaera sendoa duela bi klaseetan.
+Spam klasean F-Measure balioa 0,94 ingurukoa da, eta ham klasean
+are handiagoa (\~0,976). Accuracy orokorra \%96,61 da.
 
 \subsection{5 Repeated Stratified Hold-Out (70/30)}
 
-10 aldiz errepikatu da 70/30 banaketa estratifikatua, emaitzen egonkortasuna
-neurtzeko.
+Bigarren ebaluazioan, 70/30 banaketa estratifikatua 5 aldiz errepikatu da,
+ereduaren egonkortasuna aztertzeko.
 
 \begin{table}[H]
     \centering
-    \caption{5 Repeated Stratified Hold-Out -- iterazio bakoitzeko emaitzak}
+    \caption{Repeated Hold-Out emaitzak iterazioz iterazio}
     \begin{tabular}{lrrr}
         \toprule
         \textbf{Iterazioa} & \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
         \midrule
-        1 & 0,9455 & 0,9771 & 0,9681 \\
-        2 & 0,9573 & 0,9815 & 0,9743 \\
-        3 & 0,9606 & 0,9831 & 0,9764 \\
-        4 & 0,9368 & 0,9757 & 0,9652 \\
-        5 & 0,9399 & 0,9752 & 0,9649 \\
-        \midrule
-        \textbf{Batezbestekoa} & \textbf{0,9480} & \textbf{0,9785} & \textbf{0,9698} \\
+        1 & 0,9340 & 0,9720 & 0,9611 \\
+        2 & 0,9519 & 0,9789 & 0,9708 \\
+        3 & 0,9525 & 0,9795 & 0,9714 \\
+        4 & 0,9372 & 0,9764 & 0,9658 \\
+        5 & 0,9495 & 0,9786 & 0,9701 \\
         \bottomrule
     \end{tabular}
-    \label{tab:rep_ho_iter}
 \end{table}
 
 \begin{table}[H]
     \centering
-    \caption{5 Repeated Stratified Hold-Out -- batezbestekoa $\pm$ desbideratze estandarra}
+    \caption{Repeated Hold-Out batezbestekoa $\pm$ desbideratze estandarra}
     \begin{tabular}{lrrr}
         \toprule
         \textbf{Klasea} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} \\
         \midrule
-        Spam & $0{,}9375 \pm 0{,}0180$ & $0{,}9591 \pm 0{,}0135$ & $0{,}9480 \pm 0{,}0094$ \\
-        Ham  & $0{,}9831 \pm 0{,}0056$ & $0{,}9741 \pm 0{,}0069$ & $0{,}9786 \pm 0{,}0032$ \\
-        WAvg & --                       & --                       & $0{,}9698 \pm 0{,}0047$ \\
+        Spam & $0{,}9286 \pm 0{,}0160$ & $0{,}9623 \pm 0{,}0084$ & $0{,}9450 \pm 0{,}0078$ \\
+        Ham  & $0{,}9845 \pm 0{,}0027$ & $0{,}9698 \pm 0{,}0071$ & $0{,}9771 \pm 0{,}0028$ \\
+        WAvg & --                       & --                       & $0{,}9678 \pm 0{,}0039$ \\
         \bottomrule
     \end{tabular}
-    \label{tab:rep_ho}
 \end{table}
 
 \subsection{Kalitate estimatuaren interpretazioa}
 
-5-fCV-k eta Repeated HO-k antzeko emaitzak ematen dituzte
-(F-spam $\approx$ 0,945--0,948), ereduak ondo orokortzen duela adieraziz.
-Desbideratze estandar txikiek ($\pm$0,009) emaitzen egonkortasuna
-erakusten dute. Ham klaseko F-Measure altuagoa da datuen desoreka dela eta.
+Bi ebaluazio-eskemek emaitza oso antzekoak ematen dituzte.
+Spam klaseko F-Measure balioa \~0,94--0,945 ingurukoa da,
+eta ham klasean \~0,977 ingurukoa.
 
+Desbideratze estandar txikiak ($\pm$0,007--0,008 spam kasuan)
+ereduaren egonkortasuna adierazten dute.
+
+Gainera, ikus daiteke spam klasean recall handiagoa dela precision-a baino,
+hau da, spam mezu gutxiago galtzen dira (false negative gutxiago),
+nahiz eta horrek false positive apur bat gehiago ekarri.
+
+Ondorioz, ereduak orokortze ona erakusten du eta egonkorra da,
+datu ezezagunetan errendimendu ona izatea espero delarik.
 \newpage
 % =============================================
 % 7. IRAGARPENAK -- ERABILTZAILE ROLA
