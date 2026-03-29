@@ -81,7 +81,7 @@ public class EmailLoader {
      * @param data Garbitu nahi den datu-multzoa
      */
     public static void sanitizeAttributeNames(Instances data) {
-        for (int i = 0; i < data.numAttributes(); i++) {
+        for (int i = 0; i < data.numAttributes() - 1; i++) {
             String oldName = data.attribute(i).name();
             String sanitizedName = oldName.replaceAll("[^a-zA-Z0-9_.-]", "_");
             if (!oldName.equals(sanitizedName)) {

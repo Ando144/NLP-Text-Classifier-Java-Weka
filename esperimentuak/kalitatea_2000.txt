@@ -1,0 +1,49 @@
+==================================================
+      AURREIKUSITAKO KALITATE TXOSTENA            
+==================================================
+Parametro optimoak:
+  LearningRate : 0.01
+  Momentum     : 0.2
+  HiddenLayers : 5
+  Epochs       : 500
+  Train+Dev    : 4654 instanzia
+
+==================================================
+1. 5-FOLD CROSS VALIDATION
+==================================================
+Accuracy          : 97,03%
+Spam  Precision   : 0,9482
+Spam  Recall      : 0,9496
+Spam  F-Measure   : 0,9489
+Ham   Precision   : 0,9794
+Ham   Recall      : 0,9788
+Ham   F-Measure   : 0,9791
+WAvg  Precision   : 0,9704
+WAvg  Recall      : 0,9703
+WAvg  F-Measure   : 0,9704
+
+Nahaste-matrizea:
+    a    b   <-- classified as
+ 1282   68 |    a = spam
+   70 3234 |    b = ham
+
+
+==================================================
+2. 5 REPEATED STRATIFIED HOLD-OUT (70/30)
+==================================================
+1. iterazioa: F-spam=0,9423 F-ham=0,9755 WAvg-F=0,9660
+2. iterazioa: F-spam=0,9471 F-ham=0,9768 WAvg-F=0,9679
+3. iterazioa: F-spam=0,9585 F-ham=0,9821 WAvg-F=0,9750
+4. iterazioa: F-spam=0,8847 F-ham=0,9496 WAvg-F=0,9320
+5. iterazioa: F-spam=0,9380 F-ham=0,9727 WAvg-F=0,9625
+
+--- BATEZBESTEKOA +- DESBIDERATZE ESTANDARRA ---
+Spam  Precision : 0,8977 +- 0,0535
+Spam  Recall    : 0,9762 +- 0,0118
+Spam  F-Measure : 0,9341 +- 0,0256
+Ham   Precision : 0,9898 +- 0,0052
+Ham   Recall    : 0,9540 +- 0,0254
+Ham   F-Measure : 0,9713 +- 0,0113
+WAvg  F-Measure : 0,9607 +- 0,0149
+
+==================================================

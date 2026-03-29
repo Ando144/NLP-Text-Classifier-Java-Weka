@@ -87,21 +87,34 @@
         \textbf{Kidea} & \textbf{Ardura nagusia} & \textbf{Inplementatutako zatiak} \\
         \midrule
         Gorka Piedra &
-        --- &
-        --- \\
+        Dokumentazio teknikoa, kalitatearen ebaluazioa eta datuen prestaketa. &
+        \textbullet{} JavaDoc dokumentazioaren sorrera proiektuko klase anitzetan. \newline
+        \textbullet{} Datuak partitzeko logikaren inplementazioa (\textit{DataSplit}). \newline
+        \textbullet{} Ereduaren kalitate-probak egitea. \newline
+        \textbullet{} Erroreen kudeaketa eta \texttt{doku.tex} dokumentazioaren fintzea. \newline
+        \textbullet{} Fluxu-diagramaren diseinua. \\
         \midrule
         Andoni Ortiz de Zarate &
-        --- &
-        --- \\
+        Esperimentazio azpiegitura, entrenamendua eta ereduaren iraunkortasuna. &
+        \textbullet{} MLP (\textit{Multilayer Perceptron}) garatzea eta doitzea \textit{grid search} bidez. \newline
+        \textbullet{} Esperimentuen erregistroa kudeatzea \texttt{Evaluate.java} eta \texttt{ExperimentLogger.java} fitxategietan. \newline
+        \textbullet{} \texttt{GetModel.java} logika eredu entrenatua lortzeko eta gordetzeko. \newline
+        \textbullet{} Datuen hasierako karga eta ereduaren testeatzea. \\
         \midrule
         Ibai Olaziregi &
-        --- &
-        --- \\
+        Testuaren aurreprozesamendua, iragarpen-interfazea eta kodearen garbiketa. &
+        \textbullet{} \texttt{EmailVectorizerAndSelector.java} garatzea bektorizaziorako eta atributu-hautapenerako. \newline
+        \textbullet{} \texttt{Iragarri.java} inplementatzea mezu berrien iragarpenerako. \newline
+        \textbullet{} Karaktere berezien tratamendua eta normalizazioa \texttt{TextNormalizer.java} fitxategian. \newline
+        \textbullet{} Klase-diagramaren diseinua eta proiektuaren azken antolaketa (errefaktorizazioa eta garbiketa). \\
         \bottomrule
     \end{tabular}
     \label{tab:ardura}
 \end{table}
 
+Aipatzekoa da taldekide guztiok parte hartu dugula, neurri handiagoan edo txikiagoan, proiektuaren atal guztietan (hala nola dokumentazioan, kodearen garbiketetan edota testaketan). Hala ere, taulan agertzen den banaketak atal bakoitzean pisu handiena izan duen edo lan karga handiena bere gain hartu duen kidea islatzen du, ardura nagusiak argiago identifikatzeko asmoz.
+
+\newpage
 % =============================================
 % 2. DATU-SORTAREN ANALISIA
 % =============================================
@@ -155,6 +168,7 @@ partiketa guztietan. Partiketa \textbf{\%80/\%10/\%10} egin da:
     \item \textbf{Test (\%10):} 517 instantzia -- azken iragarpenak egiteko
 \end{itemize}
 
+\newpage
 % =============================================
 % 3. AURREPROZESAMENDUA
 % =============================================
@@ -171,7 +185,7 @@ Prozesu honetan honako eragiketak egin dira:
     Maiuskulak eta minuskulak berdintzen dira. \textit{``FREE''} eta \textit{``free''}
     hitz bera bezala tratatzen dira.
     \item \textbf{Tokenizazioa (\texttt{WordTokenizer}):}
-    Testua hitzetan banatzen da puntuazio-markak banatzailetzat erabiliz.
+    Testua hitzetan banatzen da puntuazio-markak banatzailetzat erabiliz. \\
     Muga-karaktereak: \texttt{" \textbackslash r\textbackslash n\textbackslash t.,;:'``()?!-+/\textbackslash<>@\#\$\%\^{}\&*\_=\textasciitilde`|[]\{\}"}
     \item \textbf{Stemming (\texttt{LovinsStemmer}):}
     Hitzak beren erroetara murrizten dira. Adib.: \textit{``running''}, \textit{``runs''}
@@ -200,6 +214,7 @@ taula bete.}
     \label{tab:stemmer}
 \end{table}
 
+\newpage
 % =============================================
 % 4. BEKTORIZAZIOA
 % =============================================
@@ -295,6 +310,7 @@ Test-blind bermatzeko prozesu hau jarraitu da:
 Prozesu honek bermatzen du train, dev eta test multzoek \textbf{atributu berdinak}
 dituztela, \textit{data leakage}-rik gabe.
 
+\newpage
 % =============================================
 % 5. SAILKATZAILEA: MULTILAYER PERCEPTRON
 % =============================================
@@ -603,6 +619,7 @@ aukeratu da proiektuko eredu optimal gisa, F-spam altuena lortzen duelako:
     \item Gordetako eredua: \texttt{modelo/mlp.model}
 \end{itemize}
 
+\newpage
 % =============================================
 % 6. KALITATE ESTIMATUA
 % =============================================
@@ -795,7 +812,7 @@ Helburuetan bi rol bereizten dira: datuen pre-prozesamendua eta klasifikazio/eba
 \subsection{Klase-diagrama}
 Gure softwareak 10 Java fitxategik osatzen dute: 3 datuen pre-prozesamendurako (irudian berdez agertzen direnak), 4 ereduaren entrenamendu eta ebaluazioentzat (irudian laranjaz edo urdinez agertzen direnak), eta beste 3 klase lagungarri gisa (irudian morez), exekuzio-fluxu nagusiaren parte ez diren arren, beste klaseek erabiltzen dituztenak.
 
-Hainbat klasek funtzio publikoak dituzte, beste klaseetatik deitzen direnak. Hortaz, fitxategien artean dependentzia erlazio bat sortzen da, \textit{EmailLoader.java} eta \textit{ExperimentLogger.java} izanik klase dependente gehien dituzten klaseak.
+Hainbat klasek funtzio publikoak dituzte, beste klaseetatik deitzen direnak. Hortaz, fitxategien artean dependentzia erlazio bat sortzen da, \texttt{EmailLoader.java} eta \texttt{ExperimentLogger.java} izanik klase dependente gehien dituzten klaseak.
 \begin{figure}[h!]
     \centering
     \includesvg[width=0.95\linewidth]{diagramas/KlaseDiagrama.svg}
