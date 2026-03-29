@@ -9,6 +9,7 @@
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{booktabs}
+\usepackage{svg}
 \usepackage{array}
 \usepackage{float}
 \usepackage{hyperref}
@@ -697,6 +698,7 @@ neurtzeko.
 Desbideratze estandar txikiek ($\pm$0,009) emaitzen egonkortasuna
 erakusten dute. Ham klaseko F-Measure altuagoa da datuen desoreka dela eta.
 
+\newpage
 % =============================================
 % 7. IRAGARPENAK -- ERABILTZAILE ROLA
 % =============================================
@@ -741,31 +743,36 @@ multzoan ebaluatu du (517 instantzia, klase ezezagunak):
 Test F-spam (0,9633) kalitate estimatutakoa (0,9480) baino altuagoa da,
 ereduak benetako datu ezezagunekin ere ondo funtzionatzen duela erakutsiz.
 
-\subsection{Classify.java -- testu gordina sailkatzeko}
+\subsection{Iragarri.java -- Mezu elektroniko berriak sailkatzeko}
 
-\texttt{Classify.java} fitxategiak testu gordina jasotzen du eta
-\textit{spam}/\textit{ham} iragarpena ematen du. Prozesu osoa
-on-the-fly egiten du:
+\texttt{Iragarri.java} klaseak sarrera direktorio batean dauden \texttt{.txt} fitxategiak (mezu elektronikoak) kargatzen ditu eta bakoitzari dagokion \textit{spam}/\textit{ham} iragarpena egiten dio. Prozesu osoak entrenamenduko pipeline berbera errepikatzen du koherentzia bermatzeko:
 
 \begin{enumerate}
-    \item Eredua kargatu (\texttt{mlp.model})
-    \item Train multzoko hiztegia berreraiki (\texttt{train\_final.arff}-tik)
-    \item Testu berria bektorizatu hiztegi berarekin
-    \item Atributu-hautaketa aplikatu ranking berarekin
-    \item \texttt{classifyInstance()} bidez iragarpena lortu
+    \item Fitxategiak direktorio batetik kargatu eta \texttt{Instances} objektu bilakatu.
+    \item Testuaren normalizazioa aplikatu (\texttt{TextNormalizer}).
+    \item Entrenamenduan gordetako filtroak kargatu eta aplikatu: bektorizazioa (\texttt{vectorizer.ser}) eta atributu-hautaketa (\texttt{selector.ser}).
+    \item Entrenatutako eredua kargatu (\texttt{mlp.model}).
+    \item \texttt{classifyInstance()} eta \texttt{distributionForInstance()} bidez iragarpenak eta konfidantza-mailak kalkulatu.
+    \item Emaitzak fitxategi batean gorde (\texttt{iragarpenak.txt}) eta esperimentu log-ean erregistratu.
 \end{enumerate}
 
 Exekuzio adibidea:
 \begin{verbatim}
-java -cp "lib\weka.jar;bin" Classify modelo/mlp.model
-     Partiketak/train_final.arff
-     "Free prize! Click here to claim your reward now"
+java -cp "lib\weka.jar;bin" Iragarri modelo/mlp.model data_proba/ emaitzak/
 \end{verbatim}
 
-Irteera:
+Kontsolan eta \texttt{iragarpenak.txt} fitxategian lortzen den irteera:
 \begin{verbatim}
-Testua     : Free prize! Click here to claim your reward now
-Iragarpena : SPAM
+==================================================
+               IRAGARPENAK - EMAITZAK             
+==================================================
+
+Mezua 1: SPAM (konfidantza: 0.9942)
+Mezua 2: HAM (konfidantza: 0.8751)
+
+==================================================
+Guztira sailkatutako mezuak: 2
+==================================================
 \end{verbatim}
 
 % =============================================
@@ -780,8 +787,19 @@ Helburuetan bi rol bereizten dira: datuen pre-prozesamendua eta klasifikazio/eba
 \begin{figure}[h]
     \centering
      Hemen jarri dezakezu zuk sortutako irudia, adibidez:
-     \includegraphics[width=1.17\textwidth]{diagramas/fuxu_diagrama.drawio.png}
+     \includegraphics[width=1.17\textwidth]{diagramas/fuxu_diagrama.png}
     \caption{Datu-fluxu sinplea: sarrera, prozesuak eta irteerak.}
+\end{figure}
+
+\subsection{Klase-diagrama}
+Gure softwareak 10 Java fitxategik osatzen dute: 3 datuen pre-prozesamendurako (irudian berdez agertzen direnak), 4 ereduaren entrenamendu eta ebaluazioentzat (irudian laranjaz edo urdinez agertzen direnak), eta beste 3 klase lagungarri gisa (irudian morez), exekuzio-fluxu nagusiaren parte ez diren arren, beste klaseek erabiltzen dituztenak.
+
+Hainbat klasek funtzio publikoak dituzte, beste klaseetatik deitzen direnak. Hortaz, fitxategien artean dependentzia erlazio bat sortzen da, \textit{EmailLoader.java} eta \textit{ExperimentLogger.java} izanik klase dependente gehien dituzten klaseak.
+\begin{figure}[h]
+    \centering
+    \includesvg[width=0.95\linewidth]{diagramas/KlaseDiagrama.svg}
+    \caption{Klase-diagrama}
+    \label{fig:klase-diagrama}
 \end{figure}
 
 \subsection{Sarrera eta Irteerak}

@@ -223,6 +223,10 @@ public class EmailVectorizerAndSelector {
 
             System.out.println("  Amaierako atributuak: " + trainFinal.numAttributes());
 
+            EmailLoader.sanitizeAttributeNames(trainFinal);
+            EmailLoader.sanitizeAttributeNames(devFinal);
+            EmailLoader.sanitizeAttributeNames(testFinal);
+
             // Gorde filtroak inferentziarako
             File modelDir = new File("modelo");
             if (!modelDir.exists())

@@ -4125,3 +4125,87 @@ EMAITZAK        :
     WAvg F-Measure : 0,9590 +- 0,0059
 =========================================================================
 
+=========================================================================
+DATA ETA ORDUA  : 2026-03-29 13:44:05
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 1. Datu Gordinen Karga (EmailLoader)
+PARAMETROAK     : Jatorria: DatuakRaw | Helburua: DatuakRaw/emails_raw.arff
+EMAITZAK        : 
+Kargatutako instantziak: 5172
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-29 13:44:06
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 2. Datuen Partiketa (DataSplit)
+PARAMETROAK     : Train: 80% | Dev: 10% | Test: 10% (Seed=1)
+EMAITZAK        : 
+Train: 4136 | Dev: 518 | Test: 518
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-29 13:44:41
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 27 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : Bektorizazioa eta Aukeraketa (ablation)
+PARAMETROAK     : WordsToKeep=50000 | MinTermFreq=1 | DigitsAsDelim=false | ThresholdMode=false | TextNormalizer=false | MaxNGram=1
+EMAITZAK        : 
+Amaierako atributuak: 2001
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-29 14:00:22
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 1. Datu Gordinen Karga (EmailLoader)
+PARAMETROAK     : Jatorria: DatuakRaw | Helburua: DatuakRaw/emails_raw.arff
+EMAITZAK        : 
+Kargatutako instantziak: 5172
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-29 14:00:23
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 2. Datuen Partiketa (DataSplit)
+PARAMETROAK     : Train: 80% | Dev: 10% | Test: 10% (Seed=1)
+EMAITZAK        : 
+Train: 4136 | Dev: 518 | Test: 518
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-29 14:15:18
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 6 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 1. Datu Gordinen Karga (EmailLoader)
+PARAMETROAK     : Jatorria: DatuakRaw | Helburua: DatuakRaw/emails_raw.arff
+EMAITZAK        : 
+Kargatutako instantziak: 5172
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-29 14:15:19
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 2. Datuen Partiketa (DataSplit)
+PARAMETROAK     : Train: 80% | Dev: 10% | Test: 10% (Seed=1)
+EMAITZAK        : 
+Train: 4136 | Dev: 518 | Test: 518
+=========================================================================
+

@@ -74,6 +74,23 @@ public class EmailLoader {
     }
 
     /**
+     * Atributu guztien izenak garbitzen ditu, Weka-k ARFF fitxategiak
+     * kargatzean erroreak eman ditzaketen kontrol-karaktereak eta
+     * karaktere bereziak ezabatuz.
+     *
+     * @param data Garbitu nahi den datu-multzoa
+     */
+    public static void sanitizeAttributeNames(Instances data) {
+        for (int i = 0; i < data.numAttributes(); i++) {
+            String oldName = data.attribute(i).name();
+            String sanitizedName = oldName.replaceAll("[^a-zA-Z0-9_.-]", "_");
+            if (!oldName.equals(sanitizedName)) {
+                data.renameAttribute(i, sanitizedName);
+            }
+        }
+    }
+
+    /**
      * Programa exekutatzen duen metodo nagusia, testu-fitxategiak kargatu
      * eta ARFF dataset bihurtzen dituena.
      *

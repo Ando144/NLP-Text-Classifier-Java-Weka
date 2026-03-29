@@ -108,7 +108,7 @@ public class Iragarri {
             }
 
             String modelPath = args.length >= 1 ? args[0] : "modelo/mlp.model";
-            String inputDir = args.length >= 2 ? args[1] : "DatuakRaw/proba_data/";
+            String inputDir = args.length >= 2 ? args[1] : "data_proba/";
             String outputDir = args.length == 3 ? args[2] : "emaitzak/";
 
             System.out.println("\n--- Iragarpenak ---");
