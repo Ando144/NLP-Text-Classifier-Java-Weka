@@ -1,0 +1,57 @@
+# Konfigurazioen Erregistroa
+
+1. Baseline (Oinarrizkoa)
+   - Konfigurazioa:
+         WORDS_TO_KEEP=25000
+         NUM_TO_SELECT=1000
+         DIGITS_AS_DELIM=false
+         MIN_TERM_FREQ=1
+         USE_THRESHOLD=false
+         USE_NORMALIZER=false
+         MAX_NGRAM=1
+   - Fitxategiak: finetuning_base.txt, test_emaitzak_base.txt, kalitatea_base.txt
+
+2. +TextNormalizer
+   - Konfigurazioa:
+         WORDS_TO_KEEP=25000
+         NUM_TO_SELECT=1000
+         DIGITS_AS_DELIM=false
+         MIN_TERM_FREQ=1
+         USE_THRESHOLD=false
+         USE_NORMALIZER=true
+         MAX_NGRAM=1
+   - Fitxategiak: finetuning_norm.txt, test_emaitzak_norm.txt, kalitatea_norm.txt
+   - OHARRA: Hau izan da aukeratutako konfigurazio optimoa.
+
+3. +Bigrams
+   - Konfigurazioa:
+         WORDS_TO_KEEP=25000
+         NUM_TO_SELECT=1000
+         DIGITS_AS_DELIM=false
+         MIN_TERM_FREQ=1
+         USE_THRESHOLD=false
+         USE_NORMALIZER=false
+         MAX_NGRAM=2
+   - Fitxategiak: finetuning_2gram.txt, test_emaitzak_2gram.txt, kalitatea_2gram.txt
+
+4. 2000 atributurekin:
+   - Konfigurazioa:
+         WORDS_TO_KEEP=50000
+         NUM_TO_SELECT=2000
+         DIGITS_AS_DELIM=false
+         MIN_TERM_FREQ=1
+         USE_THRESHOLD=false
+         USE_NORMALIZER=false
+         MAX_NGRAM=1
+   - Fitxategiak: finetuning_2000.txt, test_emaitzak_2000.txt, kalitatea_2000.txt
+
+5. 500 atributurekin:
+   - Konfigurazioa:
+         WORDS_TO_KEEP=10000
+         NUM_TO_SELECT=500
+         DIGITS_AS_DELIM=false
+         MIN_TERM_FREQ=1
+         USE_THRESHOLD=false
+         USE_NORMALIZER=false
+         MAX_NGRAM=1
+   - Fitxategiak: finetuning_500.txt, test_emaitzak_500.txt, kalitatea_500.txt
