@@ -138,9 +138,10 @@ public class EmailVectorizerAndSelector {
 
             // Aukeran, testuaren aurreprozesamendua aplikatzen da (garbiketa,
             // normalizazioa)
+            TextNormalizer normalizer = null;
             if (useNormalizer) {
                 System.out.println("\nTextNormalizer aplikatzen...");
-                TextNormalizer normalizer = new TextNormalizer();
+                normalizer = new TextNormalizer();
                 normalizer.setInputFormat(train);
                 train = Filter.useFilter(train, normalizer);
                 dev = Filter.useFilter(dev, normalizer);
@@ -235,6 +236,14 @@ public class EmailVectorizerAndSelector {
             // Filtroak gordetzen dira, gero inferentzian berrerabiltzeko
             FilterSerializationHelper.saveFilter(stwv, "modelo/vectorizer.ser");
             FilterSerializationHelper.saveFilter(filterSelector, "modelo/selector.ser");
+            if (normalizer != null) {
+                FilterSerializationHelper.saveFilter(normalizer, "modelo/normalizer.ser");
+                System.out.println("  TextNormalizer gordeta inferentziarako (modelo/normalizer.ser)");
+            } else {
+                File nf = new File("modelo/normalizer.ser");
+                if (nf.exists())
+                    nf.delete();
+            }
             System.out.println("\nFiltroak gordeta inferentziarako (modelo/vectorizer.ser, modelo/selector.ser)");
 
             // Azken dataset eraldatuak fitxategietan gordetzen dira

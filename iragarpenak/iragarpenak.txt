@@ -1,0 +1,12 @@
+==================================================
+               IRAGARPENAK - EMAITZAK             
+==================================================
+
+Mezua 1: SPAM (konfidantza: 0,9939)
+Mezua 2: HAM (konfidantza: 0,9993)
+Mezua 3: HAM (konfidantza: 0,5998)
+Mezua 4: SPAM (konfidantza: 0,9939)
+
+==================================================
+Guztira sailkatutako mezuak: 4
+==================================================

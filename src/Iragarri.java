@@ -152,18 +152,25 @@ public class Iragarri {
             EmailLoader.saveToArff(probaRaw, new File(outputDir, "proba_raw.arff"));
             System.out.println("  RAW ARFF gordeta.");
 
-            // TestNormalizer aplikatu
-            System.out.println("\nTextNormalizer aplikatzen...");
-            TextNormalizer normalizer = new TextNormalizer();
-            normalizer.setInputFormat(probaRaw);
-            Instances probaNorm = Filter.useFilter(probaRaw, normalizer);
-            System.out.println("  TextNormalizer aplikatuta.");
-
             // Filtroak kargatu
+            File normalizerFile = new File("modelo/normalizer.ser");
             File vectorizerFile = new File("modelo/vectorizer.ser");
             File selectorFile = new File("modelo/selector.ser");
 
             Instances probaFinal;
+            Instances probaNorm;
+
+            // TestNormalizer aplikatu (horrekin entrenatu bada)
+            if (normalizerFile.exists()) {
+                System.out.println("\nTextNormalizer aplikatzen (modelo/normalizer.ser)...");
+                TextNormalizer normalizer = (TextNormalizer) FilterSerializationHelper
+                        .loadFilter(normalizerFile.getPath());
+                probaNorm = Filter.useFilter(probaRaw, normalizer);
+                System.out.println("  TextNormalizer aplikatuta.");
+            } else {
+                System.out.println("\nTextNormalizer ez da aurkitu. Jatorrizko testua mantentzen.");
+                probaNorm = probaRaw;
+            }
 
             if (vectorizerFile.exists() && selectorFile.exists()) {
                 System.out.println("\nEntrenamenduko filtroak kargatzen (vectorizer.ser, selector.ser)...");
@@ -173,11 +180,9 @@ public class Iragarri {
                 AttributeSelection selector = (AttributeSelection) FilterSerializationHelper
                         .loadFilter(selectorFile.getPath());
 
-                stwv.setInputFormat(probaNorm);
                 Instances probaVec = Filter.useFilter(probaNorm, stwv);
                 System.out.println("  Bektorizazioaren ostean atributuak: " + probaVec.numAttributes());
 
-                selector.setInputFormat(probaVec);
                 probaFinal = Filter.useFilter(probaVec, selector);
                 System.out.println("  Aukeraketa aplikatuta. Atributuak: " + probaFinal.numAttributes());
 

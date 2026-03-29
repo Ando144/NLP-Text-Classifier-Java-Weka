@@ -18,7 +18,7 @@ cd /home/ibai/Dokumentuak/Testu-Sailkatzailea
 #   - digitsAsDelim:  false (Enron token informatiboak babesten)
 #   - minTermFreq:    1 (jokabide originala)
 #   - useThreshold:   false (numToSelect finkoa)
-#   - useNormalizer:  false
+#   - useNormalizer:  true
 # ----------------------------------------------------------
 WORDS_TO_KEEP=25000
 NUM_TO_SELECT=1000
@@ -151,7 +151,7 @@ java --add-opens java.base/java.lang=ALL-UNNAMED \
      Iragarri \
      modelo/mlp.model \
      data_proba/ \
-     esperimentuak/
+     iragarpenak/
 echo "  OK"
 
 
@@ -172,7 +172,7 @@ echo "Emaitzak hemen:"
 echo "  - esperimentuak/finetuning_norm.txt      (fine-tuning taula)"
 echo "  - esperimentuak/test_emaitzak_norm.txt   (test itsuaren emaitzak)"
 echo "  - esperimentuak/kalitatea_norm.txt       (kalitate estimatua)"
-echo "  - esperimentuak/iragarpenak.txt            (iragarpen berriak)"
+echo "  - iragarpenak/iragarpenak.txt            (iragarpen berriak)"
 echo "  - registro_experimentos.txt           (log osoa)"
 echo "  - modelo/mlp.model                    (eredu onena)"
 echo "=========================================================="
