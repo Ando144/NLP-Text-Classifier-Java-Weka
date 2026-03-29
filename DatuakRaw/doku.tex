@@ -401,7 +401,18 @@ Weka-ko \texttt{MultilayerPerceptron} klaseak honako parametro sentikorrak ditu:
 
 Atal honetan \textit{MultilayerPerceptron} ereduaren parametro optimoak bilatu dira, \textbf{F-Measure (spam)} maximizatzea helburu hartuta. Horretarako, hainbat esperimentu egin dira \texttt{train\_final.arff} eta \texttt{dev\_final.arff} datu-multzoekin.
 
-Lau konfigurazio desberdin aztertu dira: \textbf{2000 atributuko bektorea}, \textbf{2-gram eredua}, \textbf{azken konfigurazioa (finala)} eta \textbf{normalizatutako datuak}.
+Corpusaren garbiketa eta atributuen aukeraketarako hainbat konfigurazio aukera inplementatu ditugu, bost eredu nagusi aztertuz: \textbf{oinarrizko eredua} (1000 atributurekin), \textbf{2000 atributuko bektorea}, \textbf{500 atributuko bektorea}, \textbf{2-gram eredua} (Bigramak onartuz atributu gisa) eta \textbf{normalizatua} (\texttt{TextNormalizer.java} erabiltzen du, guk eskuz aukeratutako hainbat filtro jartzeko).
+
+\subsubsection*{Oinarrizko eredua}
+Azken konfigurazioan (aurreprozesamendu osoarekin), parametro optimoak honakoak izan dira:
+\begin{itemize}
+    \item LearningRate: 0,010
+    \item Momentum: 0,1
+    \item HiddenLayers: 5
+    \item Epochs: 500
+\end{itemize}
+
+Eredu honek \textbf{F-spam = 0,9252} lortu du, 78,34 segundoko entrenamenduarekin.
 
 \subsubsection*{2000 atributuko eredua}
 Emaitzen arabera, parametro konbinazio onena honakoa izan da:
@@ -414,6 +425,17 @@ Emaitzen arabera, parametro konbinazio onena honakoa izan da:
 
 Konfigurazio honek \textbf{F-spam = 0,9117} lortu du, 161,89 segundoko entrenamendu denborarekin.
 
+\subsubsection*{500 atributuko eredua}
+Emaitzen arabera, parametro konbinazio onena honakoa izan da:
+\begin{itemize}
+    \item LearningRate: 0,003
+    \item Momentum: 0,1
+    \item HiddenLayers: 5
+    \item Epochs: 500
+\end{itemize}
+
+Konfigurazio honek \textbf{F-spam = 0,9320} lortu du, 37,97 segundoko entrenamendu denborarekin.
+
 \subsubsection*{2-gram eredua}
 Emaitza onenak 2-gram konfigurazioarekin lortu dira. Parametro optimoak hauek izan dira:
 \begin{itemize}
@@ -425,35 +447,6 @@ Emaitza onenak 2-gram konfigurazioarekin lortu dira. Parametro optimoak hauek iz
 
 Kasu honetan, \textbf{F-spam = 0,9669} lortu da, eta entrenamendu denbora nabarmen txikiagoa izan da (53,09 s).
 
-\subsubsection*{Azken konfigurazioa (finala)}
-Azken konfigurazioan (aurreprozesamendu osoarekin), parametro optimoak honakoak izan dira:
-\begin{itemize}
-    \item LearningRate: 0,010
-    \item Momentum: 0,1
-    \item HiddenLayers: 5
-    \item Epochs: 500
-\end{itemize}
-
-Eredu honek \textbf{F-spam = 0,9252} lortu du, 78,34 segundoko entrenamenduarekin.
-
-
-
-\begin{table}[h!]
-\centering
-\caption{Comparación de los mejores modelos de fine-tuning}
-\resizebox{\textwidth}{!}{%
-\begin{tabular}{|l|c|c|c|c|c|c|}
-\hline
-\textbf{Eredua / Fitxategia} & \textbf{LearningRate} & \textbf{Momentum} & \textbf{HiddenLayers} & \textbf{Epochs} & \textbf{F-Measure (spam)} & \textbf{Entrenamendu denbora (s)} \\
-\hline
-2000 atributuko & 0,010 & 0,2 & 5 & 500 & 0,9117 & 161,89 \\
-2-gram & 0,003 & 0,3 & 3 & 500 & 0,9669 & 53,09 \\
-Azken konfigurazioa & 0,003 & 0,1 & 3 & 500 & 0,9039 & 56,83 \\
-Normalizatua & 0,010 & 0,3 & 3 & 500 & 0,9530 & 50,71 \\
-\hline
-\end{tabular}%
-}
-\end{table}
 \subsubsection*{Datu normalizatuak}
 Normalizatutako datuekin lortutako emaitza onenak honako parametroekin izan dira:
 \begin{itemize}
@@ -465,10 +458,29 @@ Normalizatutako datuekin lortutako emaitza onenak honako parametroekin izan dira
 
 Kasu honetan, \textbf{F-spam = 0,9046} izan da, 51,67 segundoko entrenamenduarekin.
 
+
+\begin{table}[h!]
+\centering
+\caption{Comparación de los mejores modelos de fine-tuning}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|c|c|c|c|c|c|}
+\hline
+\textbf{Eredua / Fitxategia} & \textbf{LearningRate} & \textbf{Momentum} & \textbf{HiddenLayers} & \textbf{Epochs} & \textbf{F-Measure (spam)} & \textbf{Entrenamendu denbora (s)} \\
+\hline
+Oinarrizkoa & 0,003 & 0,1 & 3 & 500 & 0,9039 & 56,83 \\
+2000 atributuko & 0,010 & 0,2 & 5 & 500 & 0,9117 & 161,89 \\
+2000 atributuko & 0,003 & 0,1 & 5 & 500 & 0,9320 & 37,97 \\
+2-gram & 0,003 & 0,3 & 3 & 500 & 0,9669 & 53,09 \\
+Normalizatua & 0,010 & 0,3 & 3 & 500 & 0,9530 & 50,71 \\
+\hline
+\end{tabular}%
+}
+\end{table}
+
 \subsubsection*{Ondorioak}
 Lortutako emaitzak alderatuta, \textbf{2-gram eredua} da errendimendurik onena eskaintzen duena, bai zehaztasunean (F-spam altuena), bai entrenamendu denboran.
 
-Hori dela eta, ondorengo ataletarako konfigurazio hau hartu da oinarritzat.
+Hala ere, parametro optimoekin sortutako ereduei \texttt{Evaluate.java} klasearen ebaluaketa egiterakoan, nabaria da \texttt{TestModel.java} klasearen ebaluaketa ez dela nahikoa, eta \textbf{5-fold Cross Validation} eta \textbf{5 Repeated Stratified Hold-Out} bezalako prozesuak erabiltzerakoan emaitza desberdinak lortu ditzazkegula. Hurrengo atalean emaitza horiek aztertuko ditugu.
 
 
 
@@ -637,6 +649,8 @@ ereduak benetako datu ezezagunekin ere ondo funtzionatzen duela erakutsiz.
     \item Emaitzak fitxategi batean gorde (\texttt{iragarpenak.txt}) eta esperimentu log-ean erregistratu.
 \end{enumerate}
 
+Gure modeloarekin probatzeko
+
 Exekuzio adibidea:
 \begin{verbatim}
 java -cp "lib\weka.jar;bin" Iragarri \
@@ -649,11 +663,13 @@ Kontsolan eta \texttt{iragarpenak.txt} fitxategian lortzen den irteera:
                IRAGARPENAK - EMAITZAK             
 ==================================================
 
-Mezua 1: SPAM (konfidantza: 0.9942)
-Mezua 2: HAM (konfidantza: 0.8751)
+Mezua 1: SPAM (konfidantza: 0,9939)
+Mezua 2: HAM (konfidantza: 0,9993)
+Mezua 3: HAM (konfidantza: 0,5998)
+Mezua 4: SPAM (konfidantza: 0,9939)
 
 ==================================================
-Guztira sailkatutako mezuak: 2
+Guztira sailkatutako mezuak: 4
 ==================================================
 \end{verbatim}
 
