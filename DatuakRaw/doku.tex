@@ -56,7 +56,7 @@
         \textbf{Egileak:}\\
         Gorka Piedra\\
         Andoni Ortiz de Zarate\\
-        Ibai Ibai Olaziregi\\
+        Ibai Olaziregi\\
     \end{minipage}
     \begin{minipage}{0.45\textwidth}
         \raggedleft
@@ -749,7 +749,6 @@ ereduak benetako datu ezezagunekin ere ondo funtzionatzen duela erakutsiz.
 
 \begin{enumerate}
     \item Fitxategiak direktorio batetik kargatu eta \texttt{Instances} objektu bilakatu.
-    \item Testuaren normalizazioa aplikatu (\texttt{TextNormalizer}).
     \item Entrenamenduan gordetako filtroak kargatu eta aplikatu: bektorizazioa (\texttt{vectorizer.ser}) eta atributu-hautaketa (\texttt{selector.ser}).
     \item Entrenatutako eredua kargatu (\texttt{mlp.model}).
     \item \texttt{classifyInstance()} eta \texttt{distributionForInstance()} bidez iragarpenak eta konfidantza-mailak kalkulatu.
@@ -758,7 +757,8 @@ ereduak benetako datu ezezagunekin ere ondo funtzionatzen duela erakutsiz.
 
 Exekuzio adibidea:
 \begin{verbatim}
-java -cp "lib\weka.jar;bin" Iragarri modelo/mlp.model data_proba/ emaitzak/
+java -cp "lib\weka.jar;bin" Iragarri \
+    modelo/mlp.model data_proba/  emaitzak/
 \end{verbatim}
 
 Kontsolan eta \texttt{iragarpenak.txt} fitxategian lortzen den irteera:
@@ -775,6 +775,7 @@ Guztira sailkatutako mezuak: 2
 ==================================================
 \end{verbatim}
 
+\newpage
 % =============================================
 % 8. SOFTWARE DISEINUA
 % =============================================
@@ -784,7 +785,7 @@ Helburuetan bi rol bereizten dira: datuen pre-prozesamendua eta klasifikazio/eba
 
 \subsection{Datu-fluxu diagrama}
 
-\begin{figure}[h]
+\begin{figure}[h!]
     \centering
      Hemen jarri dezakezu zuk sortutako irudia, adibidez:
      \includegraphics[width=1.17\textwidth]{diagramas/fuxu_diagrama.png}
@@ -795,7 +796,7 @@ Helburuetan bi rol bereizten dira: datuen pre-prozesamendua eta klasifikazio/eba
 Gure softwareak 10 Java fitxategik osatzen dute: 3 datuen pre-prozesamendurako (irudian berdez agertzen direnak), 4 ereduaren entrenamendu eta ebaluazioentzat (irudian laranjaz edo urdinez agertzen direnak), eta beste 3 klase lagungarri gisa (irudian morez), exekuzio-fluxu nagusiaren parte ez diren arren, beste klaseek erabiltzen dituztenak.
 
 Hainbat klasek funtzio publikoak dituzte, beste klaseetatik deitzen direnak. Hortaz, fitxategien artean dependentzia erlazio bat sortzen da, \textit{EmailLoader.java} eta \textit{ExperimentLogger.java} izanik klase dependente gehien dituzten klaseak.
-\begin{figure}[h]
+\begin{figure}[h!]
     \centering
     \includesvg[width=0.95\linewidth]{diagramas/KlaseDiagrama.svg}
     \caption{Klase-diagrama}
