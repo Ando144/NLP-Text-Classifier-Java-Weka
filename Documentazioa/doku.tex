@@ -477,12 +477,57 @@ Normalizatua & 0,010 & 0,3 & 3 & 500 & 0,9530 & 50,71 \\
 }
 \end{table}
 
+
+
 \subsubsection*{Ondorioak}
 Lortutako emaitzak alderatuta, \textbf{2-gram eredua} da errendimendurik onena eskaintzen duena, bai zehaztasunean (F-spam altuena), bai entrenamendu denboran.
 
 Hala ere, parametro optimoekin sortutako ereduei \texttt{Evaluate.java} klasearen ebaluaketa egiterakoan, nabaria da \texttt{TestModel.java} klasearen ebaluaketa ez dela nahikoa, eta \textbf{5-fold Cross Validation} eta \textbf{5 Repeated Stratified Hold-Out} bezalako prozesuak erabiltzerakoan emaitza desberdinak lortu ditzazkegula. Hurrengo atalean emaitza horiek aztertuko ditugu.
+\newpage
 
+\subsection{Emaitza esperimentalen adierazpen grafikoa: aztertutako parametroak eta horietarako metrikak}
 
+Jarraian, parametroen ekorketan ebaluatutako eredu esanguratsuenen emaitzak aurkezten dira modu grafikoan, modelo finala "norm" atziskia duena izaten. Eredu hauen arteko konparaketak aukeratutako eredu finalaren justifikazio enpirikoa eskaintzen du, irizpide anitzeko ebaluazio bat eginez.
+
+\subsubsection*{Metrika orokorren konparaketa}
+Lehenengo irudian, ebaluatutako eredu nagusien sailkapen-metrikak (Zehaztasuna, Estaldura, F-Neurria eta Accuracy) alderatzen dira. Grafiko honek erakusten du nola eredu txapeldunak oreka egokia lortzen duen metrika guztien artean, bereziki Spam klaseko F-Neurrian, muturreko balioak edo alborapenak saihestuz.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{G1_metrika_konparaketa_eu_editado.PNG}
+    \caption{Eredu ezberdinen sailkapen-metrika nagusien konparaketa (Spam klasea eta metrika orokorrak).}
+    \label{fig:g1_metrikak}
+\end{figure}
+\newpage
+\subsubsection*{Ereduaren egonkortasuna eta iterazioak}
+Bigarren irudian, errepikatutako Hold-Out (5 Repeated Stratified Hold-Out) ebaluazioaren iterazioetako emaitzak eta F-Neurriaren bilakaera bistaratzen dira. Desbideratze estandarrak ($\sigma$) ereduaren sendotasuna adierazten du testuinguru ezberdinetan; kasu honetan, eredu hautatua aldakortasun txikiena erakusten du iterazioz iterazio, Overfitting-a jasateko arriskua nabarmen gutxituz.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{G2_ebo_iterazioak_eu.png}
+    \caption{F-Neurriaren bilakaera eta desbideratze estandarra Errepikatutako Hold-Out ebaluazioan, ereduaren egonkortasuna neurtzeko.}
+    \label{fig:g2_iterazioak}
+\end{figure}
+\newpage
+\subsubsection*{Akatsen analisia (Konfusio-matrizeak)}
+Sailkapen-akatsen tipologia ulertzea ezinbestekoa da Spam detekzioan. Hirugarren irudiak konfusio-matrizeetako erroreak xehatzen ditu, Gezurrezko Positiboak (posta legitimoa spam gisa sailkatua) eta Gezurrezko Negatiboak (spam mezuak sarrerako ontzian utziak) bereiziz. Eredu finalak akats totalen kopuru optimoa mantentzen du, testuinguru erreal baterako jarrera egokia erakutsiz.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{G3_nahaste_matrizeak_eu.png}
+    \caption{Konfusio-matrizeen analisia: Gezurrezko Positiboen eta Gezurrezko Negatiboen banaketa eredu bakoitzean.}
+    \label{fig:g3_akatsak}
+\end{figure}
+\newpage
+\subsubsection*{Eredu onenaren hautaketa eta justifikazioa}
+Azkenik, laugarren irudiko radar-diagramak eredu txapeldunaren erabakia justifikatzen du dimentsio anitzeko ikuspegi batetik. Arazoa ez da soilik F-Neurria maximizatzea; Koste konputazionala (entrenamendu denbora laburra) eta egonkortasuna (desbideratze estandar txikia) ere ebaluatu dira. Ockham-en labanaren printzipioari jarraituz, sare neuronal arinena eta orekatuena aukeratu da ekoizpenerako (produkziorako) eredu gisa.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{G4_radar_justifikazioa_eu_editado.PNG}
+    \caption{Eredu onenaren hautaketaren justifikazio multikriterioa (Radar diagrama): F-Neurria, Koste Konputazionala eta Egonkortasuna besalako metrikak kontuan hartuta.}
+    \label{fig:g4_radar}
+\end{figure}
 
 \newpage
 % =============================================
