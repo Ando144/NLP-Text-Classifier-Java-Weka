@@ -22,18 +22,18 @@ cd /home/ibai/Dokumentuak/Testu-Sailkatzailea
 # ----------------------------------------------------------
 WORDS_TO_KEEP=25000
 NUM_TO_SELECT=1000
+DIGITS_AS_DELIM=false
 MIN_TERM_FREQ=1
 USE_THRESHOLD=false
-USE_NORMALIZER=false
-# MAX_NGRAM: 1 = unigrama zaharra, 2 = unigrama+bigrama, 3 = unigrama+bigrama+trigrama
+USE_NORMALIZER=true
 MAX_NGRAM=1
 
 # ----------------------------------------------------------
 # PARAMETRO OPTIMOAK
-LEARNING_RATE=0.005;
-MOMENTUM=0.2;
+LEARNING_RATE=0.01;
+MOMENTUM=0.1;
 HIDDEN_LAYERS="3";
-EPOCHS=300;
+EPOCHS=500;
 
 # ----------------------------------------------------------
 # DIREKTORIOAK PRESTATU
@@ -108,7 +108,7 @@ java --add-opens java.base/java.lang=ALL-UNNAMED \
      Partiketak/train_final.arff \
      Partiketak/dev_final.arff \
      modelo/mlp.model \
-     emaitzak/finetuning_finala.txt
+     esperimentuak/finetuning_norm.txt
 echo "  OK"
 
 # ----------------------------------------------------------
@@ -121,7 +121,7 @@ java --add-opens java.base/java.lang=ALL-UNNAMED \
      TestModel \
      Partiketak/test_final.arff \
      modelo/mlp.model \
-     emaitzak/test_emaitzak_finala.txt
+     esperimentuak/test_emaitzak_norm.txt
 echo "  OK"
 
 # ----------------------------------------------------------
@@ -134,7 +134,7 @@ java --add-opens java.base/java.lang=ALL-UNNAMED \
      Evaluate \
      Partiketak/train_final.arff \
      Partiketak/dev_final.arff \
-     emaitzak/kalitatea_finala.txt \
+     esperimentuak/kalitatea_norm.txt \
      "$LEARNING_RATE" \
      "$MOMENTUM" \
      "$HIDDEN_LAYERS" \
@@ -150,15 +150,15 @@ java --add-opens java.base/java.lang=ALL-UNNAMED \
      -cp "lib/weka.jar:bin" \
      Iragarri \
      modelo/mlp.model \
-     DatuakRaw/proba_data \
-     emaitzak/
+     data_proba/ \
+     esperimentuak/
 echo "  OK"
 
 
 # ----------------------------------------------------------
 # 9) JAVADOC SORTU
 # ----------------------------------------------------------
-javadoc -d doc -sourcepath src -cp "lib/*" src/*.java
+javadoc -d docs -sourcepath src -cp "lib/*" src/*.java
 
 
 # ----------------------------------------------------------
@@ -169,10 +169,10 @@ echo "=========================================================="
 echo "  PIPELINE AMAITUTA"
 echo "=========================================================="
 echo "Emaitzak hemen:"
-echo "  - emaitzak/finetuning_finala.txt      (fine-tuning taula)"
-echo "  - emaitzak/test_emaitzak_finala.txt   (test itsuaren emaitzak)"
-echo "  - emaitzak/kalitatea_finala.txt       (kalitate estimatua)"
-echo "  - emaitzak/iragarpenak.txt            (iragarpen berriak)"
+echo "  - esperimentuak/finetuning_norm.txt      (fine-tuning taula)"
+echo "  - esperimentuak/test_emaitzak_norm.txt   (test itsuaren emaitzak)"
+echo "  - esperimentuak/kalitatea_norm.txt       (kalitate estimatua)"
+echo "  - esperimentuak/iragarpenak.txt            (iragarpen berriak)"
 echo "  - registro_experimentos.txt           (log osoa)"
 echo "  - modelo/mlp.model                    (eredu onena)"
 echo "=========================================================="
