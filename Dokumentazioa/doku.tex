@@ -535,10 +535,87 @@ Azkenik, laugarren irudiko radar-diagramak eredu txapeldunaren erabakia justifik
 % =============================================
 \section{Aurreikusitako kalitate estimatua}
 
-Eredu finalaren kalitatea bi ebaluazio-eskemaren bidez estimatu da,
-\textbf{train eta dev instantziak elkartuz} (4.654 instantzia).
-Parametro optimoak honakoak dira:
+Atal honetan ebaluatutako bost ereduen (\textit{Oinarrizkoa}, \textit{2000 atributukoa}, \textit{500 atributukoa}, \textit{2-gram} eta \textit{Normalizatua}) kalitate estimatua aztertuko da, \textbf{train eta dev instantziak elkartuz} (guztira 4.654 instantzia). Ebaluazioa egiteko bi eskema erabili dira: 5-fold Cross Validation eta 5 Repeated Stratified Hold-Out (70/30).
 
+\subsection{Ereduen arteko konparaketa eta azterketa}
+
+Eredu bakoitzaren fidagarritasuna eta egonkortasuna neurtzeko, bi ebaluazio-eskemekin lortutako emaitza nagusiak alderatuko ditugu.
+
+Hona hemen 5-fold Cross Validation bidez lortutako metrika nagusiak bost ereduetarako:
+
+\begin{table}[H]
+    \centering
+    \caption{Bost ereduen 5-fold Cross Validation emaitzen konparaketa}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Eredua} & \textbf{Accuracy} & \textbf{Spam F-Measure} & \textbf{Ham F-Measure} & \textbf{WAvg F-Measure} \\
+        \midrule
+        Oinarrizkoa   & \%96,82 & 0,9454 & 0,9776 & 0,9682 \\
+        2000 atributu & \%97,03 & 0,9489 & 0,9791 & 0,9704 \\
+        500 atributu  & \%96,43 & 0,9387 & 0,9748 & 0,9644 \\
+        2-gram        & \%96,28 & 0,9359 & 0,9738 & 0,9628 \\
+        Normalizatua  & \%96,61 & 0,9415 & 0,9761 & 0,9661 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Ikusten denez, 5-fold CV bidez, \textit{2000 atributuko} eredua da zehaztasun handiena lortzen duena (Accuracy \%97,03 eta Spam F-Measure 0,9489), eta atzetik oinarrizko eredua dago. \textit{Normalizatutako} eredua hirugarren postuan geratzen da, oso emaitza lehiakorrak lortuz baina ez altuenak.
+
+Hala ere, eredu baten fidagarritasun erreala neurtzeko ezinbestekoa da bere egonkortasuna aztertzea; izan ere, kasu guztietan zehaztasuna hain handia denean, hobe izaten da desbideratze estandarra minimizatzen duen eredua aukeratzea, zehaztasuna maximizatzen duena baino. Horretarako, 5 Repeated Stratified Hold-Out (70/30) emaitzak eta haien desbideratze estandarrak ($\pm$) alderatuko ditugu:
+
+\begin{table}[H]
+    \centering
+    \caption{Bost ereduen 5 Repeated Stratified Hold-Out (70/30) emaitzen konparaketa}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Eredua} & \textbf{Spam F-Measure} & \textbf{Ham F-Measure} & \textbf{WAvg F-Measure} \\
+        \midrule
+        Oinarrizkoa   & $0{,}9480 \pm 0{,}0094$ & $0{,}9786 \pm 0{,}0032$ & $0{,}9698 \pm 0{,}0047$ \\
+        2000 atributu & $0{,}9341 \pm 0{,}0256$ & $0{,}9713 \pm 0{,}0113$ & $0{,}9607 \pm 0{,}0149$ \\
+        500 atributu  & $0{,}9455 \pm 0{,}0109$ & $0{,}9773 \pm 0{,}0036$ & $0{,}9681 \pm 0{,}0054$ \\
+        2-gram        & $0{,}9288 \pm 0{,}0117$ & $0{,}9712 \pm 0{,}0035$ & $0{,}9590 \pm 0{,}0059$ \\
+        Normalizatua  & $0{,}9450 \pm 0{,}0078$ & $0{,}9771 \pm 0{,}0028$ & $0{,}9678 \pm 0{,}0039$ \\
+        \bottomrule
+    \end{tabular}%
+    }
+\end{table}
+
+\subsection{Eredu finalaren hautaketa}
+
+Emaitza hauek aztertuta, \textbf{Normalizatutako eredua} hautatu dugu azken eredu gisa. Nahiz eta 5-fold CV bidez lortutako zehaztasun handienak beste eredu batzuek lortu dituzten (adibidez, 2000 atributukoak), aldea oso txikia da (Normalizatutakoaren eta 2000 atributukoaren arteko diferentzia F-Measure Spam metrikan 0,0074koa baino ez da).
+
+Hala ere, Repeated Hold-Out ebaluazioak argi erakusten du Normalizatutako eredua dela denetan \textbf{egonkorrena}, desbideratze estandar txikienak aurkezten baititu metrika guztietan:
+\begin{itemize}
+    \item Spam F-Measure: $\pm 0{,}0078$
+    \item Ham F-Measure: $\pm 0{,}0028$
+    \item WAvg F-Measure: $\pm 0{,}0039$
+\end{itemize}
+
+Desbideratze txiki hauek bermatzen dute ereduak ez duela gehiegizko doikuntzarik (overfitting) eta portaera sendoa eta errepikagarria izango duela datu berrien aurrean. Hori dela eta, zehaztasun maximoa gutxigatik sakrifikatu dugu egonkortasun handiagoaren truke.
+
+\subsection{Filtro konbinaketak}
+
+Oinarrizko prozeduraz gain, filtro konbinaketa gehiago ere probatu dira proiektu honetan. Proba guztiek ondorio berberetara eramaten gaituzten arren, bi konbinazio hauek aukeratu dira eredu adierazgarri gisa: testuen normalizazioa bigramekin (2-gram) batera, eta normalizazioa maiztasun-atalasearekin (\textit{threshold}) batera.
+
+\begin{table}[htbp]
+\centering
+    \caption{Filtro konbinaketen bidezko emaitzen batezbestekoa eta desbideratze estandarra.}
+\label{tab:filtro_konbinaketak}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Konfigurazioa} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} & \textbf{WAvg F-Meas.} \\ \hline
+Norm + 2gram & $0{,}9210 \pm 0{,}0478$ & $0{,}9378 \pm 0{,}0471$ & $0{,}9272 \pm 0{,}0183$ & $0{,}9576 \pm 0{,}0102$ \\
+Norm + Thresh. & $0{,}9218 \pm 0{,}0229$ & $0{,}9416 \pm 0{,}0385$ & $0{,}9306 \pm 0{,}0097$ & $0{,}9596 \pm 0{,}0046$ \\ \hline
+\end{tabular}
+\end{table}
+
+\noindent
+Taulan ikus daitekeenez, batez ere \textit{Norm + 2gram} kasuan, desbideratze estandarra altuagoa da. Gainera, filtroak konbinatzeak entrenamendu denborak luzatzea ekarri du kasu askotan (200 segundotik gora zenbait kasutan), lortutako etekin eskasari begira merezi ez duen karga kalkulatzailea erantsiz. Beraz, eredu hauek baztertu egin dira, beste konfigurazio orekatuagoen eta sinpleagoen alde egiteko.
+
+\subsection{Hautatutako ereduaren ebaluazio aurreratua}
+
+Eredu normalizatuaren parametro optimoak honako hauek dira:
 \begin{itemize}
     \item LearningRate: 0,01
     \item Momentum: 0,1
@@ -546,15 +623,11 @@ Parametro optimoak honakoak dira:
     \item Epochs: 500
 \end{itemize}
 
-\subsection{5-fold Cross Validation}
-
-5-fold Cross Validation metodoan datu-multzoa 5 zatitan banatzen da.
-Iterazio bakoitzean 4 zatirekin entrenatzen da eta gainerakoarekin ebaluatzen da,
-prozesua 5 aldiz errepikatuz.
+\subsubsection*{5-fold Cross Validation}
 
 \begin{table}[H]
     \centering
-    \caption{5-fold Cross Validation emaitzak}
+    \caption{Normalizatutako ereduaren 5-fold CV emaitzak}
     \begin{tabular}{lrrr}
         \toprule
         \textbf{Klasea} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} \\
@@ -572,7 +645,7 @@ Nahaste-matrizea:
 
 \begin{table}[H]
     \centering
-    \caption{5-fold CV nahaste-matrizea}
+    \caption{Normalizatutako ereduaren 5-fold CV nahaste-matrizea}
     \begin{tabular}{rr|l}
         \toprule
         \textbf{a} & \textbf{b} & \\
@@ -583,18 +656,11 @@ Nahaste-matrizea:
     \end{tabular}
 \end{table}
 
-Emaitzek erakusten dute ereduak portaera sendoa duela bi klaseetan.
-Spam klasean F-Measure balioa 0,94 ingurukoa da, eta ham klasean
-are handiagoa (\~0,976). Accuracy orokorra \%96,61 da.
-
-\subsection{5 Repeated Stratified Hold-Out (70/30)}
-
-Bigarren ebaluazioan, 70/30 banaketa estratifikatua 5 aldiz errepikatu da,
-ereduaren egonkortasuna aztertzeko.
+\subsubsection*{5 Repeated Stratified Hold-Out (70/30)}
 
 \begin{table}[H]
     \centering
-    \caption{Repeated Hold-Out emaitzak iterazioz iterazio}
+    \caption{Repeated Hold-Out emaitzak iterazioz iterazio (Normalizatua)}
     \begin{tabular}{lrrr}
         \toprule
         \textbf{Iterazioa} & \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
@@ -610,7 +676,7 @@ ereduaren egonkortasuna aztertzeko.
 
 \begin{table}[H]
     \centering
-    \caption{Repeated Hold-Out batezbestekoa $\pm$ desbideratze estandarra}
+    \caption{Repeated Hold-Out batezbestekoa $\pm$ desbideratze estandarra (Normalizatua)}
     \begin{tabular}{lrrr}
         \toprule
         \textbf{Klasea} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} \\
@@ -622,21 +688,8 @@ ereduaren egonkortasuna aztertzeko.
     \end{tabular}
 \end{table}
 
-\subsection{Kalitate estimatuaren interpretazioa}
+Emaitzek erakusten dute aukeratutako ereduak portaera sendoa duela bi klaseetan, desbideratze estandar txikiekin, datu ezezagunen aurrean orokortze ona bermatuz.
 
-Bi ebaluazio-eskemek emaitza oso antzekoak ematen dituzte.
-Spam klaseko F-Measure balioa \~0,94--0,945 ingurukoa da,
-eta ham klasean \~0,977 ingurukoa.
-
-Desbideratze estandar txikiak ($\pm$0,007--0,008 spam kasuan)
-ereduaren egonkortasuna adierazten dute.
-
-Gainera, ikus daiteke spam klasean recall handiagoa dela precision-a baino,
-hau da, spam mezu gutxiago galtzen dira (false negative gutxiago),
-nahiz eta horrek false positive apur bat gehiago ekarri.
-
-Ondorioz, ereduak orokortze ona erakusten du eta egonkorra da,
-datu ezezagunetan errendimendu ona izatea espero delarik.
 \newpage
 % =============================================
 % 7. IRAGARPENAK -- ERABILTZAILE ROLA
@@ -741,7 +794,7 @@ Gure softwareak 10 Java fitxategik osatzen dute: 3 datuen pre-prozesamendurako (
 Hainbat klasek funtzio publikoak dituzte, beste klaseetatik deitzen direnak. Hortaz, fitxategien artean dependentzia erlazio bat sortzen da, \texttt{EmailLoader.java} eta \texttt{ExperimentLogger.java} izanik klase dependente gehien dituzten klaseak.
 \begin{figure}[h!]
     \centering
-    \includesvg[width=0.95\linewidth]{diagramas/KlaseDiagrama.svg}
+    \includesvg[width=0.95\linewidth]{KlaseDiagrama.svg}
     \caption{Klase-diagrama}
     \label{fig:klase-diagrama}
 \end{figure}

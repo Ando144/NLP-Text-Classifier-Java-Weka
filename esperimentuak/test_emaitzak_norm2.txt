@@ -1,0 +1,19 @@
+==================================================
+               EBALUAZIOAREN EMAITZAK                  
+==================================================
+
+--- METRIKA OROKORRAK ---
+Zuzenen Ehunekoa (Accuracy) : 96,91%
+F-Measure Haztatua (WAvg)   : 0,9692
+
+--- SPAM KLASEAREN METRIKAK ---
+Zehaztasuna (Precision) : 0,9351
+Estaldura (Recall)      : 0,9600
+F-Measure               : 0,9474
+
+--- NAHASTE MATRIZEA (Confusion Matrix) ---
+   a   b   <-- classified as
+ 144   6 |   a = spam
+  10 358 |   b = ham
+
+==================================================
