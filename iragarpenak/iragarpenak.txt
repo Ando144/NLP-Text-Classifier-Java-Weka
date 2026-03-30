@@ -2,11 +2,19 @@
                IRAGARPENAK - EMAITZAK             
 ==================================================
 
-Mezua 1: SPAM (konfidantza: 0,9939)
-Mezua 2: HAM (konfidantza: 0,9993)
-Mezua 3: HAM (konfidantza: 0,5998)
-Mezua 4: SPAM (konfidantza: 0,9939)
+1. mezua: HAM (zehaztasuna: 0,9993)
+2. mezua: HAM (zehaztasuna: 0,9986)
+3. mezua: SPAM (zehaztasuna: 0,9268)
+4. mezua: SPAM (zehaztasuna: 0,9938)
+5. mezua: SPAM (zehaztasuna: 0,9743)
+6. mezua: SPAM (zehaztasuna: 0,9095)
+7. mezua: SPAM (zehaztasuna: 0,9335)
+8. mezua: HAM (zehaztasuna: 0,5469)
+9. mezua: HAM (zehaztasuna: 0,9943)
+10. mezua: HAM (zehaztasuna: 0,5365)
+11. mezua: SPAM (zehaztasuna: 0,8892)
+12. mezua: HAM (zehaztasuna: 0,5998)
 
 ==================================================
-Guztira sailkatutako mezuak: 4
+Guztira sailkatutako mezuak: 12
 ==================================================

@@ -5452,3 +5452,51 @@ EMAITZAK        :
     WAvg F-Measure : 0,9596 +- 0,0046
 =========================================================================
 
+=========================================================================
+DATA ETA ORDUA  : 2026-03-30 14:41:30
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 6. Iragarpenak (Iragarri)
+PARAMETROAK     : Eredua: modelo/mlp.model
+Sarrera direktorioa: data_proba/
+Proba mezuak: 12
+Filtroak: modelo/vectorizer.ser, modelo/selector.ser
+EMAITZAK        : 
+Sailkatutako mezuak: 12
+Irteera fitxategia: /home/ibai/Dokumentuak/Testu-Sailkatzailea/iragarpenak/iragarpenak.txt
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-30 22:49:28
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 6. Iragarpenak (Iragarri)
+PARAMETROAK     : Eredua: modelo/mlp.model
+Sarrera direktorioa: data_proba/
+Proba mezuak: 12
+Filtroak: modelo/vectorizer.ser, modelo/selector.ser
+EMAITZAK        : 
+Sailkatutako mezuak: 12
+Irteera fitxategia: /home/ibai/Dokumentuak/Testu-Sailkatzailea/iragarpenak/iragarpenak.txt
+=========================================================================
+
+=========================================================================
+DATA ETA ORDUA  : 2026-03-30 22:49:52
+SISTEMA         : Linux (amd64) | Java: 21.0.10
+PROZESADOREA    : Ezezaguna (Ez da Windows) (16 nukleo/hari)
+MEMORIA (RAM)   : 8 MB erabilita sare neuronalarako
+-------------------------------------------------------------------------
+FASEA           : 6. Iragarpenak (Iragarri)
+PARAMETROAK     : Eredua: modelo/mlp.model
+Sarrera direktorioa: data_proba/
+Proba mezuak: 12
+Filtroak: modelo/vectorizer.ser, modelo/selector.ser
+EMAITZAK        : 
+Sailkatutako mezuak: 12
+Irteera fitxategia: /home/ibai/Dokumentuak/Testu-Sailkatzailea/iragarpenak/iragarpenak.txt
+=========================================================================
+
