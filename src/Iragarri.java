@@ -88,6 +88,29 @@ public class Iragarri {
         return data;
     }
 
+    /**
+     * Datu-multzo bat ARFF formatuko fitxategi batean gordetzen du.
+     *
+     * <p>
+     * Metodo honek, existitzen ez badira, irteerako fitxategiaren direktorioak
+     * sortzen ditu, eta Weka-ko {@link ArffSaver} erabiliz datuak idazten
+     * ditu.
+     * </p>
+     *
+     * @param data       Gorde nahi den Instances objektua
+     * @param outputFile Irteerako fitxategiaren File objektua
+     * @throws Exception Fitxategia idaztean errore bat gertatzen bada
+     */
+    public static void saveToArff(Instances data, File outputFile) throws Exception {
+        if (outputFile.getParentFile() != null) {
+            outputFile.getParentFile().mkdirs();
+        }
+        ArffSaver saver = new ArffSaver();
+        saver.setInstances(data);
+        saver.setFile(outputFile);
+        saver.writeBatch();
+    }
+
 
     /**
      * Programaren sarrera-puntua.
@@ -137,7 +160,10 @@ public class Iragarri {
             System.out.println("\nEmailak irakurtzen...");
             Instances probaRaw = loadFlatInferenceData(inputDirectory);
 
-            EmailLoader.ensureClassIndex(probaRaw);
+            if (probaRaw.classIndex() == -1) {
+                probaRaw.setClassIndex(probaRaw.numAttributes() - 1);
+            }
+
             for (int i = 0; i < probaRaw.numInstances(); i++) {
                 probaRaw.instance(i).setClassMissing();
             }
@@ -149,7 +175,7 @@ public class Iragarri {
                         "ABISUA: Ez da mezu elektronikorik kargatu. Egiaztatu sarrera direktorioaren egitura.");
             }
 
-            EmailLoader.saveToArff(probaRaw, new File(outputDir, "proba_raw.arff"));
+            saveToArff(probaRaw, new File(outputDir, "proba_raw.arff"));
             System.out.println("  RAW ARFF gordeta.");
 
             // Filtroak kargatu
@@ -163,8 +189,7 @@ public class Iragarri {
             // TestNormalizer aplikatu (horrekin entrenatu bada)
             if (normalizerFile.exists()) {
                 System.out.println("\nTextNormalizer aplikatzen (modelo/normalizer.ser)...");
-                TextNormalizer normalizer = (TextNormalizer) FilterSerializationHelper
-                        .loadFilter(normalizerFile.getPath());
+                TextNormalizer normalizer = (TextNormalizer) FilterSerializationHelper.loadFilter(normalizerFile.getPath());
                 probaNorm = Filter.useFilter(probaRaw, normalizer);
                 System.out.println("  TextNormalizer aplikatuta.");
             } else {
@@ -175,10 +200,8 @@ public class Iragarri {
             if (vectorizerFile.exists() && selectorFile.exists()) {
                 System.out.println("\nEntrenamenduko filtroak kargatzen (vectorizer.ser, selector.ser)...");
 
-                StringToWordVector stwv = (StringToWordVector) FilterSerializationHelper
-                        .loadFilter(vectorizerFile.getPath());
-                AttributeSelection selector = (AttributeSelection) FilterSerializationHelper
-                        .loadFilter(selectorFile.getPath());
+                StringToWordVector stwv = (StringToWordVector) FilterSerializationHelper.loadFilter(vectorizerFile.getPath());
+                AttributeSelection selector = (AttributeSelection) FilterSerializationHelper.loadFilter(selectorFile.getPath());
 
                 Instances probaVec = Filter.useFilter(probaNorm, stwv);
                 System.out.println("  Bektorizazioaren ostean atributuak: " + probaVec.numAttributes());
@@ -191,7 +214,7 @@ public class Iragarri {
                         "Filtro serializatuak ez dira aurkitu 'modelo/' karpetan. Exekutatu EmailVectorizerAndSelector lehenik.");
             }
 
-            EmailLoader.saveToArff(probaFinal, new File(outputDir, "proba_final.arff"));
+            saveToArff(probaFinal, new File(outputDir, "proba_final.arff"));
             System.out.println("  FINAL ARFF gordeta.");
 
             System.out.println("\nEredua (sare neuronala) kargatzen...");
@@ -234,6 +257,7 @@ public class Iragarri {
             System.out.println("Emaitzak gordeta: " + resultsFile.getAbsolutePath());
 
             // Experiment Tracking (Aukerakoa)
+            /*
             String parametrosLog = String.format(
                     "Eredua: %s\n" +
                             "Sarrera direktorioa: %s\n" +
@@ -247,7 +271,7 @@ public class Iragarri {
                     totalCount, resultsFile.getAbsolutePath());
 
             ExperimentLogger.log("6. Iragarpenak (Iragarri)", parametrosLog, resultadosLog);
-
+            */
         } catch (Exception e) {
             System.err.println("Errore kritikoa iragarpenak egitean.");
             e.printStackTrace();
