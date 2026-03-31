@@ -1,0 +1,5 @@
+Subject: actualizacion de volumenes
+miercoles 05 / 03 / 02 - revisamos los datos del sistema y parece que el
+medidor 5532 esta reportando por debajo de lo esperado .
+actualmente tenemos 8 , 900 pero deberia estar cerca de 10 , 000 .
+voy a hablar con control para verificarlo .

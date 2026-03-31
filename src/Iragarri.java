@@ -216,7 +216,7 @@ public class Iragarri {
                 String klaseIzena = probaFinal.classAttribute().value((int) prediccion);
                 double confidence = probabilidades[(int) prediccion];
 
-                emaitzak.append(String.format("Mezua %d: %s (konfidantza: %.4f)%n",
+                emaitzak.append(String.format("%d. mezua: %s (zehaztasuna: %.4f)%n",
                         i + 1, klaseIzena.toUpperCase(), confidence));
             }
 

@@ -12,6 +12,7 @@
 \usepackage{svg}
 \usepackage{array}
 \usepackage{float}
+\usepackage{pifont}
 \usepackage{hyperref}
 \usepackage{xcolor}
 \usepackage{amsmath}
@@ -535,10 +536,87 @@ Azkenik, laugarren irudiko radar-diagramak eredu txapeldunaren erabakia justifik
 % =============================================
 \section{Aurreikusitako kalitate estimatua}
 
-Eredu finalaren kalitatea bi ebaluazio-eskemaren bidez estimatu da,
-\textbf{train eta dev instantziak elkartuz} (4.654 instantzia).
-Parametro optimoak honakoak dira:
+Atal honetan ebaluatutako bost ereduen (\textit{Oinarrizkoa}, \textit{2000 atributukoa}, \textit{500 atributukoa}, \textit{2-gram} eta \textit{Normalizatua}) kalitate estimatua aztertuko da, \textbf{train eta dev instantziak elkartuz} (guztira 4.654 instantzia). Ebaluazioa egiteko bi eskema erabili dira: 5-fold Cross Validation eta 5 Repeated Stratified Hold-Out (70/30).
 
+\subsection{Ereduen arteko konparaketa eta azterketa}
+
+Eredu bakoitzaren fidagarritasuna eta egonkortasuna neurtzeko, bi ebaluazio-eskemekin lortutako emaitza nagusiak alderatuko ditugu.
+
+Hona hemen 5-fold Cross Validation bidez lortutako metrika nagusiak bost ereduetarako:
+
+\begin{table}[H]
+    \centering
+    \caption{Bost ereduen 5-fold Cross Validation emaitzen konparaketa}
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Eredua} & \textbf{Accuracy} & \textbf{Spam F-Measure} & \textbf{Ham F-Measure} & \textbf{WAvg F-Measure} \\
+        \midrule
+        Oinarrizkoa   & \%96,82 & 0,9454 & 0,9776 & 0,9682 \\
+        2000 atributu & \%97,03 & 0,9489 & 0,9791 & 0,9704 \\
+        500 atributu  & \%96,43 & 0,9387 & 0,9748 & 0,9644 \\
+        2-gram        & \%96,28 & 0,9359 & 0,9738 & 0,9628 \\
+        Normalizatua  & \%96,61 & 0,9415 & 0,9761 & 0,9661 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Ikusten denez, 5-fold CV bidez, \textit{2000 atributuko} eredua da zehaztasun handiena lortzen duena (Accuracy \%97,03 eta Spam F-Measure 0,9489), eta atzetik oinarrizko eredua dago. \textit{Normalizatutako} eredua hirugarren postuan geratzen da, oso emaitza lehiakorrak lortuz baina ez altuenak.
+
+Hala ere, eredu baten fidagarritasun erreala neurtzeko ezinbestekoa da bere egonkortasuna aztertzea; izan ere, kasu guztietan zehaztasuna hain handia denean, hobe izaten da desbideratze estandarra minimizatzen duen eredua aukeratzea, zehaztasuna maximizatzen duena baino. Horretarako, 5 Repeated Stratified Hold-Out (70/30) emaitzak eta haien desbideratze estandarrak ($\pm$) alderatuko ditugu:
+
+\begin{table}[H]
+    \centering
+    \caption{Bost ereduen 5 Repeated Stratified Hold-Out (70/30) emaitzen konparaketa}
+    \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Eredua} & \textbf{Spam F-Measure} & \textbf{Ham F-Measure} & \textbf{WAvg F-Measure} \\
+        \midrule
+        Oinarrizkoa   & $0{,}9480 \pm 0{,}0094$ & $0{,}9786 \pm 0{,}0032$ & $0{,}9698 \pm 0{,}0047$ \\
+        2000 atributu & $0{,}9341 \pm 0{,}0256$ & $0{,}9713 \pm 0{,}0113$ & $0{,}9607 \pm 0{,}0149$ \\
+        500 atributu  & $0{,}9455 \pm 0{,}0109$ & $0{,}9773 \pm 0{,}0036$ & $0{,}9681 \pm 0{,}0054$ \\
+        2-gram        & $0{,}9288 \pm 0{,}0117$ & $0{,}9712 \pm 0{,}0035$ & $0{,}9590 \pm 0{,}0059$ \\
+        Normalizatua  & $0{,}9450 \pm 0{,}0078$ & $0{,}9771 \pm 0{,}0028$ & $0{,}9678 \pm 0{,}0039$ \\
+        \bottomrule
+    \end{tabular}%
+    }
+\end{table}
+
+\subsection{Eredu finalaren hautaketa}
+
+Emaitza hauek aztertuta, \textbf{Normalizatutako eredua} hautatu dugu azken eredu gisa. Nahiz eta 5-fold CV bidez lortutako zehaztasun handienak beste eredu batzuek lortu dituzten (adibidez, 2000 atributukoak), aldea oso txikia da (Normalizatutakoaren eta 2000 atributukoaren arteko diferentzia F-Measure Spam metrikan 0,0074koa baino ez da).
+
+Hala ere, Repeated Hold-Out ebaluazioak argi erakusten du Normalizatutako eredua dela denetan \textbf{egonkorrena}, desbideratze estandar txikienak aurkezten baititu metrika guztietan:
+\begin{itemize}
+    \item Spam F-Measure: $\pm 0{,}0078$
+    \item Ham F-Measure: $\pm 0{,}0028$
+    \item WAvg F-Measure: $\pm 0{,}0039$
+\end{itemize}
+
+Desbideratze txiki hauek bermatzen dute ereduak ez duela gehiegizko doikuntzarik (overfitting) eta portaera sendoa eta errepikagarria izango duela datu berrien aurrean. Hori dela eta, zehaztasun maximoa gutxigatik sakrifikatu dugu egonkortasun handiagoaren truke.
+
+\subsection{Filtro konbinaketak}
+
+Oinarrizko prozeduraz gain, filtro konbinaketa gehiago ere probatu dira proiektu honetan. Proba guztiek ondorio berberetara eramaten gaituzten arren, bi konbinazio hauek aukeratu dira eredu adierazgarri gisa: testuen normalizazioa bigramekin (2-gram) batera, eta normalizazioa maiztasun-atalasearekin (\textit{threshold}) batera.
+
+\begin{table}[htbp]
+\centering
+    \caption{Filtro konbinaketen bidezko emaitzen batezbestekoa eta desbideratze estandarra.}
+\label{tab:filtro_konbinaketak}
+\begin{tabular}{lcccc}
+\hline
+\textbf{Konfigurazioa} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} & \textbf{WAvg F-Meas.} \\ \hline
+Norm + 2gram & $0{,}9210 \pm 0{,}0478$ & $0{,}9378 \pm 0{,}0471$ & $0{,}9272 \pm 0{,}0183$ & $0{,}9576 \pm 0{,}0102$ \\
+Norm + Thresh. & $0{,}9218 \pm 0{,}0229$ & $0{,}9416 \pm 0{,}0385$ & $0{,}9306 \pm 0{,}0097$ & $0{,}9596 \pm 0{,}0046$ \\ \hline
+\end{tabular}
+\end{table}
+
+\noindent
+Taulan ikus daitekeenez, batez ere \textit{Norm + 2gram} kasuan, desbideratze estandarra altuagoa da. Gainera, filtroak konbinatzeak entrenamendu denborak luzatzea ekarri du kasu askotan (200 segundotik gora zenbait kasutan), lortutako etekin eskasari begira merezi ez duen karga kalkulatzailea erantsiz. Beraz, eredu hauek baztertu egin dira, beste konfigurazio orekatuagoen eta sinpleagoen alde egiteko.
+
+\subsection{Hautatutako ereduaren ebaluazio aurreratua}
+
+Eredu normalizatuaren parametro optimoak honako hauek dira:
 \begin{itemize}
     \item LearningRate: 0,01
     \item Momentum: 0,1
@@ -546,15 +624,11 @@ Parametro optimoak honakoak dira:
     \item Epochs: 500
 \end{itemize}
 
-\subsection{5-fold Cross Validation}
-
-5-fold Cross Validation metodoan datu-multzoa 5 zatitan banatzen da.
-Iterazio bakoitzean 4 zatirekin entrenatzen da eta gainerakoarekin ebaluatzen da,
-prozesua 5 aldiz errepikatuz.
+\subsubsection*{5-fold Cross Validation}
 
 \begin{table}[H]
     \centering
-    \caption{5-fold Cross Validation emaitzak}
+    \caption{Normalizatutako ereduaren 5-fold CV emaitzak}
     \begin{tabular}{lrrr}
         \toprule
         \textbf{Klasea} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} \\
@@ -572,7 +646,7 @@ Nahaste-matrizea:
 
 \begin{table}[H]
     \centering
-    \caption{5-fold CV nahaste-matrizea}
+    \caption{Normalizatutako ereduaren 5-fold CV nahaste-matrizea}
     \begin{tabular}{rr|l}
         \toprule
         \textbf{a} & \textbf{b} & \\
@@ -583,18 +657,11 @@ Nahaste-matrizea:
     \end{tabular}
 \end{table}
 
-Emaitzek erakusten dute ereduak portaera sendoa duela bi klaseetan.
-Spam klasean F-Measure balioa 0,94 ingurukoa da, eta ham klasean
-are handiagoa (\~0,976). Accuracy orokorra \%96,61 da.
-
-\subsection{5 Repeated Stratified Hold-Out (70/30)}
-
-Bigarren ebaluazioan, 70/30 banaketa estratifikatua 5 aldiz errepikatu da,
-ereduaren egonkortasuna aztertzeko.
+\subsubsection*{5 Repeated Stratified Hold-Out (70/30)}
 
 \begin{table}[H]
     \centering
-    \caption{Repeated Hold-Out emaitzak iterazioz iterazio}
+    \caption{Repeated Hold-Out emaitzak iterazioz iterazio (Normalizatua)}
     \begin{tabular}{lrrr}
         \toprule
         \textbf{Iterazioa} & \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
@@ -610,7 +677,7 @@ ereduaren egonkortasuna aztertzeko.
 
 \begin{table}[H]
     \centering
-    \caption{Repeated Hold-Out batezbestekoa $\pm$ desbideratze estandarra}
+    \caption{Repeated Hold-Out batezbestekoa $\pm$ desbideratze estandarra (Normalizatua)}
     \begin{tabular}{lrrr}
         \toprule
         \textbf{Klasea} & \textbf{Precision} & \textbf{Recall} & \textbf{F-Measure} \\
@@ -622,48 +689,143 @@ ereduaren egonkortasuna aztertzeko.
     \end{tabular}
 \end{table}
 
-\subsection{Kalitate estimatuaren interpretazioa}
+Emaitzek erakusten dute aukeratutako ereduak portaera sendoa duela bi klaseetan, desbideratze estandar txikiekin, datu ezezagunen aurrean orokortze ona bermatuz.
 
-Bi ebaluazio-eskemek emaitza oso antzekoak ematen dituzte.
-Spam klaseko F-Measure balioa \~0,94--0,945 ingurukoa da,
-eta ham klasean \~0,977 ingurukoa.
-
-Desbideratze estandar txikiak ($\pm$0,007--0,008 spam kasuan)
-ereduaren egonkortasuna adierazten dute.
-
-Gainera, ikus daiteke spam klasean recall handiagoa dela precision-a baino,
-hau da, spam mezu gutxiago galtzen dira (false negative gutxiago),
-nahiz eta horrek false positive apur bat gehiago ekarri.
-
-Ondorioz, ereduak orokortze ona erakusten du eta egonkorra da,
-datu ezezagunetan errendimendu ona izatea espero delarik.
 \newpage
 % =============================================
-% 7. IRAGARPENAK -- ERABILTZAILE ROLA
+% 7. IRAGARPENAK -- ERABILTZAILE PAKETEA
 % =============================================
-\section{Iragarpenak: erabiltzailearen paketea}
+\section{Erabiltzailearen paketea}
 
-\subsection{Test-blind ebaluazioa}
+\subsection{Paketearen edukia eta helburua}
 
-\texttt{TestModel.java} fitxategiak eredu finala \texttt{test\_final.arff}
-multzoan ebaluatu du (517 instantzia, klase ezezagunak):
+Erabiltzaileari entregatzen zaion paketeak testu gordina sartu eta spam/ham 
+iragarpenak lortzeko behar den guztia biltzen du:
+
+\begin{itemize}
+    \item \textbf{Eredu entrenatua}: \texttt{modelo/mlp.model} (MultilayerPerceptron)
+    \begin{itemize}
+            \item Instantzia guztiekin entrenatutakoa.
+        \end{itemize}
+    \item \textbf{Ereduaren ebaluaketa}: \texttt{test\_emaitzak\_norm.txt}, \texttt{kalitatea\_norm.txt}
+    \item \textbf{Aurreprozesamenduko filtroak}:
+    \begin{itemize}
+        \item \texttt{modelo/normalizer.ser}
+        \begin{itemize}
+            \item Fitxategi hau TextNormalizer filtroa erabili dela adierazteko da.
+            \item Eredu optimoak beti izango du, baina erabaki dugu fitxategi hau mantentzea kode orokorrago bat izateko.
+        \end{itemize}
+        \item \texttt{modelo/vectorizer.ser} (StringToWordVector, TF-IDF)
+        \item \texttt{modelo/selector.ser} (AttributeSelection, InfoGain)
+    \end{itemize}
+    \item \textbf{Inferentzia klasea}: \texttt{Iragarri.java}
+    \item \textbf{Exekuziorako beharrezko klaseak}: \texttt{FilterSerializationHelper.java}, \texttt{EmailLoader.java}, \texttt{TextNormalizer.java}
+    \item \textbf{Weka liburutegia}: \texttt{lib/weka.jar}
+    \item \textbf{Dokumentazioa}: Javadoc eta erabilera eskuliburua
+\end{itemize}
+
+\subsection{Inferentzia pipeline-a: Iragarri.java}
+
+\texttt{Iragarri.java} klaseak sarrerako direktorio batean dauden \texttt{.txt} fitxategiak (mezu elektroniko gordinak) kargatzen ditu eta bakoitzari dagokion \textit{spam}/\textit{ham} iragarpena egiten dio. Prozesuak entrenamenduko pipeline osoa errepikatzen du koherentzia bermatzeko:
+
+\begin{enumerate}
+    \item \textbf{Karga}: \texttt{.txt} fitxategiak direktorio lautik kargatu eta \texttt{Instances} objektu bilakatu, klase ezezagunarekin.
+    \item \textbf{Normalizazioa}: \texttt{normalizer.ser} existitzen bada, TextNormalizer aplikatu (URLak, emailak, HTML garbitu).
+    \item \textbf{Bektorizazioa}: \texttt{vectorizer.ser} kargatu eta aplikatu (TF-IDF, tokenizazioa, stemming, stopwords).
+    \item \textbf{Atributu-hautaketa}: \texttt{selector.ser} aplikatu, InfoGain bidez hautatutako atributuak mantentzeko.
+    \item \textbf{Sailkapena}: Eredua kargatu eta \texttt{classifyInstance()} + \texttt{distributionForInstance()} bidez iragarpenak eta konfidantza-mailak kalkulatu.
+    \item \textbf{Emaitzak gorde}: \texttt{iragarpenak.txt} fitxategian iragarpenak erregistratu.
+\end{enumerate}
+
+\subsubsection*{Exekuzio adibidea}
+
+\begin{verbatim}
+java --add-opens java.base/java.lang=ALL-UNNAMED \
+     -cp "lib/weka.jar:bin" Iragarri \
+     modelo/mlp.model data_proba/ iragarpenak/
+\end{verbatim}
+
+Irteera kontsolan eta \texttt{emaitzak/iragarpenak.txt} fitxategian:
+
+\begin{verbatim}
+==================================================
+               IRAGARPENAK - EMAITZAK             
+==================================================
+
+1. mezua: SPAM (zehaztasuna: 0.9939)
+2. mezua: HAM (zehaztasuna: 0.9993)
+3. mezua: HAM (zehaztasuna: 0.5998)
+4. mezua: SPAM (zehaztasuna: 0.9939)
+
+==================================================
+Guztira sailkatutako mezuak: 4
+==================================================
+\end{verbatim}
+
+\subsection{Ereduaren muga funtzionalak: hizkuntza-mendekotasuna}
+
+Eredua ingelesezko emailekin entrenatu denez, hizkuntza horretarako optimizatuta dago. Hau frogatzeko, 12 mezu berri probatu ditugu hiru hizkuntzatan (ingelesa, gaztelania eta euskara), 2 spam eta 2 ham hizkuntza bakoitzeko:
 
 \begin{table}[H]
     \centering
-    \caption{Test multzoko emaitzak (517 instantzia)}
+    \caption{Iragarpenak hizkuntza desberdinetan}
+    \begin{tabular}{llll}
+        \toprule
+        \textbf{Hizkuntza} & \textbf{Mota} & \textbf{Iragarpena} & \textbf{Zuzena?} \\
+        \midrule
+        Ingelesa & Ham  & HAM (0,9268)  & \ding{51} \\
+        Ingelesa & Ham  & HAM (0,9938)  & \ding{51} \\
+        Ingelesa & Spam & SPAM (0,9993) & \ding{51} \\
+        Ingelesa & Spam & SPAM (0,9986) & \ding{51} \\
+        \midrule
+        Gaztelania & Ham  & SPAM (0,9743)  & \ding{55} \\
+        Gaztelania & Ham  & SPAM (0,9095) & \ding{55} \\
+        Gaztelania & Spam & SPAM (0,9335)  & \ding{51} \\
+        Gaztelania & Spam & HAM (0,5469)  & \ding{55} \\
+        \midrule
+        Euskara & Ham  & HAM (0,9943)  & \ding{51} \\
+        Euskara & Ham  & HAM (0,5365)  & \ding{51} \\
+        Euskara & Spam & SPAM (0,8892)  & \ding{55} \\
+        Euskara & Spam & HAM (0,5998)  & \ding{51} \\
+        \bottomrule
+    \end{tabular}
+    \label{tab:lang_test}
+\end{table}
+
+\begin{itemize}
+    \item \textbf{Ingelesa}: 4/4 zuzen (\%100 accuracy), konfidantza-maila 
+          altuekin (0,97-0,99).
+    \item \textbf{Gaztelania}: 1/4 zuzen (\%25). Spam gisa sailkatzeko joera, konfidantza-maila altuarekin.
+    \item \textbf{Euskara}: 3/4 zuzen (\%75), baina horietako bi konfidantza-maila baxuarekin.
+\end{itemize}
+
+Emaitza hauek ikusita, argia da ereduak ingelesez soilik dela fidagarria. Izan ere, hizkuntza desberdinetan antzeko hitzak egon daitezken arren, hau ez da gehiengo kasua izango, mezuaren testuinguru eta informazio gehiena galduz; gure euskarazko proba kasuetako bat, hain zuzen ere, atributurik gabe geratu da bektorizazioaren ondoren, klase ezezaguna soilik edukiz.
+
+Ingesez ez diren mezuak sailkatzeko hobe izango da beste eredu bat erabiltzea, hizkuntza horretarako bereziki prestatua edota eleaniztuna.
+
+\subsection{Kalitate-egiaztapena}
+Paketearen fidagarritasuna bermatzeko, bi ebaluazio-txosten entregatzen dira:
+
+\subsubsection{Blind Test}
+
+\texttt{test\_emaitzak\_norm.txt} fitxategiak ereduaren errendimendu erreala erakusten du datu ezezagunen gainean. Test multzoak 517 instantzia ditu, entrenamenduan inoiz ikusi ez direnak:
+
+\begin{table}[H]
+    \centering
+    \caption{Test multzoko emaitzak (ebaluazio itsua)}
     \begin{tabular}{lr}
         \toprule
         \textbf{Metrika} & \textbf{Balioa} \\
         \midrule
-        Accuracy                    & \%97,87 \\
-        F-Measure haztatua (WAvg)   & 0,9787  \\
+        Accuracy                    & \%95,95 \\
+        F-Measure haztatua (WAvg)   & 0,9591  \\
         \midrule
-        Spam Precision              & 0,9633  \\
-        Spam Recall                 & 0,9633  \\
-        Spam F-Measure              & 0,9633  \\
+        Spam Precision              & 0,9574  \\
+        Spam Recall                 & 0,9000  \\
+        Spam F-Measure              & 0,9278  \\
         \bottomrule
     \end{tabular}
-    \label{tab:test}
+    \label{tab:test_blind}
 \end{table}
 
 \begin{table}[H]
@@ -673,50 +835,18 @@ multzoan ebaluatu du (517 instantzia, klase ezezagunak):
         \toprule
         \textbf{a} & \textbf{b} & \\
         \midrule
-        289 & 11 & a = spam \\
-        11  & 724 & b = ham \\
+        135 & 15 & a = spam \\
+        6  & 362 & b = ham \\
         \bottomrule
     \end{tabular}
+    \label{tab:test_confusion_blind}
 \end{table}
 
-Test F-spam (0,9633) kalitate estimatutakoa (0,9480) baino altuagoa da,
-ereduak benetako datu ezezagunekin ere ondo funtzionatzen duela erakutsiz.
+Emaitza hauek benetako erabilera-baldintzetan espero daitekeen errendimendua islatzen dute, datu ezezagunen gaineko ebaluazio itsua delako. Bezeroak, asko jota, emaitza hobeak lortuko ditu, berak jasoko duen eredua instantzia guztiekin entrenatutakoa izango da eta.
 
-\subsection{Iragarri.java -- Mezu elektroniko berriak sailkatzeko}
+\subsubsection{Kalitate-estimazio sendoa}
 
-\texttt{Iragarri.java} klaseak sarrera direktorio batean dauden \texttt{.txt} fitxategiak (mezu elektronikoak) kargatzen ditu eta bakoitzari dagokion \textit{spam}/\textit{ham} iragarpena egiten dio. Prozesu osoak entrenamenduko pipeline berbera errepikatzen du koherentzia bermatzeko:
-
-\begin{enumerate}
-    \item Fitxategiak direktorio batetik kargatu eta \texttt{Instances} objektu bilakatu.
-    \item Entrenamenduan gordetako filtroak kargatu eta aplikatu: bektorizazioa (\texttt{vectorizer.ser}) eta atributu-hautaketa (\texttt{selector.ser}).
-    \item Entrenatutako eredua kargatu (\texttt{mlp.model}).
-    \item \texttt{classifyInstance()} eta \texttt{distributionForInstance()} bidez iragarpenak eta konfidantza-mailak kalkulatu.
-    \item Emaitzak fitxategi batean gorde (\texttt{iragarpenak.txt}) eta esperimentu log-ean erregistratu.
-\end{enumerate}
-
-Gure modeloarekin probatzeko
-
-Exekuzio adibidea:
-\begin{verbatim}
-java -cp "lib\weka.jar;bin" Iragarri \
-    modelo/mlp.model data_proba/  emaitzak/
-\end{verbatim}
-
-Kontsolan eta \texttt{iragarpenak.txt} fitxategian lortzen den irteera:
-\begin{verbatim}
-==================================================
-               IRAGARPENAK - EMAITZAK             
-==================================================
-
-Mezua 1: SPAM (konfidantza: 0,9939)
-Mezua 2: HAM (konfidantza: 0,9993)
-Mezua 3: HAM (konfidantza: 0,5998)
-Mezua 4: SPAM (konfidantza: 0,9939)
-
-==================================================
-Guztira sailkatutako mezuak: 4
-==================================================
-\end{verbatim}
+\texttt{kalitatea\_norm.txt} fitxategiak, 6.4 atalean azaldu dugun bezala, ereduaren egonkortasuna eta fidagarritasuna erakusten du bi ebaluazio-eskema independente erabiliz: 5-fold Cross Validation eta 5 Repeated Stratified Hold-Out (70/30). Ebaluazio honen emaitzak ikusteko, zoaz \textit{6.4. Hautatutako ereduaren ebaluazio aurreratua} atalera.
 
 \newpage
 % =============================================
@@ -741,7 +871,7 @@ Gure softwareak 10 Java fitxategik osatzen dute: 3 datuen pre-prozesamendurako (
 Hainbat klasek funtzio publikoak dituzte, beste klaseetatik deitzen direnak. Hortaz, fitxategien artean dependentzia erlazio bat sortzen da, \texttt{EmailLoader.java} eta \texttt{ExperimentLogger.java} izanik klase dependente gehien dituzten klaseak.
 \begin{figure}[h!]
     \centering
-    \includesvg[width=0.95\linewidth]{diagramas/KlaseDiagrama.svg}
+    \includesvg[width=0.95\linewidth]{KlaseDiagrama.svg}
     \caption{Klase-diagrama}
     \label{fig:klase-diagrama}
 \end{figure}

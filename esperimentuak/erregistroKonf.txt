@@ -55,3 +55,25 @@
          USE_NORMALIZER=false
          MAX_NGRAM=1
    - Fitxategiak: finetuning_500.txt, test_emaitzak_500.txt, kalitatea_500.txt
+
+6. TextNormalizer + Bigrams:
+   - Konfigurazioa:
+         WORDS_TO_KEEP=25000
+         NUM_TO_SELECT=1000
+         DIGITS_AS_DELIM=false
+         MIN_TERM_FREQ=1
+         USE_THRESHOLD=false
+         USE_NORMALIZER=true
+         MAX_NGRAM=2
+   - Fitxategiak: finetuning_norm2.txt, test_emaitzak_norm2.txt, kalitatea_norm2.txt
+
+7. TextNormalizer + Threshold:
+   - Konfigurazioa:
+         WORDS_TO_KEEP=25000
+         NUM_TO_SELECT=1000
+         DIGITS_AS_DELIM=false
+         MIN_TERM_FREQ=1
+         USE_THRESHOLD=true
+         USE_NORMALIZER=true
+         MAX_NGRAM=1
+   - Fitxategiak: finetuning_normThres.txt, test_emaitzak_normThres.txt, kalitatea_normThres.txt
