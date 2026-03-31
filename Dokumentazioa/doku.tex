@@ -90,18 +90,19 @@
         Gorka Piedra &
         Dokumentazio teknikoa, kalitatearen ebaluazioa eta datuen prestaketa. &
         \textbullet{} JavaDoc dokumentazioaren sorrera proiektuko klase anitzetan. \newline
-        \textbullet{} Datuak partitzeko logikaren inplementazioa (\textit{DataSplit}). \newline
-        \textbullet{} Ereduaren kalitate-probak egitea. \newline
-        \textbullet{} Erroreen kudeaketa eta \texttt{doku.tex} dokumentazioaren fintzea. \newline
-        \textbullet{} Fluxu-diagramaren diseinua. \\
+        \textbullet{} Datuak partitzeko logikaren inplementazioa (\texttt{DataSplit}). \newline
+        \textbullet{} \texttt{GetModel.java} logika eredu entrenatuta lortzeko eta gordetzeko. \newline
+        \textbullet{} \texttt{Evaluate.java} inplementazioa eredua ebaluatzeko. \newline
+        \textbullet{} Erroreen kudeaketa eta \texttt{doku.tex} dokumentazioaren fintzea. \\
         \midrule
         Andoni Ortiz de Zarate &
-        Esperimentazio azpiegitura, entrenamendua eta ereduaren iraunkortasuna. &
+        Esperimentazio azpiegitura eta analisia, entrenamendua eta ereduaren iraunkortasuna. &
         \textbullet{} MLP (\textit{Multilayer Perceptron}) garatzea eta doitzea \textit{grid search} bidez. \newline
-        \textbullet{} Esperimentuen erregistroa kudeatzea \texttt{Evaluate.java} eta \texttt{ExperimentLogger.java} fitxategietan. \newline
-        \textbullet{} \texttt{GetModel.java} logika eredu entrenatua lortzeko eta gordetzeko. \newline
+        \textbullet{} Esperimentuen erregistroa kudeatzea   \texttt{ExperimentLogger.java} fitxategietan. \newline
+        \textbullet{} Lortutako metriken analisia eta errepresentazioa grafikoen bidez.\newline 
         \textbullet{} Datuen hasierako karga eta ereduaren testeatzea. \\
         \midrule
+
         Ibai Olaziregi &
         Testuaren aurreprozesamendua, iragarpen-interfazea eta kodearen garbiketa. &
         \textbullet{} \texttt{EmailVectorizerAndSelector.java} garatzea bektorizaziorako eta atributu-hautapenerako. \newline
@@ -175,44 +176,59 @@ partiketa guztietan. Partiketa \textbf{\%80/\%10/\%10} egin da:
 % =============================================
 \section{Aurreprozesamendua}
 
-\subsection{Aplikatutako prozesuak}
+Sailkapen-eredu bat entrenatu aurretik, ezinbestekoa da datu gordinak (string formatukoak) garbitzea eta estandarizatzea. Posta elektronikoek (bereziki spam-ak) zarata handia izan ohi dute: HTML etiketak, estekak, karaktere bereziak eta informazio semantikorik gabeko hitzak. Atal honetan, aplikatutako garbiketa-prozesuak, horien helburua eta datuetan izandako eragin kuantitatiboa azaltzen dira.
 
-\texttt{EmailVectorizerAndSelector.java} fitxategiak \texttt{StringToWordVector}
-filtroaren bidez testu gordinak bektore numeriko bihurtzen ditu.
-Prozesu honetan honako eragiketak egin dira:
+\subsection{Testuaren Normalizazioa: Zer egin da eta zertarako?}
+Weka-ren iragazki estandarrak aplikatu aurretik, gure \texttt{TextNormalizer.java} klaseak espresio erregularrak (Regex) erabiltzen ditu testuko patroi espezifikoak ezagutu eta ordezkatzeko:
+
+\begin{itemize}
+    \item \textbf{URLak eta Estekak:} \textit{http://...} bezalako estekak \texttt{URL\_TOKEN} marka batekin ordezkatzen dira. Spam mezuetan oso ohikoa da estekak egotea, baina URL zehatzak berak ez du balio sailkapenerako, bere presentziak baizik.
+    \item \textbf{Helbide elektronikoak:} Posta helbideak \texttt{EMAIL\_TOKEN} gisa etiketatzen dira, datu pertsonalen zarata murriztuz eta ereduak patroi orokorra ikas dezan.
+    \item \textbf{HTML etiketak:} Etiketa guztiak ezabatzen dira, barruko testu garbia soilik mantenduz.
+\end{itemize}
+
+\subsection{Hizkuntza-tratamendua (NLP) eta eragin kuantitatiboa}
+Behin testua normalizatuta, \texttt{StringToWordVector} filtroa konfiguratzen da testua hitzetan banatu eta bektorizatzeko prestatzeko. Prozesu honetan aplikatutako teknika bakoitza justifikatzeko, aldez aurretiko proba esperimentalak egin dira, teknika aplikatu eta aplikatu gabeko egoerak alderatuz.
 
 \begin{itemize}
     \item \textbf{Minuskulizazioa (\texttt{LowerCaseTokens=true}):}
-    Maiuskulak eta minuskulak berdintzen dira. \textit{``FREE''} eta \textit{``free''}
-    hitz bera bezala tratatzen dira.
-    \item \textbf{Tokenizazioa (\texttt{WordTokenizer}):}
-    Testua hitzetan banatzen da puntuazio-markak banatzailetzat erabiliz. \\
-    Muga-karaktereak: \texttt{" \textbackslash r\textbackslash n\textbackslash t.,;:'``()?!-+/\textbackslash<>@\#\$\%\^{}\&*\_=\textasciitilde`|[]\{\}"}
+    Maiuskulak eta minuskulak berdintzen dira. Adibidez, \textit{``FREE''} eta \textit{``free''} token berdin gisa tratatzen dira. Erabaki hau hartu da ikusi delako hiztegiaren dimentsioa izugarri txikitzen duela eta ereduaren sakabanaketa saihesten duela.
+    
+    \item \textbf{Stopwords iragazkia (\texttt{Rainbow}):}
+    Informazio semantiko esanguratsurik ez duten hitzak ezabatzen dira (artikuluak, preposizioak, adib.: \textit{``the''}, \textit{``is''}). Horrek zarata murrizten du.
+    
     \item \textbf{Stemming (\texttt{LovinsStemmer}):}
-    Hitzak beren erroetara murrizten dira. Adib.: \textit{``running''}, \textit{``runs''}
-    eta \textit{``run''} hitz bera bilakatzen dira.
-    \item \textbf{Stopwords (\texttt{Rainbow}):}
-    Hitz ez-informatiboak ezabatzen dira (\textit{``the''}, \textit{``is''}, \textit{``at''}, ...).
+    Hitzak beren erro lexikora murrizten dira (adib.: \textit{``running''} eta \textit{``runs''} $\rightarrow$ \textit{``run''}). 
 \end{itemize}
 
-\subsection{Parametroen eragina (kuantitatiboa)}
+\subsubsection*{Erabaki esperimentalen justifikazio kuantitatiboa}
+Aurreko NLP teknikak (bereziki Stopwords eta Stemming) ez dira ausaz aukeratu. Oinarrizko konfigurazio batean (bektorizazio sinplea) teknika hauek aktibatzeak eta desaktibatzeak datuetan duen eragina neurtu da. 
 
-Stemmer-aren eta stopword-en eraginaren ebaluazioa train multzoan egin da.
-
+Hurrengo taulan ikus daiteke zein den prozesu hauen eragina hiztegiaren tamainan (sortutako atributu kopurua hautaketa egin aurretik) eta lortutako asmatze-tasan (Spam F-Neurria):
 
 \begin{table}[H]
     \centering
-    \caption{Stemmer-aren eraginaren konparaketa (F-Measure, spam)}
-    \begin{tabular}{lrr}
+    \caption{Aurreprozesamendu tekniken eragin kuantitatiboa datuetan}
+    \begin{tabular}{lcc}
         \toprule
-        \textbf{Konfigurazioa} & \textbf{Atributu kopurua} & \textbf{F-spam} \\
+        \textbf{Konfigurazioa} & \textbf{Atributu kopurua (Hiztegia)} & \textbf{Spam F-Neurria} \\
         \midrule
-        Stemmer gabe  & -- & -- \\
-        LovinsStemmer & -- & -- \\
+        Garbiketa gabe (Raw text) & XX & XX \\
+        + Stopwords (Rainbow) aplikatuta & XX & XX \\
+        + Stemmer (Lovins) aplikatuta & XX & XX \\
+        \textbf{Biak aplikatuta (Gure hautua)} & \textbf{XX} & \textbf{XX} \\
         \bottomrule
     \end{tabular}
-    \label{tab:stemmer}
+    \label{tab:aurreprozesamendu_eragina}
 \end{table}
+
+
+
+Datu esperimental hauetan oinarrituz, argi geratzen da Stemmer-a eta Stopwords-ak aplikatzeak eragin bikoitza duela: alde batetik, \textbf{karga konputazionala nabarmen murrizten du} (sare neuronalak milaka atributu gutxiago prozesatu behar dituelako), eta bestetik, \textbf{ereduaren kalitatea (F-Neurria) hobetzen du}, hitz garrantzitsuetan soilik zentratzea ahalbidetzen baitu, zarata kenduz. Arrazoi kuantitatibo hauengatik erabaki da behin betiko pipeline-an txertatzea.
+
+\subsection{Filtroen serializazioa}
+Ereduaren fidagarritasuna bermatzeko (batez ere ekoizpen fasean edo \texttt{Iragarri.java} exekutatzean), datuen gainean aplikatutako iragazkiak diskora esportatzen dira (\texttt{.ser} formatuan). Eratutako \texttt{normalizer.ser} fitxategiari esker, ziurtatzen da mezu ezezagun berri batek entrenamendu-faseko eraldaketa morfologiko berberak jasango dituela, \textit{Data Leakage} (datu-ihesa) saihestuz.
+
 
 \newpage
 % =============================================
@@ -462,7 +478,7 @@ Kasu honetan, \textbf{F-spam = 0,9046} izan da, 51,67 segundoko entrenamenduarek
 
 \begin{table}[h!]
 \centering
-\caption{Comparación de los mejores modelos de fine-tuning}
+\caption{Fine-tuning eredu onenen konparaketa}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{|l|c|c|c|c|c|c|}
 \hline
@@ -488,48 +504,122 @@ Hala ere, parametro optimoekin sortutako ereduei \texttt{Evaluate.java} klaseare
 
 \subsection{Emaitza esperimentalen adierazpen grafikoa: aztertutako parametroak eta horietarako metrikak}
 
-Jarraian, parametroen ekorketan ebaluatutako eredu esanguratsuenen emaitzak aurkezten dira modu grafikoan, modelo finala "norm" atziskia duena izaten. Eredu hauen arteko konparaketak aukeratutako eredu finalaren justifikazio enpirikoa eskaintzen du, irizpide anitzeko ebaluazio bat eginez.
+Jarraian, parametroen ekorketan ebaluatutako eredu esanguratsuenen emaitzak aurkezten dira modu grafikoan, azken eredu txapelduna (``Norm'') nabarmenduz. Eredu hauen arteko konparaketak aukeratutako ereduaren justifikazio enpirikoa eskaintzen du, sailkapen-ahalmena, kostu konputazionala eta fidagarritasun estatistikoa uztartzen dituen irizpide anitzeko ebaluazio baten bidez.
 
 \subsubsection*{Metrika orokorren konparaketa}
-Lehenengo irudian, ebaluatutako eredu nagusien sailkapen-metrikak (Zehaztasuna, Estaldura, F-Neurria eta Accuracy) alderatzen dira. Grafiko honek erakusten du nola eredu txapeldunak oreka egokia lortzen duen metrika guztien artean, bereziki Spam klaseko F-Neurrian, muturreko balioak edo alborapenak saihestuz.
+Lehenengo irudian, ebaluatutako eredu nagusien sailkapen-metrika estandarrak (Zehaztasuna, Estaldura, F-Neurria eta Accuracy) alderatzen dira. Gure datu-multzoan klaseen desoreka nabarmena dagoenez (spam-a \%29 baino ez da), Accuracy metrika hutsa engainagarria izan daiteke. Grafiko honek erakusten du nola eredu txapeldunak oreka sendoa lortzen duen metrika guztien artean. Nahiz eta eredu batzuek metrika zehatz batean gailur altuagoak izan ditzaketen, ``Norm'' ereduak muturreko balioak eta klase minoritarioarekiko alborapenak saihesten ditu, Spam klaseko F-Neurrian oso emaitza lehiakorra mantenduz.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{G1_metrika_konparaketa_eu_editado.PNG}
-    \caption{Eredu ezberdinen sailkapen-metrika nagusien konparaketa (Spam klasea eta metrika orokorrak).}
+    \caption{Eredu ezberdinen sailkapen-metrika nagusien konparaketa (Spam klasea eta metrika orokorrak). Desorekatutako datuetan F-Neurriak duen garrantzia nabarmentzen da.}
     \label{fig:g1_metrikak}
 \end{figure}
+
 \newpage
-\subsubsection*{Ereduaren egonkortasuna eta iterazioak}
-Bigarren irudian, errepikatutako Hold-Out (5 Repeated Stratified Hold-Out) ebaluazioaren iterazioetako emaitzak eta F-Neurriaren bilakaera bistaratzen dira. Desbideratze estandarrak ($\sigma$) ereduaren sendotasuna adierazten du testuinguru ezberdinetan; kasu honetan, eredu hautatua aldakortasun txikiena erakusten du iterazioz iterazio, Overfitting-a jasateko arriskua nabarmen gutxituz.
+\subsubsection*{Ereduaren egonkortasuna eta iterazioen bilakaera}
+Bigarren irudian, \textit{5 Repeated Stratified Hold-Out} ebaluazio-eskemako iterazioz iterazioko bilakaera bistaratzen da. Eredu baten benetako balioa ez datza soilik bere batezbesteko asmatze-tasan, baizik eta datu-partiketa desberdinen aurrean erakusten duen sendotasunean. Grafiko honetako lerroen gorabeherek argi erakusten dute eredu hautatuak (Norm) aldakortasun oso txikiko portaera duela iterazioetan zehar. Bariantza txiki honek bermatzen du eredua ez dela soilik datu-multzo zehatz batera gainegokitu (\textit{Overfitting}), baizik eta patroi orokorrak ikasi dituela.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\textwidth]{G2_ebo_iterazioak_eu.png}
-    \caption{F-Neurriaren bilakaera eta desbideratze estandarra Errepikatutako Hold-Out ebaluazioan, ereduaren egonkortasuna neurtzeko.}
+    \caption{F-Neurriaren bilakaera iterazioz iterazio. Lerroen gorabeherek datu ezezagunen aurreko egonkortasuna (edo bariantza) irudikatzen dute.}
     \label{fig:g2_iterazioak}
 \end{figure}
-\newpage
-\subsubsection*{Akatsen analisia (Konfusio-matrizeak)}
-Sailkapen-akatsen tipologia ulertzea ezinbestekoa da Spam detekzioan. Hirugarren irudiak konfusio-matrizeetako erroreak xehatzen ditu, Gezurrezko Positiboak (posta legitimoa spam gisa sailkatua) eta Gezurrezko Negatiboak (spam mezuak sarrerako ontzian utziak) bereiziz. Eredu finalak akats totalen kopuru optimoa mantentzen du, testuinguru erreal baterako jarrera egokia erakutsiz.
+
+\subsubsection*{Akatsen analisia (Konfusio-matrizeak eta inpaktu erreala)}
+Sailkapen-akatsen tipologia ulertzea ezinbestekoa da posta elektronikoaren kudeaketan; izan ere, akats guztiek ez dute kostu bera. Gezurrezko Positibo batek (posta legitimo bat spam gisa ezabatzeak) erabiltzailearentzat informazio galera larria suposa dezake; Gezurrezko Negatibo batek (spam mezu bat sarrerako ontzian jasotzeak), aldiz, ez dauka inportantzia handirik. Hirugarren irudiak argi bereizten ditu errore mota hauek eredu bakoitzeko. Eredu finalak ez du soilik akats totalen kopuru optimoa mantentzen, baizik eta Gezurrezko Positiboen tasa minimizatzen laguntzen du, testuinguru erreal eta profesional baterako jarrera seguruagoa eskainiz.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{G3_nahaste_matrizeak_eu.png}
-    \caption{Konfusio-matrizeen analisia: Gezurrezko Positiboen eta Gezurrezko Negatiboen banaketa eredu bakoitzean.}
+    \caption{Konfusio-matrizeen analisia: Gezurrezko Positiboen (errore kritikoagoa) eta Gezurrezko Negatiboen banaketa eredu bakoitzean.}
     \label{fig:g3_akatsak}
 \end{figure}
+
 \newpage
-\subsubsection*{Eredu onenaren hautaketa eta justifikazioa}
-Azkenik, laugarren irudiko radar-diagramak eredu txapeldunaren erabakia justifikatzen du dimentsio anitzeko ikuspegi batetik. Arazoa ez da soilik F-Neurria maximizatzea; Koste konputazionala (entrenamendu denbora laburra) eta egonkortasuna (desbideratze estandar txikia) ere ebaluatu dira. Ockham-en labanaren printzipioari jarraituz, sare neuronal arinena eta orekatuena aukeratu da ekoizpenerako (produkziorako) eredu gisa.
+\subsubsection*{Erabaki multikriterioa: Errendimendu orokorra eta egonkortasuna}
+Laugarren irudiko radar-diagramak argi islatzen du eredu txapelduna hautatzeko erabili den dimentsio anitzeko ikuspegia. Grafiko honek eredu bakoitzaren aztarna estatistikoa ebaluatzen du sei ardatzetan: Gurutzeko Baliozkotzeko (CV) F-Neurria, Hold-Out ebaluazioko F-Neurria ($\mu$), Zehaztasuna (Precision $\mu$), Estaldura (Recall $\mu$), Haztatutako batezbestekoa (WAvg F $\mu$) eta Egonkortasuna ($1-\sigma$). 
+
+Ikus daitekeenez, erabakia ez da oinarritu metrika bakar bat maximizatzean (adibidez, CV F-spam hutsa). Aitzitik, ``Norm'' ereduak lortzen du azalera orekatuena muga guztietan, bereziki egonkortasunean (Egonk.) gailenduz. Puntuazio altuen eta bariantza txikiaren arteko oreka horrek bermatzen du eredu txapelduna dela fidagarriena ingurune erreal batean.
+
+\subsubsection*{Errendimenduaren eta Egonkortasunaren arteko balantzea (Dispersio-grafikoa)}
+Laugarren irudiaren ezkerraldeko dispersio-grafikoak EBO (Hold-Out) ebaluazioaren bi parametro kritikoenak gurutzatzen ditu: Y ardatzean Spam F-Neurriaren batezbestekoa ($\mu$) eta X ardatzean desbideratze estandarra ($\sigma$). 
+
+Machine Learning ingurune batean, eredu ideal bat grafikoaren goiko ezkerreko ertzean kokatuko litzateke (asmatze-tasa maximoa eta aldakortasun minimoa). Puntuak aztertuz gero, argi ikusten da ``Norm'' eredua dela ezkerralderago dagoena. Hau da, nahiz eta ``base'' ereduak batezbesteko apur bat altuagoa izan (Y ardatzean gorago egon), ``Norm'' ereduak bariantza askoz txikiagoa du (X ardatzean ezkerrago dago). Balantze honek erakusten du eredua gai dela datu berrien aurrean portaera iragarri bat mantentzeko, ``2000'' ereduak erakusten duen ezegonkortasunaren (eskuinalderantz lerratuta) aurrean.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{G4_radar_justifikazioa_eu_editado.PNG}
-    \caption{Eredu onenaren hautaketaren justifikazio multikriterioa (Radar diagrama): F-Neurria, Koste Konputazionala eta Egonkortasuna besalako metrikak kontuan hartuta.}
+    \caption{Eredu onenaren hautaketarako analisi grafiko bikoitza: ezkerrean, errendimenduaren ($\mu$) eta egonkortasunaren ($\sigma$) arteko dispersioa; eskuinean, sei metrika estatistikoren ebaluazio multikriterioa radar-diagrama bidez.}
     \label{fig:g4_radar}
 \end{figure}
+\newpage
+\subsubsection*{Konparaketa estatistiko zehatza: Errore-barrak}
 
+Aurreko ataletan aipatutako egonkortasun hori maila kuantitatibo zehatzagoan aztertzeko, hurrengo grafikoan eredu bakoitzaren Spam F-Neurriaren batezbestekoa ($\mu$) eta desbideratze estandarra ($\sigma$) irudikatzen dira errore-barren bitartez. 
+
+Grafiko honek ikuspegi garbia ematen du: errore-barra zenbat eta estuagoa izan, orduan eta seguruago egon gaitezke lortuko dugun emaitzaz. Ikus daitekeen bezala, nahiz eta ``base'' ereduak batezbesteko apur bat altuagoa izan, gure eredu txapeldunak (\textbf{Norm}) du sakabanaketarik txikiena ($\sigma=0{,}0078$). Horrek esan nahi du eredu horrek portaera askoz aurreikusgarriagoa duela diseinutik kanpoko egoeretan, ``2000'' bezalako eredu konplexuago batek erakusten duen ziurgabetasun altuaren ($\sigma=0{,}0256$) aldean.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+    title={\textbf{Hold-Out F-Neurria eta Desbideratze Estandarra}},
+    width=12cm,
+    height=8cm,
+    ylabel={Spam F-Neurria (batezbestekoa $\pm\,\sigma$)},
+    xlabel={Ebaluatutako Eredua},
+    % Identifikatzaile barneko seguruak
+    symbolic x coords={C1, C2, C3, C4, C5},
+    xtick=data,
+    % Ardatzean erakutsiko diren benetako etiketak
+    xticklabels={Norm (Txapelduna), 2000, 2Gram, 500, base},
+    x tick label style={font=\small},
+    ymin=0.890,
+    ymax=0.985, 
+    ymajorgrids=true,
+    grid style=dashed,
+    legend style={at={(0.97,0.03)}, anchor=south east, font=\small}, 
+    error bars/y dir=both,
+    error bars/y explicit,
+    error bars/error bar style={thick, black},
+    error bars/error mark options={rotate=90, mark size=4pt, black, thick},
+    mark size=5pt,
+]
+
+% Datuen irudikapena
+\addplot[
+    only marks,
+    mark=*,
+    mark options={fill=orange!80, draw=orange!90!black}
+] 
+coordinates {
+    (C1, 0.9450) +- (0, 0.0078)
+    (C2, 0.9341) +- (0, 0.0256)
+    (C3, 0.9288) +- (0, 0.0117)
+    (C4, 0.9455) +- (0, 0.0109)
+    (C5, 0.9480) +- (0, 0.0094)
+};
+\addlegendentry{Hold-Out F-Neurria ($\pm\,\sigma$)}
+
+% Desbideratze estandarraren balioak errore-barren gainean idatzita
+\node[font=\small, blue!70!black, above, yshift=5pt] at (axis cs:C1, 0.9528) {$\sigma\!=\!0{,}0078$};
+\node[font=\small, red!70!black, above, yshift=5pt] at (axis cs:C2, 0.9597) {$\sigma\!=\!0{,}0256$};
+\node[font=\small, black!60, above, yshift=5pt] at (axis cs:C3, 0.9405) {$\sigma\!=\!0{,}0117$};
+\node[font=\small, black!60, above, yshift=5pt] at (axis cs:C4, 0.9564) {$\sigma\!=\!0{,}0109$};
+\node[font=\small, black!60, above, yshift=5pt] at (axis cs:C5, 0.9574) {$\sigma\!=\!0{,}0094$};
+
+% Eredu txapeldunaren erreferentzia lerroa
+\draw[dotted, blue!60!black, thick]
+    (axis cs:C1, 0.9450) -- (axis cs:C5, 0.9450)
+    node[pos=1, above left, font=\tiny] {Norm: $\mu=0{,}9450$};
+
+\end{axis}
+\end{tikzpicture}
+\caption{Spam klaseko F-Neurriaren batezbestekoa eta desbideratze estandarra ($\sigma$). Errore-barren tamaina estuak egonkortasuna bermatzen du. \textbf{Norm} ereduak du sakabanaketa estatistiko txikiena ($\sigma=0{,}0078$).}
+\label{fig:errore_barrak_fneurria}
+\end{figure}
 \newpage
 % =============================================
 % 6. KALITATE ESTIMATUA
@@ -854,16 +944,30 @@ Emaitza hauek benetako erabilera-baldintzetan espero daitekeen errendimendua isl
 % =============================================
 \section{Diseinua}
 
-Helburuetan bi rol bereizten dira: datuen pre-prozesamendua eta klasifikazio/ebaluazioa. Atal bakoitzerako diseinatu dugun softwarearen diseinua grafikoan adierazten da datuen fluxu-diagramen bitartez, non prozesu nagusiak eta datuen transformazioak ikus daitezkeen.
+Helburuetan bi rol bereizten dira: datuen pre-prozesamendua eta ebaluazioa. Atal bakoitzerako diseinatu dugun softwarearen diseinua grafikoan adierazten da datuen fluxu-diagramen bitartez, non prozesu nagusiak eta datuen transformazioak ikus daitezkeen.
 
 \subsection{Datu-fluxu diagrama}
 
 \begin{figure}[h!]
     \centering
-     Hemen jarri dezakezu zuk sortutako irudia, adibidez:
-     \includegraphics[width=1.17\textwidth]{diagramas/fuxu_diagrama.png}
+     \includegraphics[width=1.17\textwidth]{diagramas/fuxu_diagrama.drawio.png}
     \caption{Datu-fluxu sinplea: sarrera, prozesuak eta irteerak.}
 \end{figure}
+
+Lehenik, sarrerako datuak (\texttt{EmailLoader} eta \texttt{DataSplit} bidez) kargatzen eta
+partiketan banatzen dira. Ondoren, \texttt{TextNormalizer} osagaiak testuak garbitzen ditu URLak, helbide elektronikoak eta HTML etiketak normalizatzeta \texttt{EmailVectorizer}
+osagaiak testu garbituak zenbakizko bektore bihurtzen ditu, TF-IDF, Stemming eta AttributeSelection teknikak erabiliz. \texttt{FilterSerializationHelper} osagaiak bektorizazio
+prozesua gordetzen du, test multzoarekin bateragarritasuna bermatzeko.
+
+Ondoren, \texttt{GetModel} osagaiak MLP sailkatzailearen parametro ekorketa egiten du
+train eta dev multzoak erabiliz, eta modelo optimoa \texttt{.model} formatuan gordetzen du.
+Ondoren, \texttt{Iragarri} osagaiak modelo hori kargatzen du eta testu berrien gainean
+iragarpenak egiten ditu.
+
+Azkenik, \texttt{Evaluate} osagaiak modeloaren kalitatea neurtzen du accuracy, F-measure eta
+confusion matrix bezalako metrikak erabiliz, eta \texttt{ExperimentLogger} osagaiak prozesu
+guztien parametroak eta emaitzak automatikoki erregistratzen ditu. Emaitza guztiak \texttt{.txt}
+fitxategi batean gordetzen dira, txosten oso bat osatuz.
 
 \subsection{Klase-diagrama}
 Gure softwareak 10 Java fitxategik osatzen dute: 3 datuen pre-prozesamendurako (irudian berdez agertzen direnak), 4 ereduaren entrenamendu eta ebaluazioentzat (irudian laranjaz edo urdinez agertzen direnak), eta beste 3 klase lagungarri gisa (irudian morez), exekuzio-fluxu nagusiaren parte ez diren arren, beste klaseek erabiltzen dituztenak.
@@ -894,11 +998,18 @@ Hainbat klasek funtzio publikoak dituzte, beste klaseetatik deitzen direnak. Hor
 Datuak sarreratik irteerara prozesu hauen bidez pasatzen dira:
 
 \begin{enumerate}
-    \item Sarrera ARFF fitxategia kargatu.
-    \item Testu atributuak normalizatu (\texttt{TextNormalizer}).
-    \item Tokenizatu eta aukeratu atributuak garrantzitsuenak (\texttt{StringToWordVector}, \texttt{AttributeSelection}).
-    \item Aplikatu inferentzia entrenatutako ereduarekin (\texttt{Classifier}).
-    \item Ebaluatu emaitzak (\texttt{Evaluation}) eta sortu txostenak (\texttt{.txt} fitxategiak).
+    \item Sarrerako ARFF fitxategia kargatu eta datu-egitura prestatu (\texttt{EmailLoader}).
+    
+    \item Testu atributuak normalizatu aurreprozesamendu gisa, zarata murrizteko (\texttt{TextNormalizer}).
+    
+    \item Testua bektore bihurtu eta atributu esanguratsuenak hautatu
+    (\texttt{StringToWordVector}, \texttt{AttributeSelection}).
+    
+    \item Entrenatutako ereduarekin inferentzia aplikatu,
+    instantzia bakoitza sailkatzeko (\texttt{Classifier}).
+    
+    \item Emaitzak ebaluatu metrika estandarren bidez eta txostenak sortu
+    (\texttt{Evaluation}, \texttt{.txt} fitxategiak).
 \end{enumerate}
 
 Horrela, datuen fluxua eta prozesu nagusiak modu grafiko eta testualean dokumentatzen dira, sarrera eta irteera formatuak argi adieraziz.
@@ -930,6 +1041,8 @@ Manning, C. D., Raghavan, P., \& Sch\"utze, H. (2008).
 \bibitem{hastie}
 Hastie, T., Tibshirani, R., \& Friedman, J. (2009).
 \textit{The Elements of Statistical Learning}. Springer.
+
+
 
 \end{thebibliography}
 
