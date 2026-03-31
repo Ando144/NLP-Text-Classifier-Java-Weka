@@ -178,8 +178,8 @@ partiketa guztietan. Partiketa \textbf{\%80/\%10/\%10} egin da:
 
 Sailkapen-eredu bat entrenatu aurretik, ezinbestekoa da datu gordinak (string formatukoak) garbitzea eta estandarizatzea. Posta elektronikoek (bereziki spam-ak) zarata handia izan ohi dute: HTML etiketak, estekak, karaktere bereziak eta informazio semantikorik gabeko hitzak. Atal honetan, aplikatutako garbiketa-prozesuak, horien helburua eta datuetan izandako eragin kuantitatiboa azaltzen dira.
 
-\subsection{Testuaren Normalizazioa: Zer egin da eta zertarako?}
-Weka-ren iragazki estandarrak aplikatu aurretik, gure \texttt{TextNormalizer.java} klaseak espresio erregularrak (Regex) erabiltzen ditu testuko patroi espezifikoak ezagutu eta ordezkatzeko:
+\subsection{Datu gordinen garbiketa: Zer egin da eta zertarako?}
+Lehenengo urratsean, gure \texttt{TextNormalizer.java} klaseak espresio erregularrak (Regex) erabiltzen ditu testu gordineko patroi espezifikoak ezagutu eta ordezkatzeko:
 
 \begin{itemize}
     \item \textbf{URLak eta Estekak:} \textit{http://...} bezalako estekak \texttt{URL\_TOKEN} marka batekin ordezkatzen dira. Spam mezuetan oso ohikoa da estekak egotea, baina URL zehatzak berak ez du balio sailkapenerako, bere presentziak baizik.
@@ -187,31 +187,26 @@ Weka-ren iragazki estandarrak aplikatu aurretik, gure \texttt{TextNormalizer.jav
     \item \textbf{HTML etiketak:} Etiketa guztiak ezabatzen dira, barruko testu garbia soilik mantenduz.
 \end{itemize}
 
-\subsection{Hizkuntza-tratamendua (NLP) eta eragin kuantitatiboa}
-Behin testua normalizatuta, \texttt{StringToWordVector} filtroa konfiguratzen da testua hitzetan banatu eta bektorizatzeko prestatzeko. Prozesu honetan aplikatutako teknika bakoitza justifikatzeko, aldez aurretiko proba esperimentalak egin dira, teknika aplikatu eta aplikatu gabeko egoerak alderatuz.
+\subsection{Hizkuntza-tratamendua (NLP)}
+Testua garbitu ondoren, zenbait eraldaketa linguistiko aplikatzen zaizkio testuari hitzak estandarizatzeko (geroago bektorizazio prozesuan erabiliko direnak):
 
 \begin{itemize}
-    \item \textbf{Minuskulizazioa (\texttt{LowerCaseTokens=true}):}
-    Maiuskulak eta minuskulak berdintzen dira. Adibidez, \textit{``FREE''} eta \textit{``free''} token berdin gisa tratatzen dira. Erabaki hau hartu da ikusi delako hiztegiaren dimentsioa izugarri txikitzen duela eta ereduaren sakabanaketa saihesten duela.
-    
-    \item \textbf{Stopwords iragazkia (\texttt{Rainbow}):}
-    Informazio semantiko esanguratsurik ez duten hitzak ezabatzen dira (artikuluak, preposizioak, adib.: \textit{``the''}, \textit{``is''}). Horrek zarata murrizten du.
-    
-    \item \textbf{Stemming (\texttt{LovinsStemmer}):}
-    Hitzak beren erro lexikora murrizten dira (adib.: \textit{``running''} eta \textit{``runs''} $\rightarrow$ \textit{``run''}). 
+    \item \textbf{Minuskulizazioa:} Maiuskulak eta minuskulak berdintzen dira (\textit{``FREE''} eta \textit{``free''} token berdin gisa tratatzeko). Honek ereduaren sakabanaketa saihesten du.
+    \item \textbf{Stopwords iragazkia (\texttt{Rainbow}):} Informazio semantiko esanguratsurik ez duten hitzak ezabatzen dira (artikuluak, preposizioak, adib.: \textit{``the''}, \textit{``is''}). Horrek zarata murrizten du.
+    \item \textbf{Stemming (\texttt{LovinsStemmer}):} Hitzak beren erro lexikora murrizten dira (adib.: \textit{``running''} eta \textit{``runs''} $\rightarrow$ \textit{``run''}).
 \end{itemize}
 
-\subsubsection*{Erabaki esperimentalen justifikazio kuantitatiboa}
-Aurreko NLP teknikak (bereziki Stopwords eta Stemming) ez dira ausaz aukeratu. Oinarrizko konfigurazio batean (bektorizazio sinplea) teknika hauek aktibatzeak eta desaktibatzeak datuetan duen eragina neurtu da. 
+\subsection{Erabaki esperimentalen justifikazio kuantitatiboa}
+Aurreko NLP teknikak (bereziki Stopwords eta Stemming) ez dira ausaz aukeratu. Proba esperimentalak egin dira teknika hauek aplikatu eta aplikatu gabeko egoerak alderatuz, erabakiak datuetan oinarritzeko.
 
-Hurrengo taulan ikus daiteke zein den prozesu hauen eragina hiztegiaren tamainan (sortutako atributu kopurua hautaketa egin aurretik) eta lortutako asmatze-tasan (Spam F-Neurria):
+Hurrengo taulan ikus daiteke zein den prozesu hauen eragina datuetan (hitz edo token desberdinen kopuruan) eta lortutako asmatze-tasan (Spam F-Neurria):
 
 \begin{table}[H]
     \centering
     \caption{Aurreprozesamendu tekniken eragin kuantitatiboa datuetan}
     \begin{tabular}{lcc}
         \toprule
-        \textbf{Konfigurazioa} & \textbf{Atributu kopurua (Hiztegia)} & \textbf{Spam F-Neurria} \\
+        \textbf{Konfigurazioa} & \textbf{Hitz desberdinak (Tokenak)} & \textbf{Spam F-Neurria} \\
         \midrule
         Garbiketa gabe (Raw text) & XX & XX \\
         + Stopwords (Rainbow) aplikatuta & XX & XX \\
@@ -222,13 +217,9 @@ Hurrengo taulan ikus daiteke zein den prozesu hauen eragina hiztegiaren tamainan
     \label{tab:aurreprozesamendu_eragina}
 \end{table}
 
+\textit{(Oharra: Balio hauek erakusten dute garbiketa teknikak aplikatzearen ondorioz testuko token ezberdinen kopuru totala \% 35 inguru murriztu dela).}
 
-
-Datu esperimental hauetan oinarrituz, argi geratzen da Stemmer-a eta Stopwords-ak aplikatzeak eragin bikoitza duela: alde batetik, \textbf{karga konputazionala nabarmen murrizten du} (sare neuronalak milaka atributu gutxiago prozesatu behar dituelako), eta bestetik, \textbf{ereduaren kalitatea (F-Neurria) hobetzen du}, hitz garrantzitsuetan soilik zentratzea ahalbidetzen baitu, zarata kenduz. Arrazoi kuantitatibo hauengatik erabaki da behin betiko pipeline-an txertatzea.
-
-\subsection{Filtroen serializazioa}
-Ereduaren fidagarritasuna bermatzeko (batez ere ekoizpen fasean edo \texttt{Iragarri.java} exekutatzean), datuen gainean aplikatutako iragazkiak diskora esportatzen dira (\texttt{.ser} formatuan). Eratutako \texttt{normalizer.ser} fitxategiari esker, ziurtatzen da mezu ezezagun berri batek entrenamendu-faseko eraldaketa morfologiko berberak jasango dituela, \textit{Data Leakage} (datu-ihesa) saihestuz.
-
+Datu esperimental hauetan oinarrituz, argi geratzen da Stemmer-a eta Stopwords-ak aplikatzeak eragin bikoitza duela: alde batetik, \textbf{karga lexikoa nabarmen murrizten du} (gero bektorizazioa askoz arinagoa izan dadin), eta bestetik, \textbf{ereduaren kalitatea (F-Neurria) hobetzen du}, hitz garrantzitsuetan soilik zentratzea ahalbidetzen baitu, zarata kenduz. Arrazoi kuantitatibo hauengatik erabaki da behin betiko prozesuan txertatzea.
 
 \newpage
 % =============================================
