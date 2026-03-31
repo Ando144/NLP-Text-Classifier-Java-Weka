@@ -197,29 +197,26 @@ Testua garbitu ondoren, zenbait eraldaketa linguistiko aplikatzen zaizkio testua
 \end{itemize}
 
 \subsection{Erabaki esperimentalen justifikazio kuantitatiboa}
-Aurreko NLP teknikak (bereziki Stopwords eta Stemming) ez dira ausaz aukeratu. Proba esperimentalak egin dira teknika hauek aplikatu eta aplikatu gabeko egoerak alderatuz, erabakiak datuetan oinarritzeko.
+Aurreko NLP teknikak (bereziki Stopwords eta Stemming) ez dira ausaz aukeratu. Iragazki bakoitza banan-banan ebaluatu beharrean, \textbf{aurreprozesamendu-bloke osoaren} (Normalizazioa + NLP) eragin bateratua neurtu da, ereduaren dimentsionalitatean eta kalitatean duen benetako inpaktua ikusteko.
 
-Hurrengo taulan ikus daiteke zein den prozesu hauen eragina datuetan (hitz edo token desberdinen kopuruan) eta lortutako asmatze-tasan (Spam F-Measure):
+Testu librea sailkatzean agertzen den arazo nagusietako bat dimentsionalitate altua da. Hurrengo taulan ikus daiteke zein den NLP garbiketa aplikatu gabe hasierako datu-sortak zuen tamaina, eta zein den gure prozesu osoa (Stemmer, Stopwords eta atributu-hautaketa barne) aplikatu ondorengo emaitza:
 
 \begin{table}[H]
     \centering
-    \caption{Aurreprozesamendu tekniken eragin kuantitatiboa datuetan}
+    \caption{Aurreprozesamendu tekniken eragin kuantitatiboa dimentsionalitatean eta errendimenduan}
     \begin{tabular}{lcc}
         \toprule
-        \textbf{Konfigurazioa} & \textbf{Hitz desberdinak (Tokenak)} & \textbf{Spam F-Measure} \\
+        \textbf{Konfigurazioa} & \textbf{Atributu kopurua (Hiztegia)} & \textbf{Spam F-Measure ($\mu \pm \sigma$)} \\
         \midrule
-        Garbiketa gabe (Raw text) & XX & XX \\
-        + Stopwords (Rainbow) aplikatuta & XX & XX \\
-        + Stemmer (Lovins) aplikatuta & XX & XX \\
-        \textbf{Biak aplikatuta (Gure hautua)} & \textbf{XX} & \textbf{XX} \\
+        Garbiketa gabe (Raw text) & 33.863 + klasea & Konputazionalki astunegia \\
+        \textbf{NLP Pipeline osoa} & \textbf{1.000 + klasea} & \textbf{0,9450} ($\pm \mathbf{0{,}0078}$) \\
         \bottomrule
     \end{tabular}
     \label{tab:aurreprozesamendu_eragina}
 \end{table}
 
-\textit{(Oharra: Balio hauek erakusten dute garbiketa teknikak aplikatzearen ondorioz testuko token ezberdinen kopuru totala \% 35 inguru murriztu dela).}
 
-Datu esperimental hauetan oinarrituz, argi geratzen da Stemmer-a eta Stopwords-ak aplikatzeak eragin bikoitza duela: alde batetik, \textbf{karga lexikoa nabarmen murrizten du} (gero bektorizazioa askoz arinagoa izan dadin), eta bestetik, \textbf{ereduaren kalitatea (F-Measure) hobetzen du}, hitz garrantzitsuetan soilik zentratzea ahalbidetzen baitu, zarata kenduz. Arrazoi kuantitatibo hauengatik erabaki da behin betiko prozesuan txertatzea.
+Datuen arabera, garbiketa eta NLP iragazkiek (Stemmer eta Stopwords) \textbf{dimentsionalitatea \% 97 murrizten dute} (33.863 atribututik 1.000ra), ereduaren \textbf{kalitate eta egonkortasun bikaina} bermatuz (Spam F-Measure $0{,}9450$, $\sigma=0{,}0078$). Murrizketa honek frogatzen du ezabatutako milaka hitzak zarata besterik ez zirela. Emaitza kuantitatibo hauengatik, prozesu hau behin betiko ereduan txertatu da.
 
 \newpage
 % =============================================
@@ -262,7 +259,7 @@ Metrika: \textbf{F-Measure (spam)}.
         TFTransform     & true   & Hitz maiztasuna kontuan hartzeko \\
         IDFTransform    & true   & Hitz arraroak gehiago ponderatzeko \\
         LowerCaseTokens & true   & Maiuskulak berdintze \\
-        WordsToKeep     & 20.000 & Hiztegi zabala mantentzeko atributu-hautaketarako \\
+        WordsToKeep     & 25.000 & Hiztegi zabala mantentzeko atributu-hautaketarako \\
         Tokenizadorea   & WordTokenizer & Puntuazio-markak banatzailetzat \\
         Stemmer         & LovinsStemmer & Hitzen erroetara murrizteko \\
         Stopwords       & Rainbow & Hitz ez-informatiboak kentzeko \\
@@ -286,7 +283,7 @@ spam klasearekiko erlazionatuen dauden atributuak aukeratzen ditu.
         \toprule
         \textbf{Konfigurazioa} & \textbf{Atributu kopurua} & \textbf{F-spam} \\
         \midrule
-        Hautaketa gabe (WordsToKeep=20.000) & 20.000 & -- \\
+        Hautaketa gabe (WordsToKeep=25.000) & 25.000 & -- \\
         Hautaketarekin (Ranker=1.000)       & 1.000  & -- \\
         \bottomrule
     \end{tabular}
@@ -961,15 +958,17 @@ guztien parametroak eta emaitzak automatikoki erregistratzen ditu. Emaitza guzti
 fitxategi batean gordetzen dira, txosten oso bat osatuz.
 
 \subsection{Klase-diagrama}
+
+\begin{figure}[H]
+    \centering
+    \includesvg[width=0.84\textwidth]{diagramak/KlaseDiagrama.svg}
+    \caption{Proiektuaren klase-diagrama nagusia, Java fitxategien arteko erlazioak eta dependentziak erakusten dituena.}
+    \label{fig:klase-diagrama}
+\end{figure}
 Gure softwareak 10 Java fitxategik osatzen dute: 3 datuen pre-prozesamendurako (irudian berdez agertzen direnak), 4 ereduaren entrenamendu eta ebaluazioentzat (irudian laranjaz edo urdinez agertzen direnak), eta beste 3 klase lagungarri gisa (irudian morez), exekuzio-fluxu nagusiaren parte ez diren arren, beste klaseek erabiltzen dituztenak.
 
 Hainbat klasek funtzio publikoak dituzte, beste klaseetatik deitzen direnak. Hortaz, fitxategien artean dependentzia erlazio bat sortzen da, \texttt{EmailLoader.java} eta \texttt{ExperimentLogger.java} izanik klase dependente gehien dituzten klaseak.
-\begin{figure}[h!]
-    \centering
-    \includesvg[width=0.95\linewidth]{diagramak/KlaseDiagrama.svg}
-    \caption{Klase-diagrama}
-    \label{fig:klase-diagrama}
-\end{figure}
+
 
 \subsection{Sarrera eta Irteerak}
 
@@ -1006,6 +1005,26 @@ Datuak sarreratik irteerara prozesu hauen bidez pasatzen dira:
 Horrela, datuen fluxua eta prozesu nagusiak modu grafiko eta testualean dokumentatzen dira, sarrera eta irteera formatuak argi adieraziz.
 
 % =============================================
+% X. ADIMEN ARTIFIZIALAREN ERABILERA
+% =============================================
+\newpage
+\section{Adimen Artifizialaren erabilera}
+
+Proiektu honen garapenean, Adimen Artifizial sortzaileko tresnak (hala nola, Claude edo Gemini) erabili dira laguntzaile tekniko gisa, betiere, hauek emandako erantzunen errepasoa bermatzen.Tresna hauek garapen-prozesua arintzeko eta azken entregagarrien kalitate formala hobetzeko erabili dira.
+
+Zehazki, honako zeregin hauetarako erabili da IA tresnen laguntza:
+
+\begin{itemize}
+    \item \textbf{Dokumentazioaren berrikuspena eta estilo-zuzenketa:} Txosteneko hainbat ataletan, testuen koherentzia, gramatika eta tonu akademikoa hobetzeko erabili da. Ideiak, argudioak eta ondorioak behin garatuta IA erabili da esaldiak hobeto egituratzeko eta irakurgarritasuna bermatzeko.
+    \item \textbf{Estetika eta LaTeX formatua:} Txostena idazteko orduan, LaTeX formatuko taula konplexuen, ekuazioen eta irudien sintaxia doitzeko laguntza eskatu da, maketazio-denbora aurreztuz.
+    \item \textbf{Zeregin errepikakorren programazioa:} Kodearen egitura orokorrak, salbuespenen kudeaketa (\textit{try-catch} blokeak) edo fitxategiak irakurri/idazteko oinarrizko egiturak azkarrago garatzeko erabili da, taldeak logika nagusian zentratu ahal izateko.
+    \item \textbf{Weka liburutegiaren ikerketa:} Wekako klaseen eta API-aren dokumentazio ofizial zabala azkarrago arakatzeko eta klase jakin batzuen (adibidez, \texttt{StringToWordVector} edo \texttt{MultilayerPerceptron}) parametroen funtzionamendua argitzeko bilatzaile aurreratu gisa erabili da.
+    \item \textbf{Kodearen dokumentazioa (JavaDoc):} Klaseen eta metodoen goiburuetako JavaDoc iruzkin estandarrak (\texttt{@param}, \texttt{@return}) era erdi-automatikoan sortzeko laguntzaile gisa erabili da, kodea ulergarriagoa eta garbiagoa izan dadin.
+\end{itemize}
+
+Laburbilduz, Adimen Artifizialaren erabilera proiektuaren kalitate formala eta garapen-abiadura hobetzeko baliabide osagarri gisa erabili da. Tresna hauek iradokitako testu, kode-egitura edo soluzio guztiak arretaz berrikusi, balioztatu eta proiektuaren behar espezifikoetara egokitu dira, emaitza finala taldearen irizpide teknikoen eta ezagutzaren isla fidela izan dadin.
+
+% =============================================
 % BIBLIOGRAFIA
 % =============================================
 \newpage
@@ -1032,6 +1051,16 @@ Manning, C. D., Raghavan, P., \& Sch\"utze, H. (2008).
 \bibitem{hastie}
 Hastie, T., Tibshirani, R., \& Friedman, J. (2009).
 \textit{The Elements of Statistical Learning}. Springer.
+
+\bibitem{alpaydin2010}
+Alpaydin, E. (2010).
+\textit{Introduction to Machine Learning} (2nd ed.). MIT Press.
+
+\bibitem{wekamanual2011}
+Bouckaert, R. R., Frank, E., Hall, M., Kirkby, R., Reutemann, P., Seewald, A., \& Scuse, D. (2011).
+\textit{WEKA Manual for Version 3-6-6}. University of Waikato, Hamilton, New Zealand.
+
+\end{thebibliography}
 
 
 
