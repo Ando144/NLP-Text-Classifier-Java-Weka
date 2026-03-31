@@ -1,0 +1,91 @@
+GRAFICO UNICO DE MUCHAS LINEAS:
+
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}
+
+% Koloreen definizioa
+\definecolor{colorBase}{RGB}{31,119,180}
+\definecolor{colorNorm}{RGB}{29,105,58}
+\definecolor{color500}{RGB}{106,44,145}
+\definecolor{color2000}{RGB}{230,85,13}
+\definecolor{color2gram}{RGB}{11,136,147}
+
+\begin{axis}[
+    width=12cm, height=10cm,
+    title={\textbf{C) Egonkortasun Profila: $\sigma$ Txikiagoa = Sendoagoa}\\[0.5ex]\textbf{(norm guztiz behean = EGONKORRENA)}},
+    title style={align=center, font=\large},
+    ylabel={Desbideratze Estandarra ($\sigma$)},
+    ylabel style={font=\large},
+    ymin=-0.002, ymax=0.055,
+    xmin=0.8, xmax=5.2,
+    scaled y ticks=false,
+    y tick label style={/pgf/number format/fixed, /pgf/number format/precision=3},
+    ytick={0,0.01,0.02,0.03,0.04,0.05},
+    yticklabels={0.00,0.01,0.02,0.03,0.04,0.05},
+    xtick={1,2,3,4,5},
+    xticklabels={F-spam $\sigma$, Precision $\sigma$, Recall $\sigma$, Ham F $\sigma$, WAvg F $\sigma$},
+    x tick label style={rotate=15, anchor=north east, font=\normalsize},
+    axis background/.style={fill=gray!5},
+    axis lines*=left,
+    grid=major,
+    grid style={dashed, gray!20},
+    legend pos=north east,
+    legend cell align={left},
+    legend style={fill=white, draw=gray!30, nodes={font=\small}}
+]
+
+% 'norm' azpiko eremu itzaleztatua
+\addplot[fill=colorNorm!10, draw=none, forget plot] coordinates {
+    (1, 0.0078)
+    (2, 0.0160)
+    (3, 0.0084)
+    (4, 0.0028)
+    (5, 0.0040)
+} \closedcycle;
+
+% 'base' lerroa
+\addplot[color=colorBase, mark=*, thick] coordinates {
+    (1, 0.0093) (2, 0.0180) (3, 0.0135) (4, 0.0035) (5, 0.0048)
+};
+\addlegendentry{base}
+
+% 'norm \star' lerroa
+\addplot[color=colorNorm, mark=*, line width=1.8pt, mark size=2.5pt] coordinates {
+    (1, 0.0078) (2, 0.0160) (3, 0.0084) (4, 0.0028) (5, 0.0040)
+};
+\addlegendentry{norm $\star$}
+
+% '500' lerroa
+\addplot[color=color500, mark=*, thick] coordinates {
+    (1, 0.0108) (2, 0.0162) (3, 0.0124) (4, 0.0032) (5, 0.0054)
+};
+\addlegendentry{500}
+
+% '2000' lerroa
+\addplot[color=color2000, mark=*, thick] coordinates {
+    (1, 0.0255) (2, 0.0540) (3, 0.0118) (4, 0.0112) (5, 0.0148)
+};
+\addlegendentry{2000}
+
+% '2gram' lerroa
+\addplot[color=color2gram, mark=*, thick] coordinates {
+    (1, 0.0115) (2, 0.0308) (3, 0.0468) (4, 0.0035) (5, 0.0058)
+};
+\addlegendentry{2gram}
+
+% Oharraren laukia
+\node[draw=colorNorm, thick, fill=colorNorm!10, rounded corners=3pt, align=left, font=\small\bfseries, text=colorNorm, anchor=west] 
+    at (axis cs: 2.2, 0.024) (annot) {norm $\star$\\Egonkorrena\\$\sigma$ guztiak txikienak};
+
+% Oharra lotzen duen lerroa
+\draw[color=colorNorm, thick] (annot.south west) -- (axis cs:2.02, 0.0165);
+
+\end{axis}
+\end{tikzpicture}
+
+\caption{Egonkortasun-profila, hainbat metrikaren (X ardatza) eta eredu-konfigurazioren desbideratze estandarra ($\sigma$) erakusten duena. Desbideratze estandar txikiago batek eredu sendoagoa eta egonkorragoa adierazten du. 'norm $\star$' konfigurazioa (berde iluna) nabarmentzen da egonkorrena gisa, balioak modu koherentean baxu mantentzen baititu metrika guztietan, ohar-laukian zehazten den bezala.}
+\label{fig:egonkortasun_profila}
+
+\end{figure}
