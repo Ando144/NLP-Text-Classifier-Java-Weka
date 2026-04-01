@@ -187,6 +187,44 @@ Lehenengo urratsean, gure \texttt{TextNormalizer.java} klaseak espresio erregula
     \item \textbf{HTML etiketak:} Etiketa guztiak ezabatzen dira, barruko testu garbia soilik mantenduz.
 \end{itemize}
 
+\subsubsection*{TextNormalizer.java: filtro pertsonalizatua}
+
+Datu gordinen aurreprozesamenduaren barruan, gure \texttt{TextNormalizer.java} klase propioa erabili dugu testuaren normalizazio fase bat aplikatzeko. Filtro hau Wekaren \texttt{SimpleStreamFilter} klasean oinarritzen da, eta \texttt{StringToWordVector} bektorizazioa aplikatu aurretik exekutatzen da.
+
+Helburu nagusia testuaren zarata murriztea da, ereduak informazio garrantzitsuan zentratzeko. Horretarako, espresio erregularretan oinarritutako hainbat aldaketa aplikatzen dira, patroien orokortzea ahalbidetuz eta overfitting-a saihestuz.
+
+Aplikatutako transformazioak honako hauek dira:
+
+\begin{enumerate}
+\item \textbf{URLen normalizazioa:} URL egiturak identifikatzen dira (adibidez, \texttt{http://...} edo \texttt{https://...}) eta \texttt{URLTOKEN} token bakarrera ordezkatzen dira. Horrela, esteka zehatzak ez dira bereizten, baina URL baten presentzia mantentzen da, spam mezuetan adierazgarri izan ohi dena.
+
+\item \textbf{Email helbideen normalizazioa:} Email helbide guztiak \texttt{EMAILTOKEN} token-era bihurtzen dira. Honek saihesten du ereduak helbide konkretuetara egokitzea, eta komunikazio-patroia mantentzen du.
+
+\item \textbf{Letra solteen bateratzea:} Spam tekniketan ohikoa da hitzak letra bananduekin idaztea (adib. \texttt{"h e l l o"}). Kasu hauetan, hizkiak elkartu egiten dira eta \texttt{"hello"} moduko forma estandar bihurtzen da.
+
+\item \textbf{HTML atributuen ezabaketa:} \texttt{href=}, \texttt{src=} edo antzeko HTML atributuak testutik kentzen dira, informazio semantiko txikia dutelako eta zarata sortzen dutelako.
+
+\item \textbf{HTML fragmentuen ezabaketa:} HTML etiketen edo fragmentuen izenak (adib. \texttt{div}, \texttt{span}, \texttt{br}, \texttt{img}) ezabatzen dira, batez ere spam mezuetan agertzen diren egitura-hondarrak direlako.
+
+\item \textbf{Puntuazio errepikatuen sinplifikazioa:} Ikur berean oinarritutako puntuazio errepikatuak (adib. \texttt{"!!!"}) sinplifikatu egiten dira (\texttt{"!"}). Horrela, enfasia mantentzen da, baina aldaera kopurua murrizten da.
+
+\item \textbf{Espazio anitzen normalizazioa:} Espazio bat baino gehiago jarraian agertzen direnean, espazio bakarrera murrizten dira. Gainera, hasierako eta amaierako hutsuneak ezabatzen dira.
+\end{enumerate}
+
+Aldaketa hauei esker, testua sinplifikatu egiten da bere egitura informatiboa mantenduz, eta horrek bektorizazioaren kalitatea hobetzen du.
+
+\paragraph{Adibidea}
+Jarraian, normalizazioaren adibide sinple bat erakusten da:
+
+\begin{itemize}
+\item \textbf{Jatorrizko testua:} \\
+\texttt{"CLICK HERE!!! http://spam.com h e l l o user123@ehu.ikasle.eus \\
+<div>Oferta!!!</div>"}
+
+\item \textbf{Normalizatutako testua:} \\
+\texttt{"CLICK HERE! URLTOKEN hello EMAILTOKEN Oferta!"}
+\end{itemize}
+
 \subsection{Hizkuntza-tratamendua (NLP)}
 Testua garbitu ondoren, zenbait eraldaketa linguistiko aplikatzen zaizkio testuari hitzak estandarizatzeko (geroago bektorizazio prozesuan erabiliko direnak):
 
