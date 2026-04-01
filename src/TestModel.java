@@ -114,6 +114,20 @@ public class TestModel {
                 writer.write(emaitzaOsoa.toString());
             }
 
+            // Iragarpenen erregistroa gorde
+            String predFilePath = resultsPath.replace(".txt", "_iragarpenak.txt");
+            try (BufferedWriter predWriter = new BufferedWriter(new FileWriter(predFilePath))) {
+                for (int i = 0; i < test.numInstances(); i++) {
+                    double realClassIdx = test.instance(i).classValue();
+                    String realClass = test.classAttribute().value((int) realClassIdx);
+                    double predClassIdx = eredua.classifyInstance(test.instance(i));
+                    String predClass = test.classAttribute().value((int) predClassIdx);
+                    String linea = String.format("%3d. instantzia:\tKlase erreala: %-8s Iragarritako klasea: %-8s\n",
+                        (i + 1), realClass, predClass);
+                    predWriter.write(linea);
+                }
+            }
+
             // Experiment Tracking (Aukerakoa)
             ExperimentLogger.log("4. Ebaluazio Itsua (TestModel)", "Eredua: " + modelPath,
                     "\n" + emaitzaOsoa.toString());

@@ -1,0 +1,518 @@
+  1. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+  2. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+  3. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+  4. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+  5. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+  6. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+  7. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+  8. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+  9. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 10. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 11. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 12. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 13. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 14. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 15. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 16. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 17. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 18. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 19. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 20. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 21. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 22. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 23. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 24. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 25. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 26. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 27. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 28. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 29. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 30. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 31. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 32. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 33. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 34. instantzia:	Klase erreala: ham      Iragarritako klasea: spam    
+ 35. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 36. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 37. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 38. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 39. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 40. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 41. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 42. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 43. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 44. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 45. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 46. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 47. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 48. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 49. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 50. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 51. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 52. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 53. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 54. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 55. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 56. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 57. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 58. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 59. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 60. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 61. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 62. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 63. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 64. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 65. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 66. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 67. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 68. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 69. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 70. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 71. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 72. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 73. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 74. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 75. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 76. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 77. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 78. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 79. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 80. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 81. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 82. instantzia:	Klase erreala: ham      Iragarritako klasea: spam    
+ 83. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 84. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 85. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 86. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 87. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 88. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 89. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 90. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 91. instantzia:	Klase erreala: ham      Iragarritako klasea: spam    
+ 92. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 93. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 94. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 95. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 96. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 97. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 98. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+ 99. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+100. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+101. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+102. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+103. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+104. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+105. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+106. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+107. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+108. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+109. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+110. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+111. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+112. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+113. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+114. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+115. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+116. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+117. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+118. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+119. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+120. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+121. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+122. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+123. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+124. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+125. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+126. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+127. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+128. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+129. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+130. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+131. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+132. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+133. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+134. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+135. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+136. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+137. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+138. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+139. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+140. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+141. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+142. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+143. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+144. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+145. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+146. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+147. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+148. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+149. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+150. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+151. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+152. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+153. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+154. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+155. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+156. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+157. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+158. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+159. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+160. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+161. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+162. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+163. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+164. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+165. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+166. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+167. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+168. instantzia:	Klase erreala: ham      Iragarritako klasea: spam    
+169. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+170. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+171. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+172. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+173. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+174. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+175. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+176. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+177. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+178. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+179. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+180. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+181. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+182. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+183. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+184. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+185. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+186. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+187. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+188. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+189. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+190. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+191. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+192. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+193. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+194. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+195. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+196. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+197. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+198. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+199. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+200. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+201. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+202. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+203. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+204. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+205. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+206. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+207. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+208. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+209. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+210. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+211. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+212. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+213. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+214. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+215. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+216. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+217. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+218. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+219. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+220. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+221. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+222. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+223. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+224. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+225. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+226. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+227. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+228. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+229. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+230. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+231. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+232. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+233. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+234. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+235. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+236. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+237. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+238. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+239. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+240. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+241. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+242. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+243. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+244. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+245. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+246. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+247. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+248. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+249. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+250. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+251. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+252. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+253. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+254. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+255. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+256. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+257. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+258. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+259. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+260. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+261. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+262. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+263. instantzia:	Klase erreala: ham      Iragarritako klasea: spam    
+264. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+265. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+266. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+267. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+268. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+269. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+270. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+271. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+272. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+273. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+274. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+275. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+276. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+277. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+278. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+279. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+280. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+281. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+282. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+283. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+284. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+285. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+286. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+287. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+288. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+289. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+290. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+291. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+292. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+293. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+294. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+295. instantzia:	Klase erreala: ham      Iragarritako klasea: spam    
+296. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+297. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+298. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+299. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+300. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+301. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+302. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+303. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+304. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+305. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+306. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+307. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+308. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+309. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+310. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+311. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+312. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+313. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+314. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+315. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+316. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+317. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+318. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+319. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+320. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+321. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+322. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+323. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+324. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+325. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+326. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+327. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+328. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+329. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+330. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+331. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+332. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+333. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+334. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+335. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+336. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+337. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+338. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+339. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+340. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+341. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+342. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+343. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+344. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+345. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+346. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+347. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+348. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+349. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+350. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+351. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+352. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+353. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+354. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+355. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+356. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+357. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+358. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+359. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+360. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+361. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+362. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+363. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+364. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+365. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+366. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+367. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+368. instantzia:	Klase erreala: ham      Iragarritako klasea: ham     
+369. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+370. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+371. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+372. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+373. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+374. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+375. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+376. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+377. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+378. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+379. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+380. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+381. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+382. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+383. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+384. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+385. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+386. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+387. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+388. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+389. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+390. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+391. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+392. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+393. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+394. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+395. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+396. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+397. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+398. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+399. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+400. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+401. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+402. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+403. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+404. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+405. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+406. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+407. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+408. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+409. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+410. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+411. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+412. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+413. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+414. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+415. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+416. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+417. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+418. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+419. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+420. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+421. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+422. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+423. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+424. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+425. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+426. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+427. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+428. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+429. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+430. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+431. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+432. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+433. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+434. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+435. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+436. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+437. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+438. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+439. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+440. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+441. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+442. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+443. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+444. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+445. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+446. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+447. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+448. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+449. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+450. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+451. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+452. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+453. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+454. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+455. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+456. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+457. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+458. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+459. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+460. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+461. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+462. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+463. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+464. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+465. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+466. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+467. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+468. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+469. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+470. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+471. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+472. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+473. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+474. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+475. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+476. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+477. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+478. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+479. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+480. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+481. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+482. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+483. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+484. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+485. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+486. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+487. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+488. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+489. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+490. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+491. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+492. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+493. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+494. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+495. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+496. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+497. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+498. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+499. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+500. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+501. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+502. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+503. instantzia:	Klase erreala: spam     Iragarritako klasea: ham     
+504. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+505. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+506. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+507. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+508. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+509. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+510. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+511. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+512. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+513. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+514. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+515. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+516. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+517. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    
+518. instantzia:	Klase erreala: spam     Iragarritako klasea: spam    

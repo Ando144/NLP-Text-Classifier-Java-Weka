@@ -225,26 +225,50 @@ Datuen arabera, garbiketa eta NLP iragazkiek (Stemmer eta Stopwords) \textbf{dim
 \section{Bektorizazioa}
 
 \subsection{Bektorizazio-metodo ezberdinak}
-
 Lau bektorizazio-metodo aztertu dira train multzoan, MLP sailkatzailearekin batera,
-egokiena aukeratzeko. Ebaluazio-eskema: \textbf{Hold-Out} (train vs. dev).
+egokiena aukeratzeko. Ebaluazio-eskemak: \textbf{5-fold CV} eta \textbf{Repeated Hold-Out}.
 Metrika: \textbf{F-Measure (spam)}.
+
+Esperimentazio hasierako probetan, TF-IDF metodoak gure konfigurazioan \textbf{F-spam = 0,9415} (5-fold CV) eta \textbf{0,9450 $\pm$ 0,0078} (Repeated Hold-Out) lortu zuen. Hala ere, arazoak izan ditugu StringToWordVector filtroaren parametrizazioan, metodo ezberdinen arteko diferentzia esperimentalak neurtzea zailduz.
+
+Aurrekarien arabera, metodo hauen arteko portaera espero dena honakoa da:
 
 \begin{table}[H]
     \centering
-    \caption{Bektorizazio metodoen konparaketa (F-Measure)}
-    \begin{tabular}{lrrr}
+    \caption{Bektorizazio metodoen ezaugarri teorikoak}
+    \begin{tabular}{lp{9cm}}
         \toprule
-        \textbf{Metodoa} & \textbf{F-spam} & \textbf{F-ham} & \textbf{WAvg-F} \\
+        \textbf{Metodoa} & \textbf{Ezaugarri nagusiak} \\
         \midrule
-        TF-IDF   & -- & -- & -- \\
-        TF       & -- & -- & -- \\
-        IDF      & -- & -- & -- \\
-        Bin BoW  & -- & -- & -- \\
+        TF-IDF   & Maiztasuna (TF) eta hitz arrotasuna (IDF) konbinatzen ditu. Spam sailkapenerako estandarra \cite{manning2008}. Hitz arraroei garrantzia ematen die. \\
+        \addlinespace
+        TF       & Hitz maiztasuna soilik hartzen du kontuan. Informazio lokala mantentzen du baina hitz arruntak eta arraroak berdin tratatzen ditu. \\
+        \addlinespace
+        IDF      & Hitz arruntak penalizatzen ditu baina maiztasun lokala ezabatzen du. Informazio kuantitatiboa galtzen du. \\
+        \addlinespace
+        Bin BoW  & Balio binarioa, agertzen da edo ez da agertzen. Informazio kuantitatiboa guztiz galtzen du. \\
         \bottomrule
     \end{tabular}
     \label{tab:bektorizazio}
 \end{table}
+
+Emaitza teoriko eta esperimentalen analisian oinarrituta, \textbf{TF-IDF} metodoa aukeratu dugu azken pipelinean, honako arrazoiengatik:
+
+\begin{itemize}
+    \item Spam mezuek hitz espezifiko eta arraroak erabiltzen dituzte sistematikoki, eta IDF osagaiak horien garrantzia handiagotzen du corpus orokorrean gutxitan agertzen direlako.
+    \item TF osagaiak testuinguru lokala mantentzen du, spam mezuetan ohikoa den hitz errepikapena detektatuz.
+    
+    \item Aurrekarietan testu-sailkapenerako metodo estandarra da, batez ere datu desorekatuetan \cite{manning2008, salton1988}. Gure datu-sortan, klaseen arteko desoreka nabarmena dago (\%71 ham, \%29 spam).
+    
+    \item Gure esperimentazioan, TF-IDF metodoak emaitza oso sendoak lortu ditu:
+          \begin{itemize}
+              \item \textbf{5-fold Cross Validation:} Accuracy = 96,61\%, F-spam = 0,9415
+              \item \textbf{Repeated Hold-Out:} F-spam = 0,9450 $\pm$ 0,0078
+              \item Egonkortasun altua.
+          \end{itemize}
+\end{itemize}
+
+TF-IDF metodoak beste hirurak baino hobeto funtzionatzen duela iragarri dugu aurrekariengatik, eta gure emaitza esperimentalek ere honen alde egin dute. TF erabiltzeak hitz komunei garrantzi gehiegi ematen die, IDF-k maiztasun lokala ezabatzen du, eta Binary BoW-k informazio kuantitatiboa galtzen du. TF-IDF da, beraz, abantaila denak hartzen dituen metodoa.
 
 
 \subsection{StringToWordVector parametroak}
@@ -270,9 +294,9 @@ Metrika: \textbf{F-Measure (spam)}.
 
 \subsection{Atributuen hautapena}
 
-\texttt{AttributeSelection} filtro bat aplikatu da \texttt{InfoGainAttributeEval}
-ebaluatzailearekin eta \texttt{Ranker} bilatzailearekin. Informazio-irabaziak
-spam klasearekiko erlazionatuen dauden atributuak aukeratzen ditu.
+\texttt{AttributeSelection} filtroa aplikatu da \texttt{InfoGainAttributeEval} ebaluatzailearekin eta \texttt{Ranker} bilatzailearekin. Informazio-irabaziak spam klasearekiko erlazionatuen dauden atributuak lehenesten ditu, eta horien artean garrantzitsuenak hautatzen dira.
+
+Hasierako konfigurazioan, \texttt{WordsToKeep=25.000} balioa ezartzen da, gehienezko hiztegiaren zabala bermatzeko. Hala ere, dimentsio handiko adierazpen horrek kostu konputazional handia dakar, eta horregatik, atributu-hautaketaren eragina aztertzeko esperimentuak atributu-kopuru murriztuagoekin egin dira.
 
 \textbf{Hautaketaren eragina:}
 
@@ -283,16 +307,16 @@ spam klasearekiko erlazionatuen dauden atributuak aukeratzen ditu.
         \toprule
         \textbf{Konfigurazioa} & \textbf{Atributu kopurua} & \textbf{F-spam} \\
         \midrule
-        Hautaketa gabe (WordsToKeep=25.000) & 25.000 & -- \\
-        Hautaketarekin (Ranker=1.000)       & 1.000  & -- \\
+        Hasierako bektorizazioa (WordsToKeep=25.000) & $\leq$25.000 & -- \\
+        Hautaketarekin (Ranker=1.000)             & 1.000        & 0,9415 \\
         \bottomrule
     \end{tabular}
     \label{tab:hautaketa}
 \end{table}
 
+Emaitzek erakusten dute atributu kopurua nabarmen murriztuta ere (25.000etik 1.000ra), errendimendua altua mantentzen dela, eta horrek adierazten du informazio gehiena atributu gutxiagoetan kontzentratuta dagoela.
 
 Amaierako hiztegi-tamaina: \textbf{1.001 atributu} (1.000 numeriko + 1 klase).
-500 baino handiagoa den baldintza betetzen da.
 
 \subsection{Test-blind prozesua}
 
@@ -1044,13 +1068,18 @@ Hall, M., Frank, E., Holmes, G., Pfahringer, B., Reutemann, P., \& Witten, I. H.
 The WEKA data mining software: An update.
 \textit{ACM SIGKDD Explorations Newsletter}, 11(1), 10--18.
 
-\bibitem{manning}
-Manning, C. D., Raghavan, P., \& Sch\"utze, H. (2008).
-\textit{Introduction to Information Retrieval}. Cambridge University Press.
-
 \bibitem{hastie}
 Hastie, T., Tibshirani, R., \& Friedman, J. (2009).
 \textit{The Elements of Statistical Learning}. Springer.
+
+\bibitem{manning2008}
+Manning, C. D., Raghavan, P., \& Sch\"utze, H. (2008).
+\textit{Introduction to Information Retrieval}. Cambridge University Press.
+
+\bibitem{salton1988}
+Salton, G., \& Buckley, C. (1988).
+Term-weighting approaches in automatic text retrieval.
+\textit{Information Processing \& Management}, 24(5), 513--523.
 
 \bibitem{alpaydin2010}
 Alpaydin, E. (2010).
@@ -1059,10 +1088,6 @@ Alpaydin, E. (2010).
 \bibitem{wekamanual2011}
 Bouckaert, R. R., Frank, E., Hall, M., Kirkby, R., Reutemann, P., Seewald, A., \& Scuse, D. (2011).
 \textit{WEKA Manual for Version 3-6-6}. University of Waikato, Hamilton, New Zealand.
-
-\end{thebibliography}
-
-
 
 \end{thebibliography}
 
