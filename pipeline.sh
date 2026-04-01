@@ -14,7 +14,6 @@ cd /home/ibai/Dokumentuak/Testu-Sailkatzailea
 # ----------------------------------------------------------
 # KONFIGURAZIO DEFINITIBOA
 # Ablation study-aren ondoren aukeratutako parametroak:
-#   - TextNormalizer: desaktibatua (ez du hobetzen)
 #   - digitsAsDelim:  false (Enron token informatiboak babesten)
 #   - minTermFreq:    1 (jokabide originala)
 #   - useThreshold:   false (numToSelect finkoa)

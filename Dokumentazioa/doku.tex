@@ -124,12 +124,9 @@ Aipatzekoa da taldekide guztiok parte hartu dugula, neurri handiagoan edo txikia
 
 \subsection{Datu gordinak}
 
-Erabilitako datu-multzoa Enron-Spam corpusa da. Bi klasetan banatutako
-mezu elektronikoz osatuta dago: \textbf{spam} (nahi ez dena) eta \textbf{ham} (legitimo).
+Erabilitako datu-multzoa Enron-Spam corpusa da. Bi klasetan banatutako mezu elektronikoz osatuta dago: \textbf{spam} (nahi ez dena) eta \textbf{ham} (legitimo).
 
-Spam mezuak sustapen komertzialen, iruzurren eta premium zerbitzuen ingurukoak dira,
-hizkera limurtzailea, maiuskulak, presazko estiloa eta estekak erabiliz
-(adib.: \textit{``Free prize! Call now to claim your \pounds 1000''}).
+Spam mezuak sustapen komertzialen, iruzurren eta premium zerbitzuen ingurukoak dira, hizkera limurtzailea, maiuskulak, presazko estiloa eta estekak erabiliz (adib.: \textit{``Free prize! Call now to claim your \pounds 1000''}).
 
 Ham mezuak eguneroko komunikazio pertsonalak dira, hizkera informala,
 laburdurak eta emotikonoak erabiliz (adib.: \textit{``Hey, what are you doing?''}).
@@ -178,18 +175,8 @@ partiketa guztietan. Partiketa \textbf{\%80/\%10/\%10} egin da:
 
 Sailkapen-eredu bat entrenatu aurretik, ezinbestekoa da datu gordinak (string formatukoak) garbitzea eta estandarizatzea. Posta elektronikoek (bereziki spam-ak) zarata handia izan ohi dute: HTML etiketak, estekak, karaktere bereziak eta informazio semantikorik gabeko hitzak. Atal honetan, aplikatutako garbiketa-prozesuak, horien helburua eta datuetan izandako eragin kuantitatiboa azaltzen dira.
 
-\subsection{Datu gordinen garbiketa: Zer egin da eta zertarako?}
-Lehenengo urratsean, gure \texttt{TextNormalizer.java} klaseak espresio erregularrak (Regex) erabiltzen ditu testu gordineko patroi espezifikoak ezagutu eta ordezkatzeko:
-
-\begin{itemize}
-    \item \textbf{URLak eta Estekak:} \textit{http://...} bezalako estekak \texttt{URL\_TOKEN} marka batekin ordezkatzen dira. Spam mezuetan oso ohikoa da estekak egotea, baina URL zehatzak berak ez du balio sailkapenerako, bere presentziak baizik.
-    \item \textbf{Helbide elektronikoak:} Posta helbideak \texttt{EMAIL\_TOKEN} gisa etiketatzen dira, datu pertsonalen zarata murriztuz eta ereduak patroi orokorra ikas dezan.
-    \item \textbf{HTML etiketak:} Etiketa guztiak ezabatzen dira, barruko testu garbia soilik mantenduz.
-\end{itemize}
-
-\subsubsection*{TextNormalizer.java: filtro pertsonalizatua}
-
-Datu gordinen aurreprozesamenduaren barruan, gure \texttt{TextNormalizer.java} klase propioa erabili dugu testuaren normalizazio fase bat aplikatzeko. Filtro hau Wekaren \texttt{SimpleStreamFilter} klasean oinarritzen da, eta \texttt{StringToWordVector} bektorizazioa aplikatu aurretik exekutatzen da.
+\subsection{TextNormalizer.java: filtro pertsonalizatua}
+Datu gordinen aurreprozesamenduan, gure \texttt{TextNormalizer.java} klase propioa erabili dugu testuaren normalizazio fase bat aplikatzeko. Filtro hau Wekaren \texttt{SimpleStreamFilter} klasean oinarritzen da, eta \texttt{StringToWordVector} bektorizazioa aplikatu aurretik exekutatzen da.
 
 Helburu nagusia testuaren zarata murriztea da, ereduak informazio garrantzitsuan zentratzeko. Horretarako, espresio erregularretan oinarritutako hainbat aldaketa aplikatzen dira, patroien orokortzea ahalbidetuz eta overfitting-a saihestuz.
 
@@ -244,7 +231,7 @@ Testu librea sailkatzean agertzen den arazo nagusietako bat dimentsionalitate al
     \caption{Aurreprozesamendu tekniken eragin kuantitatiboa dimentsionalitatean eta errendimenduan}
     \begin{tabular}{lcc}
         \toprule
-        \textbf{Konfigurazioa} & \textbf{Atributu kopurua (Hiztegia)} & \textbf{Spam F-Measure ($\mu \pm \sigma$)} \\
+        \textbf{Konfigurazioa} & \textbf{Atributu kopurua} & \textbf{Spam F-Measure ($\mu \pm \sigma$)} \\
         \midrule
         Garbiketa gabe (Raw text) & 33.863 + klasea & Konputazionalki astunegia \\
         \textbf{NLP Pipeline osoa} & \textbf{1.000 + klasea} & \textbf{0,9450} ($\pm \mathbf{0{,}0078}$) \\
@@ -263,8 +250,7 @@ Datuen arabera, garbiketa eta NLP iragazkiek (Stemmer eta Stopwords) \textbf{dim
 \section{Bektorizazioa}
 
 \subsection{Bektorizazio-metodo ezberdinak}
-Lau bektorizazio-metodo aztertu dira train multzoan, MLP sailkatzailearekin batera,
-egokiena aukeratzeko. Ebaluazio-eskemak: \textbf{5-fold CV} eta \textbf{Repeated Hold-Out}.
+Lau bektorizazio-metodo aztertu dira train multzoan, MLP sailkatzailearekin batera, egokiena aukeratzeko. Ebaluazio-eskemak: \textbf{5-fold CV} eta \textbf{Repeated Hold-Out}.
 Metrika: \textbf{F-Measure (spam)}.
 
 Esperimentazio hasierako probetan, TF-IDF metodoak gure konfigurazioan \textbf{F-spam = 0,9415} (5-fold CV) eta \textbf{0,9450 $\pm$ 0,0078} (Repeated Hold-Out) lortu zuen. Hala ere, arazoak izan ditugu StringToWordVector filtroaren parametrizazioan, metodo ezberdinen arteko diferentzia esperimentalak neurtzea zailduz.
@@ -442,23 +428,20 @@ Weka-ko \texttt{MultilayerPerceptron} klaseak honako parametro sentikorrak ditu:
         \textbf{Aztertutakoak} \\
         \midrule
         \texttt{learningRate} ($\eta$) & $(0, 1]$ &
-        Ikasketaren abiadura. Balio handiak ezegonkortasuna sor dezake;
-        txikiak konbergentzia moteltzen du &
-        0,001 / 0,003 / 0,005 / 0,010 \\
+        Ikasketaren abiadura. Balio handiak ezegonkortasuna sor dezake; txikiak konbergentzia moteltzen du &
+        0,003 / 0,005 / 0,010 \\
         \midrule
         \texttt{momentum} ($\alpha$) & $[0, 1)$ &
-        Aurreko eguneraketaren eragina. Minimum lokalak ekidin eta
-        konbergentzia azkartzen laguntzen du &
-        0,2 / 0,4 / 0,6 / 0,8 \\
+        Aurreko eguneraketaren eragina. Minimum lokalak ekidin eta konbergentzia azkartzen laguntzen du &
+        0,1 / 0,2 / 0,3 / 0,5 / 0,8 \\
         \midrule
         \texttt{hiddenLayers} & $\geq 1$ neurona &
-        Sarearen konplexutasuna. Gehiegi izateak overfitting ekar dezake;
-        gutxiegi, underfitting &
-        3 / 5 / 10 / 20 / 30 \\
+        Sarearen konplexutasuna. Gehiegi izateak overfitting ekar dezake; gutxiegi, underfitting. &
+        3 / 5 / 10 / 20 \\
         \midrule
-        \texttt{trainingTime} & $\geq 1$ &
-        Entrenamendu-iterazio kopurua (epokak). Gehiegi izateak overfitting &
-        100 / 200 / 300 \\
+        \texttt{epochs} & $\geq 1$ &
+        Entrenamendu-iterazio kopurua. Gehiegi izateak overfitting eragin dezake. &
+        200 / 300 / 500 \\
         \bottomrule
     \end{tabular}
     \label{tab:parametroak}
@@ -1021,20 +1004,11 @@ Helburuetan bi rol bereizten dira: datuen pre-prozesamendua eta ebaluazioa. Atal
     \caption{Datu-fluxu sinplea: sarrera, prozesuak eta irteerak.}
 \end{figure}
 
-Lehenik, sarrerako datuak (\texttt{EmailLoader} eta \texttt{DataSplit} bidez) kargatzen eta
-partiketan banatzen dira. Ondoren, \texttt{TextNormalizer} osagaiak testuak garbitzen ditu URLak, helbide elektronikoak eta HTML etiketak normalizatzeta \texttt{EmailVectorizer}
-osagaiak testu garbituak zenbakizko bektore bihurtzen ditu, TF-IDF, Stemming eta AttributeSelection teknikak erabiliz. \texttt{FilterSerializationHelper} osagaiak bektorizazio
-prozesua gordetzen du, test multzoarekin bateragarritasuna bermatzeko.
+Lehenik, sarrerako datuak (\texttt{EmailLoader} eta \texttt{DataSplit} bidez) kargatzen eta partiketan banatzen dira. Ondoren, \texttt{TextNormalizer} osagaiak testuak garbitzen ditu URLak, helbide elektronikoak eta HTML etiketak normalizatzeta \texttt{EmailVectorizer} osagaiak testu garbituak zenbakizko bektore bihurtzen ditu, TF-IDF, Stemming eta AttributeSelection teknikak erabiliz. \texttt{FilterSerializationHelper} osagaiak bektorizazio prozesua gordetzen du, test multzoarekin bateragarritasuna bermatzeko.
 
-Ondoren, \texttt{GetModel} osagaiak MLP sailkatzailearen parametro ekorketa egiten du
-train eta dev multzoak erabiliz, eta modelo optimoa \texttt{.model} formatuan gordetzen du.
-Ondoren, \texttt{Iragarri} osagaiak modelo hori kargatzen du eta testu berrien gainean
-iragarpenak egiten ditu.
+Ondoren, \texttt{GetModel} osagaiak MLP sailkatzailearen parametro ekorketa egiten du train eta dev multzoak erabiliz, eta modelo optimoa \texttt{.model} formatuan gordetzen du. Ondoren, \texttt{Iragarri} osagaiak modelo hori kargatzen du eta testu berrien gainean iragarpenak egiten ditu.
 
-Azkenik, \texttt{Evaluate} osagaiak modeloaren kalitatea neurtzen du accuracy, F-measure eta
-confusion matrix bezalako metrikak erabiliz, eta \texttt{ExperimentLogger} osagaiak prozesu
-guztien parametroak eta emaitzak automatikoki erregistratzen ditu. Emaitza guztiak \texttt{.txt}
-fitxategi batean gordetzen dira, txosten oso bat osatuz.
+Azkenik, \texttt{Evaluate} osagaiak modeloaren kalitatea neurtzen du accuracy, F-measure eta confusion matrix bezalako metrikak erabiliz, eta \texttt{ExperimentLogger} osagaiak prozesu guztien parametroak eta emaitzak automatikoki erregistratzen ditu, esperimentazio prozesua errazteko. Emaitza guztiak \texttt{.txt} fitxategi batean gordetzen dira, txosten oso bat osatuz.
 
 \subsection{Klase-diagrama}
 
