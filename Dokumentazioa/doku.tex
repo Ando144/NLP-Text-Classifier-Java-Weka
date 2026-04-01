@@ -218,7 +218,7 @@ Jarraian, normalizazioaren adibide sinple bat erakusten da:
 
 \begin{itemize}
 \item \textbf{Jatorrizko testua:} \\
-\texttt{"CLICK HERE!!! http://spam.com h e l l o user123@ehu.ikasle.eus \\
+\texttt{"CLICK HERE!!! http://spam.com h e l l o user123@ikasle.ehu.eus \\
 <div>Oferta!!!</div>"}
 
 \item \textbf{Normalizatutako testua:} \\
@@ -464,11 +464,30 @@ Weka-ko \texttt{MultilayerPerceptron} klaseak honako parametro sentikorrak ditu:
     \label{tab:parametroak}
 \end{table}
 
-\subsection{Parametroen optimizazioa (Fine-Tuning)}
+\subsection{Inplementazio praktikoa}
+Azken ereduaren konfigurazioa honakoa da:
 
-Atal honetan \textit{MultilayerPerceptron} ereduaren parametro optimoak bilatu dira, \textbf{F-Measure (spam)} maximizatzea helburu hartuta. Horretarako, hainbat esperimentu egin dira \texttt{train\_final.arff} eta \texttt{dev\_final.arff} datu-multzoekin.
+\begin{itemize}
+    \item LearningRate: 0,010
+    \item Momentum: 0,1
+    \item HiddenLayers: 3
+    \item Epochs: 500
+\end{itemize}
 
-Corpusaren garbiketa eta atributuen aukeraketarako hainbat konfigurazio aukera inplementatu ditugu, bost eredu nagusi aztertuz: \textbf{oinarrizko eredua} (1000 atributurekin), \textbf{2000 atributuko bektorea}, \textbf{500 atributuko bektorea}, \textbf{2-gram eredua} (Bigramak onartuz atributu gisa) eta \textbf{normalizatua} (\texttt{TextNormalizer.java} erabiltzen du, guk eskuz aukeratutako hainbat filtro jartzeko).
+Konfigurazio hau \textbf{normalizatutako ereduan} oinarritzen da, eta \textbf{F-spam = 0,9046} lortu du, errendimendu eta egonkortasun arteko oreka onena eskainiz.
+
+Parametro hauek ez dira ausazkoak, hainbat konfigurazio alternatiba alderatu ondoren hautatu ditugu. Seigarren eta zazpigarren ataletan modelo optimoaren bilaketaren xehetasun guztiak aztertuko ditugu.
+
+\newpage
+
+% =============================================
+% 6. FINE-TUNING
+% =============================================
+\section{Parametroen optimizazioa: Fine-Tuning}
+
+Atal honetan \textit{MultilayerPerceptron} ereduarentzat parametro optimoak bilatu dira, \textbf{F-Measure (spam)} maximizatzea helburu hartuta. Horretarako, hainbat esperimentu egin dira \texttt{train\_final.arff} eta \texttt{dev\_final.arff} datu-multzoekin.
+
+Corpusaren garbiketa eta atributuen aukeraketarako hainbat konfigurazio aukera inplementatu ditugu, bost eredu nagusi aztertuz: \textbf{oinarrizko eredua} (1000 atributurekin), \textbf{2000 atributuko bektorea}, \textbf{500 atributuko bektorea}, \textbf{2-gram eredua} (Bigramak onartuz atributu gisa) eta \textbf{normalizatua} (\texttt{TextNormalizer.java} erabiltzen du guk eskuz aukeratutako hainbat filtro jartzeko, testuaren zarata murriztuz eta patroien orokortzea hobetuz).
 
 \subsubsection*{Oinarrizko eredua}
 Azken konfigurazioan (aurreprozesamendu osoarekin), parametro optimoak honakoak izan dira:
@@ -544,12 +563,10 @@ Normalizatua & 0,010 & 0,3 & 3 & 500 & 0,9530 & 50,71 \\
 }
 \end{table}
 
-
-
 \subsubsection*{Ondorioak}
 Lortutako emaitzak alderatuta, \textbf{2-gram eredua} da errendimendurik onena eskaintzen duena, bai zehaztasunean (F-spam altuena), bai entrenamendu denboran.
 
-Hala ere, parametro optimoekin sortutako ereduei \texttt{Evaluate.java} klasearen ebaluaketa egiterakoan, nabaria da \texttt{TestModel.java} klasearen ebaluaketa ez dela nahikoa, eta \textbf{5-fold Cross Validation} eta \textbf{5 Repeated Stratified Hold-Out} bezalako prozesuak erabiltzerakoan emaitza desberdinak lortu ditzazkegula. Hurrengo atalean emaitza horiek aztertuko ditugu.
+Hala ere, parametro optimoekin sortutako ereduei \texttt{Evaluate.java} klasearen ebaluaketa egiterakoan, nabaria da \texttt{TestModel.java} klasearen ebaluaketa ez dela nahikoa, eta \textbf{5-fold Cross Validation} eta \textbf{5 Repeated Stratified Hold-Out} bezalako prozesuak erabiltzerakoan emaitza desberdinak lortu ditzazkegula. Zazpigarren atalean emaitza horiek aztertuko ditugu.
 \newpage
 
 \subsection{Emaitza esperimentalen adierazpen grafikoa: aztertutako parametroak eta horietarako metrikak}
@@ -672,7 +689,7 @@ coordinates {
 \end{figure}
 \newpage
 % =============================================
-% 6. KALITATE ESTIMATUA
+% 7. KALITATE ESTIMATUA
 % =============================================
 \section{Aurreikusitako kalitate estimatua}
 
@@ -733,7 +750,7 @@ Hala ere, Repeated Hold-Out ebaluazioak argi erakusten du Normalizatutako eredua
     \item WAvg F-Measure: $\pm 0{,}0039$
 \end{itemize}
 
-Desbideratze txiki hauek bermatzen dute ereduak ez duela gehiegizko doikuntzarik (overfitting) eta portaera sendoa eta errepikagarria izango duela datu berrien aurrean. Hori dela eta, zehaztasun maximoa gutxigatik sakrifikatu dugu egonkortasun handiagoaren truke.
+Desbideratze txiki hauek bermatzen dute ereduak ez duela gehiegizko doikuntzarik (overfitting) eta portaera sendoa eta errepikagarria izango duela datu berrien aurrean. Hori dela eta, zehaztasun maximoa gutxigatik sakrifikatu dugu, bariantza murriztu eta orokortze-gaitasun handiagoa lortzeko.
 
 \subsection{Filtro konbinaketak}
 
@@ -833,7 +850,7 @@ Emaitzek erakusten dute aukeratutako ereduak portaera sendoa duela bi klaseetan,
 
 \newpage
 % =============================================
-% 7. IRAGARPENAK -- ERABILTZAILE PAKETEA
+% 8. IRAGARPENAK -- ERABILTZAILE PAKETEA
 % =============================================
 \section{Erabiltzailearen paketea}
 
@@ -990,7 +1007,7 @@ Emaitza hauek benetako erabilera-baldintzetan espero daitekeen errendimendua isl
 
 \newpage
 % =============================================
-% 8. SOFTWARE DISEINUA
+% 9. SOFTWARE DISEINUA
 % =============================================
 \section{Diseinua}
 
@@ -1067,7 +1084,7 @@ Datuak sarreratik irteerara prozesu hauen bidez pasatzen dira:
 Horrela, datuen fluxua eta prozesu nagusiak modu grafiko eta testualean dokumentatzen dira, sarrera eta irteera formatuak argi adieraziz.
 
 % =============================================
-% X. ADIMEN ARTIFIZIALAREN ERABILERA
+% 10. ADIMEN ARTIFIZIALAREN ERABILERA
 % =============================================
 \newpage
 \section{Adimen Artifizialaren erabilera}
