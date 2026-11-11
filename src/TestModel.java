@@ -9,133 +9,137 @@ import java.io.File;
 import java.io.FileWriter;
 
 /**
- * Entrenatutako eredu baten azken ebaluazioa egiten duen klasea,
- * test datu-multzo independente baten gainean (blind test).
+ * Performs the final evaluation of a trained model
+ * on an independent test dataset (blind test).
  *
- * 
- * Klase honek aurrez entrenatutako sailkatzaile bat kargatzen du
- * eta inoiz ikusi ez dituen datuen gainean ebaluatzen du,
- * ereduaren benetako generalizazio gaitasuna neurtzeko.
- * 
  *
- * 
- * Ebaluazio honek ez du inolako parametro doikuntzarik egiten,
- * eta horregatik da fidagarriena.
- * 
+ * This class loads a previously trained classifier
+ * and evaluates it on data it has never seen,
+ * to measure the real generalization ability of the model.
+ *
+ *
+ *
+ * This evaluation does not tune any parameter,
+ * and that is why it is the most reliable one.
+ *
  *
  * @version 1.0
  */
 public class TestModel {
     /**
-     * Programaren sarrera-puntua.
+     * Program entry point.
      *
-     * 
-     * Metodo honek:
+     *
+     * This method:
      * <ul>
-     * <li>Test datuak kargatzen ditu</li>
-     * <li>Aurrez entrenatutako eredua kargatzen du</li>
-     * <li>Eredua ebaluatzen du datu ezezagunetan</li>
-     * <li>Metrika nagusiak kalkulatzen ditu (Accuracy, F-Measure, etab.)</li>
-     * <li>Emaitzak pantailan erakutsi eta fitxategian gordetzen ditu</li>
+     * <li>Loads the test data</li>
+     * <li>Loads the previously trained model</li>
+     * <li>Evaluates the model on unseen data</li>
+     * <li>Computes the main metrics (Accuracy, F-Measure, etc.)</li>
+     * <li>Shows the results on screen and saves them to a file</li>
      * </ul>
-     * 
      *
-     * @param args Argumentuak:
-     *             {@code <test_final.arff> <eredua.model> <emaitzak.txt> }
+     *
+     * @param args Arguments:
+     *             {@code <test_final.arff> <model.model> <results.txt> }
      */
     public static void main(String[] args) {
         try {
             if (args.length > 3) {
                 System.err.println(
-                        "Erabilera: java -cp \"lib/weka.jar:bin\" TestModel <test_final.arff> <eredua.model> <emaitzak.txt>");
+                        "Usage: java -cp \"lib/weka.jar:bin\" TestModel <test_final.arff> <model.model> <results.txt>");
                 return;
             }
 
-            // Balio lehenetsiak
-            String testPath = args.length >= 1 ? args[0] : "Partiketak/test_final.arff";
-            String modelPath = args.length >= 2 ? args[1] : "modelo/mlp.model";
-            String resultsPath = args.length == 3 ? args[2] : "emaitzak/test_emaitzak.txt";
+            // Default values
+            String testPath = args.length >= 1 ? args[0] : "data/splits/test_final.arff";
+            String modelPath = args.length >= 2 ? args[1] : "model/mlp.model";
+            String resultsPath = args.length == 3 ? args[2] : "results/test_results.txt";
 
             System.out.println("==================================================");
-            System.out.println("EBALUAZIO ITSUAREN KONFIGURAZIOA (Blind Test):");
-            System.out.println("Test fitxategia : " + testPath);
-            System.out.println("Eredua (.model) : " + modelPath);
-            System.out.println("Emaitzak (.txt) : " + resultsPath);
+            System.out.println("BLIND EVALUATION CONFIGURATION (Blind Test):");
+            System.out.println("Test file       : " + testPath);
+            System.out.println("Model (.model)  : " + modelPath);
+            System.out.println("Results (.txt)  : " + resultsPath);
             System.out.println("==================================================\n");
 
             if (!new File(testPath).exists() || !new File(modelPath).exists()) {
-                System.err.println("ERROREA: Fitxategiren bat ez da existitzen.");
+                System.err.println("ERROR: One of the files does not exist.");
                 return;
             }
 
-            // Datuak eta eredua kargatu
+            // Load the data and the model
             Instances test = new DataSource(testPath).getDataSet();
             EmailLoader.ensureClassIndex(test);
 
-            Classifier eredua = (Classifier) SerializationHelper.read(modelPath);
+            Classifier model = (Classifier) SerializationHelper.read(modelPath);
 
-            // Ebaluaketa
-            System.out.println("Eredua ebaluatzen datu ezezagunekin...\n");
+            // Evaluation
+            System.out.println("Evaluating the model on unseen data...\n");
             Evaluation eval = new Evaluation(test);
-            eval.evaluateModel(eredua, test);
+            eval.evaluateModel(model, test);
 
-            // Emaitzak prestatu
+            // Prepare the results
             int spamIndex = test.classAttribute().indexOfValue("SPAM");
             if (spamIndex == -1)
                 spamIndex = test.classAttribute().indexOfValue("spam");
 
-            StringBuilder emaitzaOsoa = new StringBuilder();
-            emaitzaOsoa.append("==================================================\n");
-            emaitzaOsoa.append("               EBALUAZIOAREN EMAITZAK                  \n");
-            emaitzaOsoa.append("==================================================\n\n");
+            StringBuilder fullReport = new StringBuilder();
+            fullReport.append("==================================================\n");
+            fullReport.append("               EVALUATION RESULTS                  \n");
+            fullReport.append("==================================================\n\n");
 
-            emaitzaOsoa.append("--- METRIKA OROKORRAK ---\n");
-            emaitzaOsoa.append(String.format("Zuzenen Ehunekoa (Accuracy) : %.2f%%\n", eval.pctCorrect()));
-            emaitzaOsoa.append(String.format("F-Measure Haztatua (WAvg)   : %.4f\n\n", eval.weightedFMeasure()));
+            fullReport.append("--- OVERALL METRICS ---\n");
+            fullReport.append(String.format("Correct Percentage (Accuracy): %.2f%%\n", eval.pctCorrect()));
+            fullReport.append(String.format("Weighted F-Measure (WAvg)   : %.4f\n\n", eval.weightedFMeasure()));
 
             if (spamIndex != -1) {
-                emaitzaOsoa.append("--- SPAM KLASEAREN METRIKAK ---\n");
-                emaitzaOsoa.append(String.format("Zehaztasuna (Precision) : %.4f\n", eval.precision(spamIndex)));
-                emaitzaOsoa.append(String.format("Estaldura (Recall)      : %.4f\n", eval.recall(spamIndex)));
-                emaitzaOsoa.append(String.format("F-Measure               : %.4f\n\n", eval.fMeasure(spamIndex)));
+                fullReport.append("--- SPAM CLASS METRICS ---\n");
+                fullReport.append(String.format("Precision               : %.4f\n", eval.precision(spamIndex)));
+                fullReport.append(String.format("Recall                  : %.4f\n", eval.recall(spamIndex)));
+                fullReport.append(String.format("F-Measure               : %.4f\n\n", eval.fMeasure(spamIndex)));
             }
 
-            emaitzaOsoa.append(eval.toMatrixString("--- NAHASTE MATRIZEA (Confusion Matrix) ---"));
-            emaitzaOsoa.append("\n==================================================");
+            fullReport.append(eval.toMatrixString("--- CONFUSION MATRIX ---"));
+            fullReport.append("\n==================================================");
 
-            System.out.println(emaitzaOsoa.toString());
+            System.out.println(fullReport.toString());
 
-            // Fitxategia gorde
+            // Save the file
             File resultsFile = new File(resultsPath);
             if (resultsFile.getParentFile() != null) {
                 resultsFile.getParentFile().mkdirs();
             }
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(resultsFile))) {
-                writer.write(emaitzaOsoa.toString());
+                writer.write(fullReport.toString());
             }
 
-            // Iragarpenen erregistroa gorde
-            String predFilePath = resultsPath.replace(".txt", "_iragarpenak.txt");
+            // Save the log of predictions
+            // Fix C4: only replace the ".txt" suffix; if there is no suffix, append one
+            // (before, a path without ".txt" made this file overwrite the report)
+            String predFilePath = resultsPath.endsWith(".txt")
+                    ? resultsPath.substring(0, resultsPath.length() - ".txt".length()) + "_predictions.txt"
+                    : resultsPath + "_predictions.txt";
             try (BufferedWriter predWriter = new BufferedWriter(new FileWriter(predFilePath))) {
                 for (int i = 0; i < test.numInstances(); i++) {
                     double realClassIdx = test.instance(i).classValue();
                     String realClass = test.classAttribute().value((int) realClassIdx);
-                    double predClassIdx = eredua.classifyInstance(test.instance(i));
+                    double predClassIdx = model.classifyInstance(test.instance(i));
                     String predClass = test.classAttribute().value((int) predClassIdx);
-                    String linea = String.format("%3d. instantzia:\tKlase erreala: %-8s Iragarritako klasea: %-8s\n",
+                    String line = String.format("%3d. instance:\tReal class: %-8s Predicted class: %-8s\n",
                         (i + 1), realClass, predClass);
-                    predWriter.write(linea);
+                    predWriter.write(line);
                 }
             }
 
-            // Experiment Tracking (Aukerakoa)
-            ExperimentLogger.log("4. Ebaluazio Itsua (TestModel)", "Eredua: " + modelPath,
-                    "\n" + emaitzaOsoa.toString());
+            // Experiment tracking (optional)
+            ExperimentLogger.log("4. Blind Evaluation (TestModel)", "Model: " + modelPath,
+                    "\n" + fullReport.toString());
 
-            System.out.println("\nARRAKASTA! Emaitzen txosten zehatza hemen gorde da: " + resultsPath);
+            System.out.println("\nSUCCESS! The detailed results report was saved here: " + resultsPath);
 
         } catch (Exception e) {
-            System.err.println("Errore kritikoa ebaluazioa burutzean.");
+            System.err.println("Critical error while running the evaluation.");
             e.printStackTrace();
         }
     }

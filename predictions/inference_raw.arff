@@ -1,0 +1,18 @@
+@relation inference_emails
+
+@attribute text string
+@attribute @@class@@ {ham,spam}
+
+@data
+'Subject: meeting follow up notes\r\ntuesday 04 / 12 / 01 - spoke with mark regarding the pipeline adjustments .\r\nhe mentioned that the volumes at meter 8821 may need revision before friday .\r\ni checked the system and the current nomination is still at 13 , 200 .\r\nwill update once confirmation is received from scheduling .',?
+'Subject: re : daily flow numbers\r\njust checked with operations and they confirmed the flow at 15 , 750 for\r\nyesterday .\r\nnumbers look consistent with what we expected .\r\nlet me know if you need anything else .',?
+'Subject: earn cash fast from home !\r\nstart making up to $ 5000 weekly without experience !\r\nno hidden fees , no risk involved .\r\nlimited time offer - sign up today and change your life !',?
+'Subject: cheap meds available now\r\nbuy your prescriptions online at discounted prices .\r\nno doctor visit required and fast delivery guaranteed .\r\nclick below for more details .',?
+'Subject: actualizacion de volumenes\r\nmiercoles 05 / 03 / 02 - revisamos los datos del sistema y parece que el\r\nmedidor 5532 esta reportando por debajo de lo esperado .\r\nactualmente tenemos 8 , 900 pero deberia estar cerca de 10 , 000 .\r\nvoy a hablar con control para verificarlo .',?
+'Subject: re : confirmacion de envio\r\nhe hablado con logistica y confirman que el envio salio esta mañana .\r\nla entrega estimada sigue siendo para el viernes .\r\navisa si necesitas seguimiento adicional .',?
+'Subject: gana dinero desde casa !\r\ntrabaja solo unas horas al dia y genera ingresos garantizados .\r\nsin experiencia necesaria y pagos semanales .\r\nempieza hoy mismo !',?
+'Subject: oferta exclusiva en creditos\r\nnecesitas dinero rapido ?\r\naprobacion inmediata y sin papeleo complicado .\r\nsolicita ahora y recibe el dinero en 24 horas .',?
+'Subject: bolumenen eguneraketa\r\nastelehena 06 / 10 / 03 - sisteman begiratu dut eta 7712 neurgailuak\r\nbalio baxuagoak erakusten ditu gaur .\r\norain 12 , 300 daukagu baina espero genuena handiagoa zen .\r\nkontrolarekin hitz egingo dut baieztatzeko .',?
+'Subject: re : bidalketaren egoera\r\ngarraioarekin hitz egin dut eta bidalketa atzo atera zela baieztatu dute .\r\naurreikusitako entrega data mantentzen da .\r\nesan behar baduzu zerbait gehiago .',?
+'Subject: dirua azkar irabazi !\r\netxetik lan eginez astean milaka euro irabazi ditzakezu .\r\nez da esperientziarik behar eta erraza da hasteko .\r\neman izena gaur bertan !',?
+'Subject: mailegu azkarrak hemen\r\ndirua behar duzu berehala ?\r\nonarpenera azkarra eta baldintza errazak .\r\neskatu orain eta jaso dirua berehala .',?

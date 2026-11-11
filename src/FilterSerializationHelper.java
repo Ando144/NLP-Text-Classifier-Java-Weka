@@ -2,41 +2,41 @@ import weka.filters.Filter;
 import java.io.*;
 
 /**
- * Klase laguntzailea Weka filtroak serializatu (gorde) eta
- * deserializatzeko (kargatzeko).
+ * Helper class to serialize (save) and deserialize (load)
+ * Weka filters.
  *
- * 
- * Machine learning pipeline batean, entrenamenduan erabilitako
- * filtroak (adibidez: bektorizazioa edo atributu-aukeraketa)
- * gordetzea beharrezkoa da, inferentzian datu berriei transformazio
- * berdinak aplikatzeko.
- * 
  *
- * 
- * Klase honek {@link weka.filters.Filter} objektuak fitxategi
- * batean gordetzeko eta gero berriro kargatzeko aukera ematen du.
- * 
+ * In a machine learning pipeline, the filters used during training
+ * (for example: vectorization or attribute selection) must be
+ * saved, so that the same transformations can be applied to new
+ * data at inference time.
  *
- * 
- * Serializazioa Java-ko {@code ObjectOutputStream} eta
- * {@code ObjectInputStream} erabiliz egiten da.
- * 
+ *
+ *
+ * This class makes it possible to save {@link weka.filters.Filter}
+ * objects to a file and load them again later.
+ *
+ *
+ *
+ * Serialization is done with Java's {@code ObjectOutputStream} and
+ * {@code ObjectInputStream}.
+ *
  *
  * @version 1.0
  */
 public class FilterSerializationHelper {
 
     /**
-     * Weka filtro bat fitxategi batean gordetzen du (serializazioa).
+     * Saves a Weka filter to a file (serialization).
      *
      * <p>
-     * Metodo honek filtroaren egoera osoa gordetzen du, geroago
-     * berrerabili ahal izateko inferentzia fasean.
+     * This method saves the complete state of the filter, so it can be
+     * reused later in the inference phase.
      * </p>
      *
-     * @param filter   Gorde nahi den filtroa
-     * @param filepath Irteerako fitxategiaren bidea
-     * @throws IOException Idaztean errorea gertatzen bada
+     * @param filter   Filter to save
+     * @param filepath Path of the output file
+     * @throws IOException If an error happens while writing
      */
     public static void saveFilter(Filter filter, String filepath) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filepath))) {
@@ -45,17 +45,17 @@ public class FilterSerializationHelper {
     }
 
     /**
-     * Fitxategi batetik Weka filtro bat kargatzen du (deserializazioa).
+     * Loads a Weka filter from a file (deserialization).
      *
      * <p>
-     * Kargatutako filtroa entrenamenduan erabilitako bera da,
-     * eta datu berriei transformazio berdinak aplikatzeko erabiltzen da.
+     * The loaded filter is the same one used during training,
+     * and it is used to apply the same transformations to new data.
      * </p>
      *
-     * @param filepath Kargatu nahi den fitxategiaren bidea
-     * @return Kargatutako filtroa
-     * @throws IOException            Irakurtzean errorea gertatzen bada
-     * @throws ClassNotFoundException Klasea ezin bada aurkitu
+     * @param filepath Path of the file to load
+     * @return The loaded filter
+     * @throws IOException            If an error happens while reading
+     * @throws ClassNotFoundException If the class cannot be found
      */
     public static Filter loadFilter(String filepath) throws IOException, ClassNotFoundException {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filepath))) {

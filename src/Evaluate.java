@@ -11,82 +11,83 @@ import java.io.FileWriter;
 import java.util.Random;
 
 /**
- * Klase honek sailkatzaile baten kalitatea ebaluatzen du,
- * bi metodologia erabiliz: Cross Validation eta Hold-Out.
+ * Evaluates the quality of a classifier
+ * with two methods: Cross Validation and Hold-Out.
  *
- * 
- * Ebaluazioa egiteko, train eta dev dataset-ak bateratzen dira,
- * eta ondoren bi estrategia aplikatzen dira:
- * 
+ *
+ * For the evaluation, the train and dev datasets are merged,
+ * and then two strategies are applied:
+ *
  *
  * <ul>
  * <li><b>5-fold Cross Validation:</b>
  * <ul>
- * <li>Datuak 5 zatitan banatzen dira</li>
- * <li>Iterazio bakoitzean 4 train + 1 test erabiltzen da</li>
- * <li>Errorearen estimazio sendoa ematen du</li>
+ * <li>The data is split into 5 parts</li>
+ * <li>In each iteration, 4 parts are used for training + 1 for testing</li>
+ * <li>Gives a robust estimate of the error</li>
  * </ul>
  * </li>
- * <li><b>Repeated Stratified Hold-Out (70/30):</b>
+ * <li><b>Repeated Random Hold-Out (70/30):</b>
  * <ul>
- * <li>Datuak %70 train eta %30 test moduan banatzen dira</li>
- * <li>Prozesua hainbat aldiz errepikatzen da</li>
- * <li>Batezbestekoa eta desbideratze estandarra kalkulatzen dira</li>
+ * <li>A random 70% of the data (without replacement) is used for training
+ * and the other 30% for testing; the class is not used to draw the sample</li>
+ * <li>The process is repeated several times</li>
+ * <li>The mean and the standard deviation are computed</li>
  * </ul>
  * </li>
  * </ul>
  *
- * 
- * Ebaluazioan kalkulatutako metrikak:
- * 
+ *
+ * Metrics computed in the evaluation:
+ *
  * <ul>
  * <li>Accuracy</li>
  * <li>Precision</li>
  * <li>Recall</li>
- * <li>F-Measure (spam eta legitimoa)</li>
+ * <li>F-Measure (spam and legitimate)</li>
  * <li>Weighted average</li>
  * </ul>
  *
- * 
- * Erabilitako eredua sare neuronal bat da (MultilayerPerceptron),
- * parametro konfigurableekin.
- * 
  *
- * 
- * Emaitzak fitxategi batean gordetzen dira eta esperimentuen
- * erregistroan ere jasotzen dira.
- * 
+ * The model used is a neural network (MultilayerPerceptron),
+ * with configurable parameters.
+ *
+ *
+ *
+ * The results are saved to a file and are also recorded in the
+ * experiment log.
+ *
  *
  * @version 1.0
  */
 public class Evaluate {
     /**
-     * Programa exekutatzen duen metodo nagusia, sailkatzailearen
-     * ebaluazio osoa egiten duena.
+     * Main method: runs the complete evaluation of the
+     * classifier.
      *
      * <p>
-     * Train eta dev dataset-ak bateratzen dira eta ondoren
-     * bi ebaluazio-metodo aplikatzen dira: Cross Validation eta
+     * The train and dev datasets are merged and then
+     * two evaluation methods are applied: Cross Validation and
      * Repeated Hold-Out.
      * </p>
      *
-     * @param args Komando lerroko argumentuak:
+     * @param args Command-line arguments:
      *             <ul>
-     *             <li>args[0] - train_final.arff fitxategia</li>
-     *             <li>args[1] - dev_final.arff fitxategia</li>
-     *             <li>args[2] - emaitzak gordetzeko fitxategia</li>
+     *             <li>args[0] - train_final.arff file</li>
+     *             <li>args[1] - dev_final.arff file</li>
+     *             <li>args[2] - file where the results are saved</li>
      *             <li>args[3] - learning rate</li>
      *             <li>args[4] - momentum</li>
-     *             <li>args[5] - hidden layers konfigurazioa</li>
-     *             <li>args[6] - epoch kopurua</li>
+     *             <li>args[5] - hidden layers configuration</li>
+     *             <li>args[6] - number of epochs</li>
      *             </ul>
      *
-     * @throws Exception Exekuzioan errore bat gertatzen bada
+     * @throws Exception If an error happens during the run
      */
     public static void main(String[] args) throws Exception {
         if (args.length < 7) {
             System.out.println(
-                    "Erabilera: java -cp \"lib\\weka.jar;bin\" Evaluate <train_final.arff> <dev_final.arff> <emaitzak.txt> <learning_rate> <momentum> <hidden_layers> <epochs>");
+                    "Usage: java -cp \"lib\\weka.jar;bin\" Evaluate <train_final.arff> <dev_final.arff> <results.txt> <learning_rate> <momentum> <hidden_layers> <epochs>");
             return;
         }
 
@@ -99,7 +100,7 @@ public class Evaluate {
         String hiddenLayers = args[5];
         int epochs = Integer.parseInt(args[6]);
 
-        // Train eta dev dataset-ak bateratzen dira ebaluazio sendoagoa egiteko
+        // The train and dev datasets are merged for a more robust evaluation
         Instances train = new DataSource(trainPath).getDataSet();
         Instances dev = new DataSource(devPath).getDataSet();
 
@@ -112,80 +113,69 @@ public class Evaluate {
         }
         EmailLoader.ensureClassIndex(allData);
 
-        System.out.println("Train+Dev: " + allData.numInstances() + " instanzia");
-        System.out.println("Parametro optimoak: LR=" + learningRate + " Mom=" + momentum
+        System.out.println("Train+Dev: " + allData.numInstances() + " instances");
+        System.out.println("Optimal parameters: LR=" + learningRate + " Mom=" + momentum
                 + " Hidden=" + hiddenLayers + " Epochs=" + epochs);
 
         int spamIndex = allData.classAttribute().indexOfValue("spam");
         if (spamIndex == -1)
             spamIndex = allData.classAttribute().indexOfValue("SPAM");
 
-        new File(resultsPath).getParentFile().mkdirs();
+        // Fix C5: a path without a folder (e.g. "quality.txt") has no parent
+        File resultsParent = new File(resultsPath).getParentFile();
+        if (resultsParent != null) {
+            resultsParent.mkdirs();
+        }
         BufferedWriter writer = new BufferedWriter(new FileWriter(resultsPath));
 
         writer.write("==================================================\n");
-        writer.write("      AURREIKUSITAKO KALITATE TXOSTENA            \n");
+        writer.write("      ESTIMATED QUALITY REPORT                    \n");
         writer.write("==================================================\n");
-        writer.write("Parametro optimoak:\n");
+        writer.write("Optimal parameters:\n");
         writer.write("  LearningRate : " + learningRate + "\n");
         writer.write("  Momentum     : " + momentum + "\n");
         writer.write("  HiddenLayers : " + hiddenLayers + "\n");
         writer.write("  Epochs       : " + epochs + "\n");
-        writer.write("  Train+Dev    : " + allData.numInstances() + " instanzia\n\n");
+        writer.write("  Train+Dev    : " + allData.numInstances() + " instances\n\n");
 
-        // 5-fold cross validation aplikatzen da, errorearen estimazio fidagarria
-        // lortzeko
+        // 5-fold cross validation is applied to get a reliable estimate
+        // of the error
         System.out.println("\n[1/2] 5-fold Cross Validation...");
 
-        /**
-         * Multilayer Perceptron sare neuronala sortu eta konfiguratzen du.
-         *
-         * @param learningRate Ikasketa tasa
-         * @param momentum     Momentum balioa
-         * @param hiddenLayers Geruza ezkutuen konfigurazioa
-         * @param epochs       Entrenamendu iterazio kopurua
-         * @return Konfiguratutako MultilayerPerceptron eredua
-         * @throws Exception Konfigurazioan errorea badago
-         */
         MultilayerPerceptron mlpCV = buildMLP(learningRate, momentum, hiddenLayers, epochs);
         Evaluation evalCV = new Evaluation(allData);
         evalCV.crossValidateModel(mlpCV, allData, 5, new Random(1));
 
-        /**
-         * Ebaluazioaren emaitzak testu formatuan bihurtzen ditu.
-         *
-         * @param eval      Evaluation objektua (Weka)
-         * @param spamIndex "spam" klasearen indizea
-         * @return Formateatutako emaitzen testua
-         * @throws Exception Errorea gertatzen bada
-         */
         writer.write("==================================================\n");
         writer.write("1. 5-FOLD CROSS VALIDATION\n");
         writer.write("==================================================\n");
         writer.write(formatResults(evalCV, spamIndex));
-        writer.write(evalCV.toMatrixString("Nahaste-matrizea:") + "\n\n");
+        writer.write(evalCV.toMatrixString("Confusion matrix:") + "\n\n");
 
         System.out.println("  5-fCV F-spam: " + String.format("%.4f", evalCV.fMeasure(spamIndex)));
 
-        // Stratified hold-out erabiliz, train/test banaketa errepikatzen da
-        System.out.println("[2/2] Repeated Stratified Hold-Out (5 errepikapen)...");
+        // Random hold-out: the train/test split is repeated with 5 different seeds
+        System.out.println("[2/2] Repeated Random Hold-Out (5 repetitions)...");
 
-        int repeticiones = 5;
-        double[] fSpam = new double[repeticiones];
-        double[] fHam = new double[repeticiones];
-        double[] fWAvg = new double[repeticiones];
-        double[] prSpam = new double[repeticiones];
-        double[] prHam = new double[repeticiones];
-        double[] reSpam = new double[repeticiones];
-        double[] reHam = new double[repeticiones];
+        int repetitions = 5;
+        double[] fSpam = new double[repetitions];
+        double[] fHam = new double[repetitions];
+        double[] fWAvg = new double[repetitions];
+        double[] prSpam = new double[repetitions];
+        double[] prHam = new double[repetitions];
+        double[] reSpam = new double[repetitions];
+        double[] reHam = new double[repetitions];
 
         writer.write("==================================================\n");
-        writer.write("2. 5 REPEATED STRATIFIED HOLD-OUT (70/30)\n");
+        writer.write("2. 5 REPEATED RANDOM HOLD-OUT (70/30)\n");
         writer.write("==================================================\n");
 
-        for (int k = 0; k < repeticiones; k++) {
-            System.out.println("  Iterazioa " + (k + 1) + "/" + repeticiones);
-            // Weka-ko Resample filtroa erabiltzen da banaketa estratifikatua egiteko
+        for (int k = 0; k < repetitions; k++) {
+            System.out.println("  Iteration " + (k + 1) + "/" + repetitions);
+            // Fix C3: Weka's unsupervised Resample filter draws a random 70% sample
+            // without replacement; it does not look at the class, so the split is
+            // random (not stratified). The same seed with invertSelection gives the
+            // complementary 30%.
             // Train 70%
             Resample rTrain = new Resample();
             rTrain.setRandomSeed(k + 1);
@@ -212,7 +202,7 @@ public class Evaluate {
             Evaluation evalIter = new Evaluation(iterTrain);
             evalIter.evaluateModel(mlpIter, iterDev);
 
-            // Precision, Recall eta F-Measure kalkulatzen dira klase bakoitzerako
+            // Precision, Recall and F-Measure are computed for each class
             fSpam[k] = evalIter.fMeasure(spamIndex);
             fHam[k] = evalIter.fMeasure(1 - spamIndex);
             fWAvg[k] = evalIter.weightedFMeasure();
@@ -221,18 +211,12 @@ public class Evaluate {
             reSpam[k] = evalIter.recall(spamIndex);
             reHam[k] = evalIter.recall(1 - spamIndex);
 
-            writer.write((k + 1) + ". iterazioa: F-spam=" + String.format("%.4f", fSpam[k])
+            writer.write((k + 1) + ". iteration: F-spam=" + String.format("%.4f", fSpam[k])
                     + " F-ham=" + String.format("%.4f", fHam[k])
                     + " WAvg-F=" + String.format("%.4f", fWAvg[k]) + "\n");
         }
 
-        /**
-         * Balio multzo baten batezbestekoa kalkulatzen du.
-         *
-         * @param arr Balioen array-a
-         * @return Batezbestekoa
-         */
-        writer.write("\n--- BATEZBESTEKOA +- DESBIDERATZE ESTANDARRA ---\n");
+        writer.write("\n--- MEAN +- STANDARD DEVIATION ---\n");
         writer.write(String.format("Spam  Precision : %.4f +- %.4f%n", mean(prSpam), stddev(prSpam)));
         writer.write(String.format("Spam  Recall    : %.4f +- %.4f%n", mean(reSpam), stddev(reSpam)));
         writer.write(String.format("Spam  F-Measure : %.4f +- %.4f%n", mean(fSpam), stddev(fSpam)));
@@ -243,23 +227,23 @@ public class Evaluate {
         writer.write("\n==================================================\n");
         writer.close();
 
-        System.out.println("\nEmaitzak gordeta: " + resultsPath);
+        System.out.println("\nResults saved: " + resultsPath);
         System.out.println("  Repeated HO F-spam: "
                 + String.format("%.4f", mean(fSpam)) + " +- " + String.format("%.4f", stddev(fSpam)));
 
-        // Experiment Tracking (Aukerakoa)
-        String parametrosLog = String.format(
-                "Datu-multzoa: Train+Dev bateratua (%d instantzia)\n" +
-                        "Sare Neuronalaren Ezarpenak: LR=%.3f | Mom=%.1f | Hidden=%s | Epochs=%d\n" +
-                        "Ebaluazio eskemak: 5-fold CV & 5 Repeated Stratified Hold-Out (70/30)",
+        // Experiment tracking (optional)
+        String paramsLog = String.format(
+                "Dataset: merged Train+Dev (%d instances)\n" +
+                        "Neural Network Settings: LR=%.3f | Mom=%.1f | Hidden=%s | Epochs=%d\n" +
+                        "Evaluation schemes: 5-fold CV & 5 Repeated Random Hold-Out (70/30)",
                 allData.numInstances(), learningRate, momentum, hiddenLayers, epochs);
 
-        String resultadosLog = String.format(
+        String resultsLog = String.format(
                 "[1] 5-FOLD CROSS VALIDATION:\n" +
                         "    Accuracy: %.2f%%\n" +
                         "    F-Spam  : %.4f\n" +
                         "    WAvg-F  : %.4f\n\n" +
-                        "[2] 5 REPEATED STRATIFIED HOLD-OUT (70/30):\n" +
+                        "[2] 5 REPEATED RANDOM HOLD-OUT (70/30):\n" +
                         "    Spam Precision : %.4f +- %.4f\n" +
                         "    Spam Recall    : %.4f +- %.4f\n" +
                         "    Spam F-Measure : %.4f +- %.4f\n" +
@@ -270,23 +254,23 @@ public class Evaluate {
                 mean(fSpam), stddev(fSpam),
                 mean(fWAvg), stddev(fWAvg));
 
-        ExperimentLogger.log("5. Kalitate Estimatua (Evaluate)", parametrosLog, resultadosLog);
+        ExperimentLogger.log("5. Estimated Quality (Evaluate)", paramsLog, resultsLog);
     }
 
     /**
-     * Multilayer Perceptron sare neuronala sortu eta konfiguratzen du.
+     * Creates and configures a Multilayer Perceptron neural network.
      *
      * <p>
-     * Metodo honek MLP algoritmoaren parametroak ezartzen ditu,
-     * input balioak hartuz eta MLP eredua haiekin sortuz.
+     * This method sets the parameters of the MLP algorithm,
+     * taking the input values and creating the MLP model with them.
      * </p>
      *
-     * @param learningRate Ikasketa tasa (learning rate)
-     * @param momentum     Momentum balioa
-     * @param hiddenLayers Geruza ezkutuen konfigurazioa (adib. "3")
-     * @param epochs       Entrenamendu iterazio kopurua (training time)
-     * @return Konfiguratutako {@link MultilayerPerceptron} eredua
-     * @throws Exception Konfigurazioan errore bat gertatzen bada
+     * @param learningRate Learning rate
+     * @param momentum     Momentum value
+     * @param hiddenLayers Hidden layers configuration (e.g. "3")
+     * @param epochs       Number of training iterations (training time)
+     * @return The configured {@link MultilayerPerceptron} model
+     * @throws Exception If a configuration error happens
      */
     public static MultilayerPerceptron buildMLP(double learningRate, double momentum, String hiddenLayers, int epochs)
             throws Exception {
@@ -302,6 +286,14 @@ public class Evaluate {
         return mlp;
     }
 
+    /**
+     * Converts the evaluation results to text format.
+     *
+     * @param eval      Evaluation object (Weka)
+     * @param spamIndex Index of the "spam" class
+     * @return The formatted results text
+     * @throws Exception If an error happens
+     */
     private static String formatResults(Evaluation eval, int spamIndex) throws Exception {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("Accuracy          : %.2f%%%n", eval.pctCorrect()));
@@ -317,6 +309,12 @@ public class Evaluate {
         return sb.toString();
     }
 
+    /**
+     * Computes the mean of a set of values.
+     *
+     * @param arr Array of values
+     * @return The mean
+     */
     private static double mean(double[] arr) {
         double sum = 0;
         for (double v : arr)
@@ -325,10 +323,11 @@ public class Evaluate {
     }
 
     /**
-     * Balio multzo baten desbideratze estandarra kalkulatzen du.
+     * Computes the (population) standard deviation of a set of values,
+     * dividing by the number of values.
      *
-     * @param arr Balioen array-a
-     * @return Desbideratze estandarra
+     * @param arr Array of values
+     * @return The standard deviation
      */
     private static double stddev(double[] arr) {
         double m = mean(arr);

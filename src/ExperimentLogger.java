@@ -5,53 +5,53 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Klase honek esperimentuen erregistro automatikoa kudeatzen du,
- * exekuzio bakoitzeko informazio garrantzitsua fitxategi batean gordez.
+ * Manages the automatic logging of experiments, saving the
+ * relevant information of each run to a file.
  *
- * 
- * Erregistroak honako informazioa jasotzen du:
- * 
+ *
+ * Each log entry contains the following information:
+ *
  * <ul>
- * <li>Data eta ordua (timestamp)</li>
- * <li>Sistemaren informazioa (OS, Java bertsioa)</li>
- * <li>Prozesadorearen informazioa eta nukleo kopurua</li>
- * <li>Memoriaren erabilera (RAM)</li>
- * <li>Exekuzio fasea (pipeline-ko pausoa)</li>
- * <li>Erabilitako parametroak</li>
- * <li>Lortutako emaitzak</li>
+ * <li>Date and time (timestamp)</li>
+ * <li>System information (OS, Java version)</li>
+ * <li>Processor information and number of cores</li>
+ * <li>Memory used by the JVM (RAM)</li>
+ * <li>Execution phase (pipeline step)</li>
+ * <li>Parameters used</li>
+ * <li>Results obtained</li>
  * </ul>
  *
- * 
- * Informazio hau {@code registro_experimentos.txt} fitxategian
- * gordetzen da, esperimentuen trazabilitatea eta erreprodukzioa
- * errazteko.
- * 
  *
- * 
- * Klase hau oso erabilgarria da machine learning pipeline-etan,
- * konfigurazio ezberdinen arteko konparaketak egiteko.
- * 
+ * This information is saved in the {@code experiment_log.txt} file,
+ * to make the experiments easier to trace and to
+ * reproduce.
+ *
+ *
+ *
+ * This class is very useful in machine learning pipelines,
+ * to compare different configurations.
+ *
  *
  * @version 1.0
  */
 public class ExperimentLogger {
 
-    private static final String LOG_FILE = "registro_experimentos.txt";
+    private static final String LOG_FILE = "experiment_log.txt";
 
     /**
-     * Esperimentu baten informazioa erregistratzen du log fitxategian.
+     * Logs the information of one experiment in the log file.
      *
      * <p>
-     * Metodo honek automatikoki gehitzen du sistemaren egoera eta
-     * exekuzioaren testuingurua, parametroekin eta emaitzekin batera.
+     * This method automatically adds the system state and the
+     * run context, together with the parameters and the results.
      * </p>
      *
-     * @param fasea       Pipeline-aren fasea (adibidez: "Datuen karga",
-     *                    "Ebaluazioa")
-     * @param parametroak Erabilitako parametroen deskribapena
-     * @param emaitzak    Lortutako emaitzak (metrikak edo bestelakoak)
+     * @param phase      Pipeline phase (for example: "Data loading",
+     *                   "Evaluation")
+     * @param parameters Description of the parameters used
+     * @param results    Results obtained (metrics or others)
      */
-    public static void log(String fasea, String parametroak, String emaitzak) {
+    public static void log(String phase, String parameters, String results) {
         try (FileWriter fw = new FileWriter(LOG_FILE, true);
                 PrintWriter pw = new PrintWriter(fw)) {
 
@@ -59,37 +59,38 @@ public class ExperimentLogger {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             String timestamp = now.format(formatter);
 
-            // Sistema eragilearen eta Java ingurunearen informazioa jasotzen da
+            // Information about the operating system and the Java environment
             String osName = System.getProperty("os.name");
             String osArch = System.getProperty("os.arch");
             String javaVersion = System.getProperty("java.version");
 
+            // Processor information and number of cores
             int cores = Runtime.getRuntime().availableProcessors();
             String cpuModel = System.getenv("PROCESSOR_IDENTIFIER");
             if (cpuModel == null) {
-                cpuModel = "Ezezaguna (Ez da Windows)";
+                cpuModel = "Unknown (not Windows)";
             }
 
-            // Prozesadorearen informazioa eta nukleo kopurua eskuratzen dira
+            // Memory currently used by the JVM (after asking for a garbage collection)
             Runtime runtime = Runtime.getRuntime();
             runtime.gc();
-            long memoriaErabiliaBytes = runtime.totalMemory() - runtime.freeMemory();
-            long memoriaErabiliaMB = memoriaErabiliaBytes / (1024 * 1024);
+            long usedMemoryBytes = runtime.totalMemory() - runtime.freeMemory();
+            long usedMemoryMB = usedMemoryBytes / (1024 * 1024);
 
-            // Informazio guztia log fitxategian formatu egituratuan idazten da
+            // All the information is written to the log file in a structured format
             pw.println("=========================================================================");
-            pw.println("DATA ETA ORDUA  : " + timestamp);
-            pw.println("SISTEMA         : " + osName + " (" + osArch + ") | Java: " + javaVersion);
-            pw.println("PROZESADOREA    : " + cpuModel + " (" + cores + " nukleo/hari)");
-            pw.println("MEMORIA (RAM)   : " + memoriaErabiliaMB + " MB erabilita sare neuronalarako");
+            pw.println("DATE AND TIME   : " + timestamp);
+            pw.println("SYSTEM          : " + osName + " (" + osArch + ") | Java: " + javaVersion);
+            pw.println("PROCESSOR       : " + cpuModel + " (" + cores + " cores/threads)");
+            pw.println("MEMORY (RAM)    : " + usedMemoryMB + " MB used by the JVM");
             pw.println("-------------------------------------------------------------------------");
-            pw.println("FASEA           : " + fasea);
-            pw.println("PARAMETROAK     : " + parametroak);
-            pw.println("EMAITZAK        : \n" + emaitzak);
+            pw.println("PHASE           : " + phase);
+            pw.println("PARAMETERS      : " + parameters);
+            pw.println("RESULTS         : \n" + results);
             pw.println("=========================================================================\n");
 
         } catch (IOException e) {
-            System.err.println("Errorea esperimentuen erregistroan idaztean: " + e.getMessage());
+            System.err.println("Error while writing the experiment log: " + e.getMessage());
         }
     }
 }

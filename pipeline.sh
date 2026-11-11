@@ -1,22 +1,43 @@
 #!/bin/bash
 # ==========================================================
-# PIPELINE OSOA — Testu-Sailkatzailea (SPAM/HAM)
-# Konfigurazio definitiboa — emaitza onenak lortu dituenak
+# FULL PIPELINE - Text Classifier (SPAM/HAM)
+# Final configuration - the one that gave the best results
 # ==========================================================
-# Erabilera:
+# What it does : Builds the ARFF corpus from raw .txt emails,
+#                splits it 80/10/10, normalizes and vectorizes the
+#                text (TF-IDF + InfoGain), tunes a Multilayer
+#                Perceptron with grid search, evaluates it (blind
+#                test, 5-fold CV, repeated hold-out) and classifies
+#                new emails.
+# Platform     : Linux / macOS / Git Bash, Java 11+ (JDK, needs
+#                javac and javadoc). Runs on CPU.
+# Tools        : Java, Weka 3.8.6 (lib/weka.jar), Bash.
+# Authors      : Ibai Olaziregi, Gorka Piedra, Andoni Ortiz de Zarate
+# Course       : Decision Support Systems (Erabakiak Hartzeko
+#                Euskarri Sistemak), Bilbao School of Engineering
+#                (UPV/EHU).
+# ==========================================================
+# Usage:
 #   chmod +x pipeline.sh
 #   ./pipeline.sh
 
-set -e  # Edozein erroretan gelditu
+set -e  # Stop on any error
 
-cd /home/ibai/Dokumentuak/Testu-Sailkatzailea
+# Fix C10: all java commands use -Dfile.encoding=UTF-8, because Weka reads and
+# writes the ARFF files with the default charset of the platform (it is not
+# UTF-8 on Windows with Java 11-17). With UTF-8 the outputs are identical on
+# every operating system.
+
+# Fix C1: run from the folder of this script (before, an absolute path of
+# one team member's computer was used, so the script failed anywhere else)
+cd "$(dirname "$0")"
 
 # ----------------------------------------------------------
-# KONFIGURAZIO DEFINITIBOA
-# Ablation study-aren ondoren aukeratutako parametroak:
-#   - digitsAsDelim:  false (Enron token informatiboak babesten)
-#   - minTermFreq:    1 (jokabide originala)
-#   - useThreshold:   false (numToSelect finkoa)
+# FINAL CONFIGURATION
+# Parameters chosen after the ablation study:
+#   - digitsAsDelim:  false (keeps the informative Enron tokens)
+#   - minTermFreq:    1 (original behaviour)
+#   - useThreshold:   false (fixed numToSelect)
 #   - useNormalizer:  true
 # ----------------------------------------------------------
 WORDS_TO_KEEP=25000
@@ -28,65 +49,65 @@ USE_NORMALIZER=true
 MAX_NGRAM=1
 
 # ----------------------------------------------------------
-# PARAMETRO OPTIMOAK
+# OPTIMAL PARAMETERS
 LEARNING_RATE=0.01;
 MOMENTUM=0.1;
 HIDDEN_LAYERS="3";
 EPOCHS=500;
 
 # ----------------------------------------------------------
-# DIREKTORIOAK PRESTATU
+# PREPARE THE DIRECTORIES
 # ----------------------------------------------------------
-mkdir -p bin Partiketak emaitzak modelo
+mkdir -p bin data/splits results model
 
 echo "=========================================================="
-echo "  PIPELINE HASIERA"
+echo "  PIPELINE START"
 echo "=========================================================="
 
 # ----------------------------------------------------------
-# 1) KONPILATU
+# 1) COMPILE
 # ----------------------------------------------------------
 echo ""
-echo "[1/6] Konpilatzen..."
+echo "[1/6] Compiling..."
 javac -encoding UTF-8 -cp "lib/weka.jar:src" -d bin src/*.java
 echo "  OK"
 
 # ----------------------------------------------------------
-# 2) ARFF GORDINA SORTU
+# 2) CREATE THE RAW ARFF
 # ----------------------------------------------------------
 echo ""
-echo "[2/6] Datuak kargatzen (EmailLoader)..."
-java --add-opens java.base/java.lang=ALL-UNNAMED \
+echo "[2/6] Loading the data (EmailLoader)..."
+java -Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED \
      -cp "lib/weka.jar:bin" \
-     EmailLoader DatuakRaw DatuakRaw/emails_raw.arff
+     EmailLoader data/raw data/raw/emails_raw.arff
 echo "  OK"
 
 # ----------------------------------------------------------
-# 3) TRAIN / DEV / TEST BANATU
+# 3) SPLIT INTO TRAIN / DEV / TEST
 # ----------------------------------------------------------
 echo ""
-echo "[3/6] Datuak banatzen 80/10/10 (DataSplit)..."
-java --add-opens java.base/java.lang=ALL-UNNAMED \
+echo "[3/6] Splitting the data 80/10/10 (DataSplit)..."
+java -Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED \
      -cp "lib/weka.jar:bin" \
      DataSplit \
-     DatuakRaw/emails_raw.arff \
-     Partiketak/train.arff \
-     Partiketak/dev.arff \
-     Partiketak/test.arff
+     data/raw/emails_raw.arff \
+     data/splits/train.arff \
+     data/splits/dev.arff \
+     data/splits/test.arff
 echo "  OK"
 
 # ----------------------------------------------------------
-# 4) BEKTORIZATU ETA ATRIBUTUAK AUKERATU
-# Argumentu-ordena:
+# 4) VECTORIZE AND SELECT ATTRIBUTES
+# Argument order:
 #   baseDir wordsToKeep numToSelect digitsAsDelim
 #   minTermFreq useThreshold useNormalizer
 # ----------------------------------------------------------
 echo ""
-echo "[4/6] Bektorizatzen eta atributuak aukeratzen (EmailVectorizerAndSelector)..."
-java --add-opens java.base/java.lang=ALL-UNNAMED \
+echo "[4/6] Vectorizing and selecting attributes (EmailVectorizerAndSelector)..."
+java -Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED \
      -cp "lib/weka.jar:bin" \
      EmailVectorizerAndSelector \
-     Partiketak \
+     data/splits \
      "$WORDS_TO_KEEP" \
      "$NUM_TO_SELECT" \
      "$DIGITS_AS_DELIM" \
@@ -97,43 +118,45 @@ java --add-opens java.base/java.lang=ALL-UNNAMED \
 echo "  OK"
 
 # ----------------------------------------------------------
-# 5) FINE-TUNING ETA EREDUA GORDE
+# 5) FINE-TUNING AND SAVE THE MODEL
+# Fix C2: the outputs go to results/ (before, they overwrote the
+# archived experiment results in experiments/)
 # ----------------------------------------------------------
 echo ""
-echo "[5/6] MLP fine-tuning eta eredua gordetzen (GetModel)..."
-java --add-opens java.base/java.lang=ALL-UNNAMED \
+echo "[5/6] MLP fine-tuning and saving the model (GetModel)..."
+java -Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED \
      -cp "lib/weka.jar:bin" \
      GetModel \
-     Partiketak/train_final.arff \
-     Partiketak/dev_final.arff \
-     modelo/mlp.model \
-     esperimentuak/finetuning_norm.txt
+     data/splits/train_final.arff \
+     data/splits/dev_final.arff \
+     model/mlp.model \
+     results/finetuning.txt
 echo "  OK"
 
 # ----------------------------------------------------------
-# 6) EBALUAZIO ITSUA (TEST)
+# 6) BLIND EVALUATION (TEST)
 # ----------------------------------------------------------
 echo ""
-echo "[6/6] Test itsuaren ebaluazioa (TestModel)..."
-java --add-opens java.base/java.lang=ALL-UNNAMED \
+echo "[6/6] Blind test evaluation (TestModel)..."
+java -Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED \
      -cp "lib/weka.jar:bin" \
      TestModel \
-     Partiketak/test_final.arff \
-     modelo/mlp.model \
-     esperimentuak/test_emaitzak_norm.txt
+     data/splits/test_final.arff \
+     model/mlp.model \
+     results/test_results.txt
 echo "  OK"
 
 # ----------------------------------------------------------
-# 7) KALITATE ESTIMATUA (EVALUATE)
+# 7) ESTIMATED QUALITY (EVALUATE)
 # ----------------------------------------------------------
 echo ""
-echo "[7/7] Kalitate estimatua (Evaluate)..."
-java --add-opens java.base/java.lang=ALL-UNNAMED \
+echo "[7/7] Estimated quality (Evaluate)..."
+java -Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED \
      -cp "lib/weka.jar:bin" \
      Evaluate \
-     Partiketak/train_final.arff \
-     Partiketak/dev_final.arff \
-     esperimentuak/kalitatea_norm.txt \
+     data/splits/train_final.arff \
+     data/splits/dev_final.arff \
+     results/quality.txt \
      "$LEARNING_RATE" \
      "$MOMENTUM" \
      "$HIDDEN_LAYERS" \
@@ -141,37 +164,37 @@ java --add-opens java.base/java.lang=ALL-UNNAMED \
 echo "  OK"
 
 # ----------------------------------------------------------
-# 8) IRAGARPEN BERRIAK (Iragarri)
+# 8) NEW PREDICTIONS (Predict)
 # ----------------------------------------------------------
 echo ""
-echo "[8/8] Iragarpen berriak egiten (Iragarri)..."
-java --add-opens java.base/java.lang=ALL-UNNAMED \
+echo "[8/8] Making new predictions (Predict)..."
+java -Dfile.encoding=UTF-8 --add-opens java.base/java.lang=ALL-UNNAMED \
      -cp "lib/weka.jar:bin" \
-     Iragarri \
-     modelo/mlp.model \
-     data_proba/ \
-     iragarpenak/
+     Predict \
+     model/mlp.model \
+     data/samples/ \
+     predictions/
 echo "  OK"
 
 
 # ----------------------------------------------------------
-# 9) JAVADOC SORTU
+# 9) GENERATE THE JAVADOC
 # ----------------------------------------------------------
-javadoc -d docs -sourcepath src -cp "lib/*" src/*.java
+javadoc -d docs/javadoc -sourcepath src -cp "lib/*" src/*.java
 
 
 # ----------------------------------------------------------
-# LABURPENA
+# SUMMARY
 # ----------------------------------------------------------
 echo ""
 echo "=========================================================="
-echo "  PIPELINE AMAITUTA"
+echo "  PIPELINE FINISHED"
 echo "=========================================================="
-echo "Emaitzak hemen:"
-echo "  - esperimentuak/finetuning_norm.txt      (fine-tuning taula)"
-echo "  - esperimentuak/test_emaitzak_norm.txt   (test itsuaren emaitzak)"
-echo "  - esperimentuak/kalitatea_norm.txt       (kalitate estimatua)"
-echo "  - iragarpenak/iragarpenak.txt            (iragarpen berriak)"
-echo "  - registro_experimentos.txt           (log osoa)"
-echo "  - modelo/mlp.model                    (eredu onena)"
+echo "Results here:"
+echo "  - results/finetuning.txt             (fine-tuning table)"
+echo "  - results/test_results.txt           (blind test results)"
+echo "  - results/quality.txt                (estimated quality)"
+echo "  - predictions/predictions.txt        (new predictions)"
+echo "  - experiment_log.txt                 (full log)"
+echo "  - model/mlp.model                    (best model)"
 echo "=========================================================="

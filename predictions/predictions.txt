@@ -1,0 +1,20 @@
+==================================================
+               PREDICTIONS - RESULTS              
+==================================================
+
+1. email: HAM (confidence: 0.9993)
+2. email: HAM (confidence: 0.9986)
+3. email: SPAM (confidence: 0.9268)
+4. email: SPAM (confidence: 0.9938)
+5. email: SPAM (confidence: 0.9743)
+6. email: SPAM (confidence: 0.9095)
+7. email: SPAM (confidence: 0.9335)
+8. email: HAM (confidence: 0.5469)
+9. email: HAM (confidence: 0.9943)
+10. email: HAM (confidence: 0.5365)
+11. email: SPAM (confidence: 0.8892)
+12. email: HAM (confidence: 0.5998)
+
+==================================================
+Total classified emails: 12
+==================================================

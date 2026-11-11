@@ -1,0 +1,12 @@
+# Keep the data byte-identical on every operating system (no CRLF conversion
+# on checkout). Converted line endings change the email texts and therefore
+# the vectors and the model. See CHANGELOG.md, fix C10.
+data/** -text
+
+# Binary files
+*.jar binary
+*.class binary
+*.model binary
+*.ser binary
+*.png binary
+*.PNG binary

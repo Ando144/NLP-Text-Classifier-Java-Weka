@@ -13,57 +13,57 @@ import weka.core.converters.ArffSaver;
 import java.io.File;
 
 /**
- * Klase honek testu-datuak bektorizatu eta atributu esanguratsuenak hautatzen
- * ditu,
- * emailen sailkapenerako (spam vs legitimoa).
+ * Vectorizes the text data and selects the most relevant
+ * attributes,
+ * for email classification (spam vs legitimate).
  *
- * 
- * Pipeline hau bi urrats nagusitan banatzen da:
- * 
+ *
+ * This pipeline has two main steps:
+ *
  *
  * <ul>
- * <li><b>Bektorizazioa (StringToWordVector):</b>
+ * <li><b>Vectorization (StringToWordVector):</b>
  * <ul>
- * <li>Testua bektore numeriko bihurtzen du (Bag-of-Words eredua)</li>
- * <li>TF-IDF transformazioa aplikatzen da</li>
- * <li>Tokenizazioa (hitzak edo n-gramak)</li>
- * <li>Stopword-en ezabaketa (Rainbow)</li>
+ * <li>Turns the text into a numeric vector (Bag-of-Words model)</li>
+ * <li>Applies the TF-IDF transformation</li>
+ * <li>Tokenization (words or n-grams)</li>
+ * <li>Stopword removal (Rainbow)</li>
  * <li>Stemming (Lovins)</li>
  * </ul>
  * </li>
- * <li><b>Atributu-aukeraketa (InfoGain):</b>
+ * <li><b>Attribute selection (InfoGain):</b>
  * <ul>
- * <li>Informazio-irabazia (Information Gain) kalkulatzen du</li>
- * <li>Atributu garrantzitsuenak hautatzen ditu</li>
- * <li>Bi modu:
+ * <li>Computes the Information Gain</li>
+ * <li>Selects the most important attributes</li>
+ * <li>Two modes:
  * <ul>
- * <li>Top-N atributuak</li>
- * <li>Atalase baten gainetik (threshold)</li>
+ * <li>Top-N attributes</li>
+ * <li>Above a threshold</li>
  * </ul>
  * </li>
  * </ul>
  * </li>
  * </ul>
  *
- * 
- * Gainera, aukerazko konfigurazio hauek onartzen dira:
- * 
+ *
+ * In addition, these optional settings are supported:
+ *
  * <ul>
- * <li>TextNormalizer aplikatzea</li>
- * <li>N-gramen erabilera</li>
- * <li>Tokenizazio pertsonalizatua</li>
- * <li>MinTermFreq parametroa</li>
+ * <li>Applying TextNormalizer</li>
+ * <li>Using n-grams</li>
+ * <li>Custom tokenization</li>
+ * <li>MinTermFreq parameter</li>
  * </ul>
  *
- * 
- * Azken emaitza train/dev/test dataset eraldatuak dira, eta filtroak
- * serializatzen dira ondorengo inferentziarako.
- * 
  *
- * 
- * Klase hau pipeline-aren erdigunea da, feature engineering fasea kudeatzen
- * duena.
- * 
+ * The final result is the transformed train/dev/test datasets, and the
+ * filters are serialized for later inference.
+ *
+ *
+ *
+ * This class is the core of the pipeline: it manages the feature
+ * engineering phase.
+ *
  *
  * @version 1.0
  */
@@ -72,38 +72,38 @@ public class EmailVectorizerAndSelector {
     private static final double INFOGAIN_THRESHOLD = 0.005;
 
     /**
-     * Programa exekutatzen duen metodo nagusia, bektorizazio eta
-     * atributu-aukeraketa pipeline osoa aplikatzen duena.
+     * Main method: applies the complete vectorization and
+     * attribute selection pipeline.
      *
      * <p>
-     * Parametroen bidez pipeline-aren konfigurazioa molda daiteke
-     * (ablation experiments egiteko diseinatua).
+     * The pipeline configuration can be changed with the parameters
+     * (designed for ablation experiments).
      * </p>
      *
-     * @param args Komando lerroko argumentuak:
+     * @param args Command-line arguments:
      *             <ul>
-     *             <li>args[0] - baseDir (train/dev/test fitxategien
-     *             direktorioa)</li>
-     *             <li>args[1] - wordsToKeep (hitz kopuru maximoa)</li>
-     *             <li>args[2] - numToSelect (aukeratutako atributuak)</li>
-     *             <li>args[3] - digitsAsDelim (digituak bereizle gisa)</li>
-     *             <li>args[4] - minTermFreq (gutxieneko maiztasuna)</li>
-     *             <li>args[5] - useThreshold (InfoGain atalasea erabili)</li>
-     *             <li>args[6] - useNormalizer (TextNormalizer aplikatu)</li>
-     *             <li>args[7] - maxNGram (n-gram tamaina maximoa)</li>
+     *             <li>args[0] - baseDir (directory of the train/dev/test
+     *             files)</li>
+     *             <li>args[1] - wordsToKeep (maximum number of words)</li>
+     *             <li>args[2] - numToSelect (number of selected attributes)</li>
+     *             <li>args[3] - digitsAsDelim (digits used as delimiters)</li>
+     *             <li>args[4] - minTermFreq (minimum term frequency)</li>
+     *             <li>args[5] - useThreshold (use the InfoGain threshold)</li>
+     *             <li>args[6] - useNormalizer (apply TextNormalizer)</li>
+     *             <li>args[7] - maxNGram (maximum n-gram size)</li>
      *             </ul>
      */
     public static void main(String[] args) {
         try {
             if (args.length > 8) {
-                System.err.println("Erabilera:");
+                System.err.println("Usage:");
                 System.err.println("  java -cp \"lib/weka.jar:bin\" EmailVectorizerAndSelector");
                 System.err.println("       [baseDir] [wordsToKeep] [numToSelect] [digitsAsDelim]");
                 System.err.println("       [minTermFreq] [useThreshold] [useNormalizer] [maxNGram]");
                 return;
             }
 
-            String baseDir = args.length >= 1 ? args[0] : "Partiketak";
+            String baseDir = args.length >= 1 ? args[0] : "data/splits";
             int wordsToKeep = args.length >= 2 ? Integer.parseInt(args[1]) : 25000;
             int numToSelect = args.length >= 3 ? Integer.parseInt(args[2]) : 1000;
             boolean digitsAsDelim = args.length >= 4 ? Boolean.parseBoolean(args[3]) : false;
@@ -116,15 +116,15 @@ public class EmailVectorizerAndSelector {
             printConfig(baseDir, wordsToKeep, numToSelect, digitsAsDelim,
                     minTermFreq, thresholdMode, useNormalizer, maxNGram);
 
-            // Fitxategiak kargatu
+            // Load the files
             File trainRawFile = new File(baseDir, "train.arff");
             File devRawFile = new File(baseDir, "dev.arff");
             File testRawFile = new File(baseDir, "test.arff");
 
             if (!trainRawFile.exists() || !devRawFile.exists() || !testRawFile.exists()) {
-                System.err.println("Sarrerako fitxategiak falta dira: " +
+                System.err.println("Input files are missing: " +
                         new File(baseDir).getAbsolutePath());
-                System.err.println("Espero: train.arff, dev.arff, test.arff");
+                System.err.println("Expected: train.arff, dev.arff, test.arff");
                 return;
             }
 
@@ -136,55 +136,55 @@ public class EmailVectorizerAndSelector {
             EmailLoader.ensureClassIndex(dev);
             EmailLoader.ensureClassIndex(test);
 
-            // Aukeran, testuaren aurreprozesamendua aplikatzen da (garbiketa,
-            // normalizazioa)
+            // Optionally, text preprocessing is applied (cleaning,
+            // normalization)
             TextNormalizer normalizer = null;
             if (useNormalizer) {
-                System.out.println("\nTextNormalizer aplikatzen...");
+                System.out.println("\nApplying TextNormalizer...");
                 normalizer = new TextNormalizer();
                 normalizer.setInputFormat(train);
                 train = Filter.useFilter(train, normalizer);
                 dev = Filter.useFilter(dev, normalizer);
                 test = Filter.useFilter(test, normalizer);
-                System.out.println("  TextNormalizer aplikatuta.");
+                System.out.println("  TextNormalizer applied.");
             } else {
-                System.out.println("\nTextNormalizer desaktibatua");
+                System.out.println("\nTextNormalizer disabled");
             }
 
-            // Testua bektore numeriko bihurtzen da TF-IDF erabiliz
-            System.out.println("\nStringToWordVector aplikatzen...");
+            // The text is turned into a numeric vector using TF-IDF
+            System.out.println("\nApplying StringToWordVector...");
             StringToWordVector stwv = new StringToWordVector();
 
-            // Tokenizazioa: hitzak edo n-gramak, konfigurazioaren arabera
+            // Tokenization: words or n-grams, depending on the configuration
             stwv.setIDFTransform(true);
             stwv.setTFTransform(true);
             stwv.setLowerCaseTokens(true);
             stwv.setWordsToKeep(wordsToKeep);
 
-            // MinTermFreq (Aukerakoa)
+            // MinTermFreq (optional)
             stwv.setMinTermFreq(minTermFreq);
             System.out.println("  MinTermFreq    = " + minTermFreq);
 
-            // N-grama (Aukerakoa)
+            // N-grams (optional)
             if (maxNGram > 1) {
                 NGramTokenizer ngramTokenizer = new NGramTokenizer();
                 ngramTokenizer.setNGramMinSize(1);
                 ngramTokenizer.setNGramMaxSize(maxNGram);
                 ngramTokenizer.setDelimiters(" \r\n\t.,;:'\"()?!-+/\\<>@#$%^&*_=~`|\\[\\]{}");
                 stwv.setTokenizer(ngramTokenizer);
-                System.out.println("  Tokenizadorea  = NGram (min=1, max=" + maxNGram + ")");
+                System.out.println("  Tokenizer      = NGram (min=1, max=" + maxNGram + ")");
             } else {
-                WordTokenizer tokenizador = new WordTokenizer();
+                WordTokenizer wordTokenizer = new WordTokenizer();
                 if (digitsAsDelim) {
-                    tokenizador.setDelimiters(
+                    wordTokenizer.setDelimiters(
                             " \r\n\t.,;:'\"()?!-+/\\<>@#$%^&*_=~`|[]{}0123456789=%");
-                    System.out.println("  Tokenizadorea  = Digituak bereizle");
+                    System.out.println("  Tokenizer      = Digits as delimiters");
                 } else {
-                    tokenizador.setDelimiters(
+                    wordTokenizer.setDelimiters(
                             " \r\n\t.,;:'\"()?!-+/\\<>@#$%^&*_=~`|[]{}");
-                    System.out.println("  Tokenizadorea  = Digituak token barruan");
+                    System.out.println("  Tokenizer      = Digits kept inside tokens");
                 }
-                stwv.setTokenizer(tokenizador);
+                stwv.setTokenizer(wordTokenizer);
             }
 
             stwv.setStemmer(new LovinsStemmer());
@@ -195,23 +195,23 @@ public class EmailVectorizerAndSelector {
             Instances devVec = Filter.useFilter(dev, stwv);
             Instances testVec = Filter.useFilter(test, stwv);
 
-            System.out.println("  Atributuak bektorizazioaren ostean: " + trainVec.numAttributes());
+            System.out.println("  Attributes after vectorization: " + trainVec.numAttributes());
 
-            // Atributu garrantzitsuenak hautatzen dira Information Gain erabiliz
-            System.out.println("\nInfoGain aukeraketa aplikatzen...");
+            // The most important attributes are selected with Information Gain
+            System.out.println("\nApplying InfoGain selection...");
             AttributeSelection filterSelector = new AttributeSelection();
             InfoGainAttributeEval eval = new InfoGainAttributeEval();
             Ranker search = new Ranker();
 
-            // Bi aukera: atributu kopuru finkoa edo atalase bidezko aukeraketa
+            // Two options: fixed number of attributes or threshold-based selection
             if (thresholdMode) {
                 search.setNumToSelect(-1);
                 search.setThreshold(INFOGAIN_THRESHOLD);
-                System.out.println("  Modua          = atalasea >= " + INFOGAIN_THRESHOLD);
+                System.out.println("  Mode           = threshold >= " + INFOGAIN_THRESHOLD);
             } else {
                 search.setNumToSelect(numToSelect);
                 search.setThreshold(-Double.MAX_VALUE);
-                System.out.println("  Modua          = numToSelect=" + numToSelect);
+                System.out.println("  Mode           = numToSelect=" + numToSelect);
             }
 
             filterSelector.setEvaluator(eval);
@@ -222,48 +222,48 @@ public class EmailVectorizerAndSelector {
             Instances devFinal = Filter.useFilter(devVec, filterSelector);
             Instances testFinal = Filter.useFilter(testVec, filterSelector);
 
-            System.out.println("  Amaierako atributuak: " + trainFinal.numAttributes());
+            System.out.println("  Final attributes: " + trainFinal.numAttributes());
 
             EmailLoader.sanitizeAttributeNames(trainFinal);
             EmailLoader.sanitizeAttributeNames(devFinal);
             EmailLoader.sanitizeAttributeNames(testFinal);
 
-            // Gorde filtroak inferentziarako
-            File modelDir = new File("modelo");
+            // Save the filters for inference
+            File modelDir = new File("model");
             if (!modelDir.exists())
                 modelDir.mkdirs();
 
-            // Filtroak gordetzen dira, gero inferentzian berrerabiltzeko
-            FilterSerializationHelper.saveFilter(stwv, "modelo/vectorizer.ser");
-            FilterSerializationHelper.saveFilter(filterSelector, "modelo/selector.ser");
+            // The filters are saved so they can be reused at inference time
+            FilterSerializationHelper.saveFilter(stwv, "model/vectorizer.ser");
+            FilterSerializationHelper.saveFilter(filterSelector, "model/selector.ser");
             if (normalizer != null) {
-                FilterSerializationHelper.saveFilter(normalizer, "modelo/normalizer.ser");
-                System.out.println("  TextNormalizer gordeta inferentziarako (modelo/normalizer.ser)");
+                FilterSerializationHelper.saveFilter(normalizer, "model/normalizer.ser");
+                System.out.println("  TextNormalizer saved for inference (model/normalizer.ser)");
             } else {
-                File nf = new File("modelo/normalizer.ser");
+                File nf = new File("model/normalizer.ser");
                 if (nf.exists())
                     nf.delete();
             }
-            System.out.println("\nFiltroak gordeta inferentziarako (modelo/vectorizer.ser, modelo/selector.ser)");
+            System.out.println("\nFilters saved for inference (model/vectorizer.ser, model/selector.ser)");
 
-            // Azken dataset eraldatuak fitxategietan gordetzen dira
+            // The final transformed datasets are saved to files
             EmailLoader.saveToArff(trainFinal, new File(baseDir, "train_final.arff"));
             EmailLoader.saveToArff(devFinal, new File(baseDir, "dev_final.arff"));
             EmailLoader.saveToArff(testFinal, new File(baseDir, "test_final.arff"));
 
             System.out.println("\n==================================================");
-            System.out.println("PROZESUA AMAITUTA!");
-            System.out.println("Amaierako atributuak: " + trainFinal.numAttributes());
+            System.out.println("PROCESS FINISHED!");
+            System.out.println("Final attributes: " + trainFinal.numAttributes());
             System.out.println("==================================================");
 
-            // Erregistroa
+            // Logging
             String config = String.format(
                     "WordsToKeep=%d | MinTermFreq=%d | DigitsAsDelim=%b | " +
                             "ThresholdMode=%b | TextNormalizer=%b | MaxNGram=%d",
                     wordsToKeep, minTermFreq, digitsAsDelim, thresholdMode,
                     useNormalizer, maxNGram);
-            String result = "Amaierako atributuak: " + trainFinal.numAttributes();
-            ExperimentLogger.log("Bektorizazioa eta Aukeraketa (ablation)", config, result);
+            String result = "Final attributes: " + trainFinal.numAttributes();
+            ExperimentLogger.log("Vectorization and Selection (ablation)", config, result);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -271,23 +271,23 @@ public class EmailVectorizerAndSelector {
     }
 
     /**
-     * Exekuzioaren konfigurazioa kontsolan inprimatzen du,
-     * esperimentuen trazabilitatea errazteko.
+     * Prints the run configuration to the console,
+     * to make the experiments easier to trace.
      *
-     * @param baseDir       Datuen direktorioa
-     * @param wordsToKeep   Hitz kopuru maximoa
-     * @param numToSelect   Hautatutako atributu kopurua
-     * @param digitsAsDelim Digituak bereizle diren ala ez
-     * @param minTermFreq   Gutxieneko maiztasuna
-     * @param thresholdMode Atalase bidezko aukeraketa aktibatuta dagoen
-     * @param useNormalizer TextNormalizer erabilera
-     * @param maxNGram      N-gram tamaina maximoa
+     * @param baseDir       Data directory
+     * @param wordsToKeep   Maximum number of words
+     * @param numToSelect   Number of selected attributes
+     * @param digitsAsDelim Whether digits are delimiters or not
+     * @param minTermFreq   Minimum term frequency
+     * @param thresholdMode Whether threshold-based selection is enabled
+     * @param useNormalizer Whether TextNormalizer is used
+     * @param maxNGram      Maximum n-gram size
      */
     private static void printConfig(String baseDir, int wordsToKeep, int numToSelect,
             boolean digitsAsDelim, int minTermFreq,
             boolean thresholdMode, boolean useNormalizer,
             int maxNGram) {
-        System.out.println("\n--- KONFIGURAZIOA ---");
+        System.out.println("\n--- CONFIGURATION ---");
         System.out.println("  baseDir       : " + baseDir);
         System.out.println("  wordsToKeep   : " + wordsToKeep);
         System.out.println("  minTermFreq   : " + minTermFreq);

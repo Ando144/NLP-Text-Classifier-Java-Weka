@@ -8,31 +8,36 @@ import weka.filters.SimpleStreamFilter;
 import java.util.regex.Pattern;
 
 /**
- * Email testua normalizatzeko Weka filtro pertsonalizatua.
+ * Custom Weka filter that normalizes email text.
  *
  *
- * Klase honek testu atributuak prozesatzen ditu
+ * This class processes the text attributes before
  * {@link weka.filters.unsupervised.attribute.StringToWordVector}
- * aplikatu aurretik, zarata murrizteko eta kalitate handiagoko
- * bektorizazioa lortzeko.
- * 
+ * is applied, to reduce noise and obtain a better
+ * vectorization.
  *
- * 
- * Aplikatzen diren normalizazio nagusiak:
- * 
+ *
+ *
+ * Main normalizations applied:
+ *
  * <ul>
- * <li>URLak token bakarrera bihurtzea</li>
- * <li>Email helbideak token bakarrera bihurtzea</li>
- * <li>Letra solteak elkartzea (adib. "h e l l o" → "hello")</li>
- * <li>HTML atributuak eta fragmentuak ezabatzea</li>
- * <li>Puntuazio errepikatuak sinplifikatzea</li>
- * <li>Espazio anitzak normalizatzea</li>
+ * <li>URLs are turned into a single token</li>
+ * <li>Email addresses are turned into a single token</li>
+ * <li>Spaced-out letters are joined (e.g. "h e l l o" → "hello")</li>
+ * <li>HTML attributes and fragments are removed</li>
+ * <li>Repeated punctuation is simplified</li>
+ * <li>Multiple spaces are normalized</li>
  * </ul>
  *
- * 
- * Helburua da testua sinplifikatzea eta ereduak patroien
- * gainean ikastea, ez zarataren gainean.
- * 
+ *
+ * The goal is to simplify the text so that the model learns
+ * from patterns, not from noise.
+ *
+ *
+ * <p>
+ * Note: the class name must not change, because an instance of this
+ * class is serialized in {@code model/normalizer.ser}.
+ * </p>
  *
  * @version 1.0
  */
@@ -40,7 +45,7 @@ public class TextNormalizer extends SimpleStreamFilter {
 
     private static final long serialVersionUID = 1L;
 
-    // Patroiak: URL, Email, Letra suelteak, HTML eta puntuazioa
+    // Patterns: URL, email, spaced-out letters, HTML and punctuation
     private static final Pattern URL_PATTERN = Pattern.compile(
             "https?\\s*:\\s*/\\s*/\\s*\\S+|ftp\\s*:\\s*/\\s*/\\s*\\S+",
             Pattern.CASE_INSENSITIVE);
@@ -67,7 +72,7 @@ public class TextNormalizer extends SimpleStreamFilter {
 
     @Override
     public String globalInfo() {
-        return "Emailen testua normalizatzeko iragazkia.";
+        return "Filter that normalizes the text of emails.";
     }
 
     @Override
@@ -84,7 +89,7 @@ public class TextNormalizer extends SimpleStreamFilter {
         return new Instances(inputFormat, 0);
     }
 
-    // Instantzia bakarra prozesatu eta testua normalizatu
+    // Process a single instance and normalize its text
     @Override
     protected Instance process(Instance instance) {
         Instance result = (Instance) instance.copy();
@@ -104,15 +109,15 @@ public class TextNormalizer extends SimpleStreamFilter {
     }
 
     /**
-     * Testu kate bati normalizazio eragiketak aplikatzen dizkio.
+     * Applies the normalization operations to a text string.
      *
-     * 
-     * Transformazioak orden jakin batean aplikatzen dira,
-     * emaitza koherentea bermatzeko.
-     * 
      *
-     * @param text Normalizatu beharreko testua
-     * @return Normalizatutako testua
+     * The transformations are applied in a fixed order
+     * to guarantee a consistent result.
+     *
+     *
+     * @param text Text to normalize
+     * @return Normalized text
      */
     public static String normalize(String text) {
         if (text == null || text.isEmpty())
@@ -130,14 +135,14 @@ public class TextNormalizer extends SimpleStreamFilter {
     }
 
     /**
-     * Letra solteak dituzten sekuentziak bateratzen ditu.
+     * Joins sequences of spaced-out single letters.
      *
      * <p>
-     * Adibidez: "h e l l o" → "hello"
+     * For example: "h e l l o" → "hello"
      * </p>
      *
-     * @param text Sarrerako testua
-     * @return Testu eraldatua
+     * @param text Input text
+     * @return Transformed text
      */
     private static String collapseSpacedLetters(String text) {
         StringBuffer sb = new StringBuffer();
