@@ -15,6 +15,10 @@ All notable changes to this repository after the original course submission.
   2. **Bytecode comparison:** both versions were compiled with `javac -g:none` and their `javap -c` output was compared. All 10 classes have identical instructions once the string constants and the `Iragarri`→`Predict` name are masked.
   3. **Execution:** `EmailLoader` → `DataSplit` → `EmailVectorizerAndSelector` produced identical ARFF data with both versions. With the shipped model, `TestModel` (518 predictions and all metrics) and `Predict` (12 predictions with their confidences) gave identical numbers.
 
+### Added
+
+- `LICENSE` file (MIT License, © the three authors), badges and a License section in the README. The License section notes that `lib/weka.jar` stays under the GNU GPL v3.
+
 ### Fixed
 
 | ID | Problem | Effect | Fix |

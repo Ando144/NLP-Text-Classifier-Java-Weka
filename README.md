@@ -1,5 +1,7 @@
 # Spam/Ham Email Classifier — Java & Weka (TF-IDF + Multilayer Perceptron)
 
+![Java](https://img.shields.io/badge/Java-11%2B-E76F00?logo=openjdk&logoColor=white) ![Weka](https://img.shields.io/badge/Weka-3.8.6-5A3E85) ![Model](https://img.shields.io/badge/Model-Multilayer%20Perceptron-2E7D32) ![Accuracy](https://img.shields.io/badge/Blind%20test%20accuracy-95.95%25-00897B) ![Bash](https://img.shields.io/badge/Pipeline-Bash-4EAA25?logo=gnubash&logoColor=white) [![License](https://img.shields.io/badge/License-MIT-0A66C2)](LICENSE)
+
 A command-line pipeline in Java and Weka that turns raw email text into TF-IDF features and classifies messages as **spam** or **ham** with a tuned Multilayer Perceptron. It was trained on 5,172 emails of the Enron-Spam corpus and reaches **95.95 % accuracy on a held-out blind test set** (518 emails) using the model shipped in the repository.
 
 ---
@@ -188,6 +190,7 @@ The pipeline compiles the code, rebuilds the corpus and the splits, fits the fil
 │   ├── ExperimentLogger.java            # Experiment tracking log
 │   └── Predict.java                     # Inference on new emails
 ├── CHANGELOG.md
+├── LICENSE               # MIT License (own code; Weka keeps its GPL)
 ├── experiment_log.txt    # Experiment log (earlier entries in Basque)
 ├── pipeline.sh           # End-to-end pipeline
 └── README.md
@@ -220,3 +223,9 @@ Course project for **Decision Support Systems** (*Erabakiak Hartzeko Euskarri Si
 The report states that all three members took part in every part of the project. The table shows who carried the main load of each part.
 
 Dataset: the Enron-Spam corpus (Metsis, Androutsopoulos & Paliouras, 2006). This repository contains the subset with 3,672 ham (`farmer` mailbox) and 1,500 spam emails.
+
+---
+
+## License
+
+The source code of this project is released under the [MIT License](LICENSE). Third-party material keeps its own terms: `lib/weka.jar` is Weka 3.8.6, distributed under the GNU General Public License v3, and the emails in `data/` come from the Enron-Spam corpus.
